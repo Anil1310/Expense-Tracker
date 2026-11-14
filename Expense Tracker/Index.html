@@ -524,13 +524,11 @@ Expense Tracker Pro: 2026 Frontend Code
               data-bs-placement="bottom">
               <i class="fas fa-plus"></i>
             </button>
-            <button class="header-icon-btn" onclick="downloadMonthReport(document.getElementById('monthFilter')?.value || CURRENT_MONTH)" title="View PDF"
-              style="background: #000000 !important; color: #ef4444 !important; border: none; height: 32px; width: 32px; padding: 0; border-radius: 50% !important; display: flex; align-items: center; justify-content: center; cursor: pointer; margin-right: 5px;">
-              <i class="fas fa-file-pdf" style="font-size: 0.85rem; color: #ef4444 !important;"></i>
+            <button class="header-icon-btn pdf-btn" id="reports-pdf-report-btn" onclick="downloadMonthReport(document.getElementById('monthFilter')?.value || CURRENT_MONTH)" title="View PDF">
+              <i class="fas fa-file-pdf"></i>
             </button>
-            <button class="header-icon-btn" onclick="openSendEmailModal(document.getElementById('monthFilter')?.value || CURRENT_MONTH, this)" title="Mail Pdf" id="reports-email-report-btn"
-              style="background: #000000 !important; color: #3b82f6 !important; border: none; height: 32px; width: 32px; padding: 0; border-radius: 50% !important; display: flex; align-items: center; justify-content: center; cursor: pointer; margin-right: 5px;">
-              <i class="fas fa-envelope" style="font-size: 0.85rem; color: #3b82f6 !important;"></i>
+            <button class="header-icon-btn email-btn" id="reports-email-report-btn" onclick="openSendEmailModal(document.getElementById('monthFilter')?.value || CURRENT_MONTH, this)" title="Mail Pdf">
+              <i class="fas fa-envelope"></i>
             </button>
             <button class="header-export-btn icon-only" onclick="exportAll()" title="Export All">
               <i class="fas fa-download"></i>
@@ -548,27 +546,27 @@ Expense Tracker Pro: 2026 Frontend Code
         <!-- Reports Stats Cards -->
         <div class="reports-stats">
 
-          <div class="report-stat-card" style="background:#ffffff; color:#1e3a8a;">
+          <div class="report-stat-card">
             <h6>Total Expenses</h6>
             <p id="reports-total">₹0</p>
           </div>
 
-          <div class="report-stat-card" style="background:#ffffff; color:#1e3a8a;">
+          <div class="report-stat-card">
             <h6>Grand Total All</h6>
             <p id="reports-year-total">₹0</p>
           </div>
 
-          <div class="report-stat-card" style="background:#ffffff; color:#1e3a8a;">
+          <div class="report-stat-card">
             <h6>Records Found</h6>
             <p id="reports-count">0</p>
           </div>
 
-          <div class="report-stat-card" style="background:#ffffff; color:#1e3a8a;">
+          <div class="report-stat-card">
             <h6>Avg. per Record</h6>
             <p id="reports-average">₹0</p>
           </div>
 
-          <div class="report-stat-card" style="background:#ffffff; color:#1e3a8a;">
+          <div class="report-stat-card">
             <h6>Max Amount</h6>
             <p id="reports-max">₹0</p>
           </div>
@@ -581,8 +579,7 @@ Expense Tracker Pro: 2026 Frontend Code
           <div class="filter-grid">
             <div class="filter-group">
               <label>Date</label>
-              <input type="date" id="dateFilter" class="filter-select" onchange="enhancedFilterReports()"
-                style="height: 28px;">
+              <input type="date" id="dateFilter" class="filter-select" onchange="enhancedFilterReports()">
             </div>
             <div class="filter-group">
               <label>Item</label>
