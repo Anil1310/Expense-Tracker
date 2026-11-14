@@ -359,6 +359,18 @@ def quick_push(project_dir):
     subprocess.run("git status -s", shell=True, cwd=project_dir)
     print(f"{BLUE}------------------------{RESET}\n")
 
+    # Automatically run build script if defined in package.json
+    pkg_json = os.path.join(project_dir, "package.json")
+    if os.path.isfile(pkg_json):
+        try:
+            with open(pkg_json, encoding="utf-8") as f:
+                pkg_data = json.load(f)
+                if "scripts" in pkg_data and "build" in pkg_data["scripts"]:
+                    print(f"{CYAN}Running build script (npm run build)...{RESET}")
+                    run_cmd("npm run build", cwd=project_dir)
+        except Exception:
+            pass
+
     print(f"{CYAN}Staging all files...{RESET}")
     run_cmd("git add .", cwd=project_dir)
 
@@ -491,12 +503,12 @@ def deploy_apps_script(project_dir):
         if deployment_id.lower() in ("c", "cancel"):
             print(f"{YELLOW}Source was pushed, but deployment was not changed.{RESET}")
             return
-        description = input(f"{YELLOW}Deployment description [Expense Pro update]: {RESET}").strip()
+        description = input(f"{YELLOW}Deployment description [Expense Tracker update]: {RESET}").strip()
     except (EOFError, KeyboardInterrupt):
         print(f"\n{YELLOW}Source was pushed, but deployment was not changed.{RESET}")
         return
 
-    description = description or "Expense Pro update"
+    description = description or "Expense Tracker update"
     command = [clasp, "deploy", "-d", description]
     if deployment_id:
         command.extend(["-i", deployment_id])
@@ -652,6 +664,8 @@ def quick_pull(project_dir):
 def create_repository(project_dir):
     """Initialize and create a new GitHub repository."""
     default_name = os.path.basename(project_dir) if project_dir else "my-app"
+    if default_name in ("Expense Pro", "Expense-Pro", "expensepro", "expense-pro"):
+        default_name = "Expense-Tracker"
     print(f"\n{CYAN}--------------------------------------------------------{RESET}")
     print(f"➕ {BOLD}Create New GitHub Repository{RESET}")
     print(f"{CYAN}--------------------------------------------------------{RESET}\n")
