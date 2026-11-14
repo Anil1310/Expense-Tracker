@@ -4,6 +4,7 @@ Expense Tracker Pro: 2026 Backend Code
 
 // ✅ Put this at the top of your script (global constants)
 const MAIN_ID = "1WK0QOkrz4c7Fl-wvkLKrH1gPODxkF3stvYajR5lVM0M";
+const CONSOLIDATED_ID = "1lCkNPBkVABweit6dD-3atsP71O0qsBnbuH1rlvzqtV8";
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 let currentUser = null; // Track current user for adding items
 
@@ -328,7 +329,9 @@ function getAllData() {
             }
         };
 
-        // Month tabs are the source of truth for web app reporting.
+        // Load from Master (All Years 2021-2026), Data sheet, and current month tabs (with automatic deduplication)
+        loadFromSource(CONSOLIDATED_ID, "Master");
+        loadFromSource(MAIN_ID, "Data");
         MONTHS.forEach(month => loadFromSource(MAIN_ID, month));
 
         // Sort by date (newest first)
