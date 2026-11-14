@@ -3,10 +3,10 @@
 
 ## Permanent Project Settings
 
-- **Project Name**: `expensepro`
+- **Project Name**: `expense-tracker`
 - **GitHub Repository**: `git@github.com:Anil1310/Expense-Tracker.git` (Branch: `main`)
 - **Primary Production Domain**: `https://expenselive.vercel.app/`
-- **Vercel Project**: `expensepro` (Org ID: `team_Yjo2eLAHEvAh9bIyKXrDkbC1`, Project ID: `prj_7ZQY0kVzBMOUuqqoGZJinJ2fIKEo`)
+- **Vercel Project**: `expense-tracker` (Org ID: `team_Yjo2eLAHEvAh9bIyKXrDkbC1`, Project ID: `prj_dCdySTrsT028RqgzUiPImjkl62jV`)
 
 ---
 
