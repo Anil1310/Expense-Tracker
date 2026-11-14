@@ -1159,19 +1159,26 @@ Expense Tracker Pro: 2026 JavaScript Code
     function showPage(pageId) {
         console.log(`Showing page: ${pageId}`);
 
-        // Hide all pages
+        // Hide all pages completely (class + inline style + aria)
         document.querySelectorAll('.page-content').forEach(page => {
             page.classList.add('d-none');
+            page.style.display = 'none';
         });
 
-        // Show target page
+        // Show target page as a completely separate page
         const targetPage = document.getElementById(`${pageId}-page`);
         if (targetPage) {
             targetPage.classList.remove('d-none');
+            targetPage.style.display = '';
             console.log(`Page ${pageId} found and shown`);
         } else {
             console.error(`Page ${pageId} not found!`);
         }
+
+        // Scroll to top of the new page
+        window.scrollTo({ top: 0, behavior: 'instant' });
+        const mainContent = document.getElementById('main-content');
+        if (mainContent) mainContent.scrollTop = 0;
 
         // Update active nav links (Sidebar)
         document.querySelectorAll('.nav-link').forEach(link => {

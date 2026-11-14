@@ -7343,6 +7343,22 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
            Makes the entire Reports page clearly visible and responsive
            ================================================================ */
 
+        /* Ensure month-buttons and dashboard stats-cards are strictly hidden on reports page */
+        body.reports-active #dashboard-page,
+        body.reports-active .month-buttons,
+        body.reports-active .stats-cards,
+        #reports-page:not(.d-none) ~ #dashboard-page,
+        #reports-page:not(.d-none) ~ * .month-buttons,
+        #reports-page:not(.d-none) ~ * .stats-cards {
+            display: none !important;
+            visibility: hidden !important;
+            height: 0 !important;
+            min-height: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            overflow: hidden !important;
+        }
+
         /* ── Top App Bar / Header ── */
         #reports-page .header {
             display: flex !important;
@@ -8198,13 +8214,10 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             height: 100% !important;
             height: 100vh !important;
             height: 100dvh !important;
-            overflow: hidden !important;
-            overscroll-behavior: none !important;
-            overscroll-behavior-y: none !important;
+            overflow-x: hidden !important;
         }
 
-        body.dashboard-active,
-        body.reports-active {
+        body.dashboard-active {
             height: 100% !important;
             height: 100vh !important;
             height: 100dvh !important;
@@ -8213,7 +8226,8 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             overscroll-behavior-y: none !important;
         }
 
-        .app-container {
+        body.dashboard-active .app-container,
+        body.dashboard-active .main-content {
             height: 100% !important;
             max-height: 100dvh !important;
             overflow: hidden !important;
@@ -8221,18 +8235,60 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             overscroll-behavior-y: none !important;
         }
 
-        .main-content {
-            height: 100% !important;
-            max-height: 100dvh !important;
-            overflow: hidden !important;
-            overscroll-behavior: none !important;
-            overscroll-behavior-y: none !important;
+        /* Separate pages (Reports, Summary, Analytics, Insights) — natural full-height scrolling */
+        body:not(.dashboard-active),
+        body.reports-active {
+            height: auto !important;
+            min-height: 100vh !important;
+            min-height: 100dvh !important;
+            overflow-x: hidden !important;
+            overflow-y: auto !important;
+            -webkit-overflow-scrolling: touch !important;
         }
 
-        #dashboard-page {
+        body:not(.dashboard-active) .app-container,
+        body:not(.dashboard-active) .main-content,
+        body.reports-active .app-container,
+        body.reports-active .main-content {
+            height: auto !important;
+            max-height: none !important;
+            overflow-x: hidden !important;
+            overflow-y: visible !important;
+        }
+
+        #dashboard-page:not(.d-none) {
             height: calc(100% - 48px) !important;
             display: flex !important;
             flex-direction: column !important;
+            overflow: hidden !important;
+        }
+
+        /* Strictly isolate each page — when a page is hidden, hide all its elements */
+        .page-content.d-none,
+        #dashboard-page.d-none,
+        #reports-page.d-none,
+        #data-page.d-none,
+        #graphs-page.d-none,
+        #categories-page.d-none,
+        #yearly-chart-page.d-none {
+            display: none !important;
+            visibility: hidden !important;
+            height: 0 !important;
+            min-height: 0 !important;
+            overflow: hidden !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        body.reports-active #dashboard-page,
+        body.reports-active .month-buttons,
+        body.reports-active .stats-cards {
+            display: none !important;
+            visibility: hidden !important;
+            height: 0 !important;
+            min-height: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
             overflow: hidden !important;
         }
     }
@@ -11115,19 +11171,26 @@ Expense Tracker Pro: 2026 JavaScript Code
     function showPage(pageId) {
         console.log(`Showing page: ${pageId}`);
 
-        // Hide all pages
+        // Hide all pages completely (class + inline style + aria)
         document.querySelectorAll('.page-content').forEach(page => {
             page.classList.add('d-none');
+            page.style.display = 'none';
         });
 
-        // Show target page
+        // Show target page as a completely separate page
         const targetPage = document.getElementById(`${pageId}-page`);
         if (targetPage) {
             targetPage.classList.remove('d-none');
+            targetPage.style.display = '';
             console.log(`Page ${pageId} found and shown`);
         } else {
             console.error(`Page ${pageId} not found!`);
         }
+
+        // Scroll to top of the new page
+        window.scrollTo({ top: 0, behavior: 'instant' });
+        const mainContent = document.getElementById('main-content');
+        if (mainContent) mainContent.scrollTop = 0;
 
         // Update active nav links (Sidebar)
         document.querySelectorAll('.nav-link').forEach(link => {
