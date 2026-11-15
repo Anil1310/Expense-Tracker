@@ -11041,8 +11041,8 @@ Expense Tracker Pro: 2026 JavaScript Code
     class ExpenseCache {
         constructor() {
             this.cacheKey = 'expense_app_cache';
-            this.cacheDuration = 24 * 60 * 60 * 1000; // 24 hours for persistent cache
-            this.shortCacheDuration = 3 * 60 * 1000; // 3 minutes for frequently changing data (multi-user sync)
+            this.cacheDuration = 2 * 60 * 1000; // 2 minutes for tight multi-device synchronization between APK & laptop
+            this.shortCacheDuration = 30 * 1000; // 30 seconds for frequently changing data
             this.loadFromStorage();
         }
 
@@ -11223,9 +11223,40 @@ Expense Tracker Pro: 2026 JavaScript Code
         window.isInitialLoadComplete = true;
     }
 
-    // Auto Sync Logic (Background sync disabled per user request)
+    // Auto Sync Logic — Keeps laptop browser and mobile .apk 100% in sync
+    function refreshDataSilently() {
+        if (typeof google === 'undefined' || !google.script || !google.script.run) return;
+        const currentM = CURRENT_MONTH || MONTHS[new Date().getMonth()];
+        const cacheKey = `monthly_${currentM}_${CURRENT_YEAR || 2026}`;
+        google.script.run
+            .withSuccessHandler(function (fresh) {
+                if (fresh && !fresh.error && fresh.tableData) {
+                    if (window.expenseCache) window.expenseCache.set(cacheKey, fresh);
+                    handleMonthData(fresh);
+                }
+            })
+            .getMonthlyData(currentM);
+    }
+    window.refreshDataSilently = refreshDataSilently;
+
     function startAutoSync() {
-        console.log("Background Auto-Sync: Disabled by user request.");
+        if (window._autoSyncTimer) clearInterval(window._autoSyncTimer);
+        // Periodic background sync every 30 seconds
+        window._autoSyncTimer = setInterval(() => {
+            if (document.visibilityState === 'visible') {
+                refreshDataSilently();
+            }
+        }, 30000);
+
+        // Immediate sync when tab or mobile app gains focus
+        window.addEventListener('focus', function () {
+            refreshDataSilently();
+        });
+        document.addEventListener('visibilitychange', function () {
+            if (document.visibilityState === 'visible') {
+                refreshDataSilently();
+            }
+        });
     }
 
     // Login function - Ultra-fast 0ms instantaneous login
@@ -12347,11 +12378,22 @@ Expense Tracker Pro: 2026 JavaScript Code
             return;
         }
 
-        // 2. CHECK PERSISTENT CACHE (Instant 0ms render)
+        // 2. CHECK PERSISTENT CACHE (Instant 0ms render with background cloud revalidation)
         if (!forceRefresh) {
             const cachedData = window.expenseCache ? window.expenseCache.get(cacheKey) : null;
             if (cachedData) {
                 handleMonthData(cachedData);
+                // Revalidate in background so changes made on mobile APK or laptop appear immediately on both
+                if (!isAll && typeof google !== 'undefined' && google.script && google.script.run) {
+                    google.script.run
+                        .withSuccessHandler((fresh) => {
+                            if (fresh && !fresh.error && fresh.tableData) {
+                                if (window.expenseCache) window.expenseCache.set(cacheKey, fresh);
+                                handleMonthData(fresh);
+                            }
+                        })
+                        .getMonthlyData(targetMonth);
+                }
                 return;
             }
 
