@@ -52,12 +52,12 @@ function buildBackendReportHTML(data, month, year, userName) {
 
     tableRows += `
     <tr style="${rowBg}">
-      <td style="padding:8px 10px;border-bottom:1px solid #f1f5f9;color:#64748b;text-align:center;">${sn}</td>
-      <td style="padding:8px 10px;border-bottom:1px solid #f1f5f9;color:#3b82f6;font-weight:600;">${id}</td>
+      <td style="padding:8px 10px;border-bottom:1px solid #f1f5f9;color:#64748b;text-align:center;white-space:nowrap;">${sn}</td>
+      <td style="padding:8px 10px;border-bottom:1px solid #f1f5f9;color:#3b82f6;font-weight:600;white-space:nowrap;">${id}</td>
       <td style="padding:8px 10px;border-bottom:1px solid #f1f5f9;white-space:nowrap;">${date}</td>
-      <td style="padding:8px 10px;border-bottom:1px solid #f1f5f9;font-weight:600;">${category}</td>
-      <td style="padding:8px 10px;border-bottom:1px solid #f1f5f9;font-weight:700;color:#0f172a;">₹${amtNum.toLocaleString('en-IN')}</td>
-      <td style="padding:8px 10px;border-bottom:1px solid #f1f5f9;color:#64748b;">${remark}</td>
+      <td style="padding:8px 10px;border-bottom:1px solid #f1f5f9;font-weight:600;white-space:nowrap;">${category}</td>
+      <td style="padding:8px 10px;border-bottom:1px solid #f1f5f9;font-weight:700;color:#0f172a;white-space:nowrap;">₹${amtNum.toLocaleString('en-IN')}</td>
+      <td style="padding:8px 10px;border-bottom:1px solid #f1f5f9;color:#64748b;white-space:nowrap;">${remark}</td>
     </tr>`;
   });
 
