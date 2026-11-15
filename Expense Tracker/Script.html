@@ -956,7 +956,7 @@ Expense Tracker Pro: 2026 JavaScript Code
         handleSubmenuToggle('databaseNavLink', 'databaseSubmenu', event);
     }
 
-    // Safely open Google Sheets across Desktop, Mobile Browsers, Android WebView & standalone PWAs
+    // Strictly open Google Sheets in a separate new tab, never navigating the current window
     function openDatabaseSheet(event, url) {
         if (event) {
             event.stopPropagation();
@@ -965,20 +965,11 @@ Expense Tracker Pro: 2026 JavaScript Code
 
         try {
             const win = window.open(url, '_blank', 'noopener,noreferrer');
-            if (!win || win.closed || typeof win.closed === 'undefined') {
-                // If popups are blocked or multi-window disabled in WebView, navigate top/current window
-                if (window.top && window.top !== window) {
-                    window.top.location.href = url;
-                } else {
-                    window.location.href = url;
-                }
+            if (win) {
+                win.focus();
             }
         } catch (e) {
-            if (window.top && window.top !== window) {
-                window.top.location.href = url;
-            } else {
-                window.location.href = url;
-            }
+            console.warn("Could not open new window:", e);
         }
         return true;
     }
