@@ -1288,8 +1288,8 @@ function populateListWithUserItems() {
             [13, "Battery", "Electronics", formattedDate, "Web App"],
             [14, "Bed", "Household Utilities", formattedDate, "Web App"],
             [15, "Belt", "Shopping", formattedDate, "Web App"],
-            [16, "Bike Petrol", "Transport", formattedDate, "Web App"],
-            [17, "Bike Service", "Transport", formattedDate, "Web App"],
+            [16, "Bike Petrol", "Fuel", formattedDate, "Web App"],
+            [17, "Bike Service", "Service", formattedDate, "Web App"],
             [18, "Birthday", "Entertainment", formattedDate, "Web App"],
             [19, "Birthday Gift", "Entertainment", formattedDate, "Web App"],
             [20, "Books", "Education", formattedDate, "Web App"],
@@ -1298,8 +1298,8 @@ function populateListWithUserItems() {
             [23, "Bulb", "Household Utilities", formattedDate, "Web App"],
             [24, "Cake", "Food", formattedDate, "Web App"],
             [25, "Candle & Ribbon", "Entertainment", formattedDate, "Web App"],
-            [26, "Car Petrol", "Transport", formattedDate, "Web App"],
-            [27, "Car Service", "Transport", formattedDate, "Web App"],
+            [26, "Car Petrol", "Fuel", formattedDate, "Web App"],
+            [27, "Car Service", "Service", formattedDate, "Web App"],
             [28, "Cell", "Electronics", formattedDate, "Web App"],
             [29, "Cinema", "Entertainment", formattedDate, "Web App"],
             [30, "Close Up", "Personal Care", formattedDate, "Web App"],
@@ -1373,7 +1373,7 @@ function populateListWithUserItems() {
             [98, "Papers", "Education", formattedDate, "Web App"],
             [99, "Pathology Test", "Medical", formattedDate, "Web App"],
             [100, "Personal Care", "Personal Care", formattedDate, "Web App"],
-            [101, "Petrol", "Transport", formattedDate, "Web App"],
+            [101, "Petrol", "Fuel", formattedDate, "Web App"],
             [102, "Pg", "Bills", formattedDate, "Web App"],
             [103, "Pnb Metlife", "Bills", formattedDate, "Web App"],
             [104, "Print Out", "Education", formattedDate, "Web App"],
@@ -1403,8 +1403,8 @@ function populateListWithUserItems() {
             [128, "School Fees May", "Education", formattedDate, "Web App"],
             [129, "School Stationary", "Education", formattedDate, "Web App"],
             [130, "School Transportation", "Education", formattedDate, "Web App"],
-            [131, "Scooty Petrol", "Transport", formattedDate, "Web App"],
-            [132, "Scooty Service", "Transport", formattedDate, "Web App"],
+            [131, "Scooty Petrol", "Fuel", formattedDate, "Web App"],
+            [132, "Scooty Service", "Service", formattedDate, "Web App"],
             [133, "Shoe", "Shopping", formattedDate, "Web App"],
             [134, "Shopping", "Shopping", formattedDate, "Web App"],
             [135, "Slippers", "Shopping", formattedDate, "Web App"],
@@ -1464,7 +1464,9 @@ function inferCategoryForItem(itemName) {
     if (/school|station|book|notebook|admission|tuition|exam|paper|print\s*out/i.test(lower)) return "Education";
     if (/fan|cooler|ac|air conditioner|refrigerator|fridge|tv|television|washing machine|geyser|microwave|iron|heater|eelctic|battery|cell|switch/i.test(lower)) return "Electronics";
     if (/fruit|vegetable|food|milk|snack|grocery|juice|bread|cake|sweet|dairy|curd|paneer|coffee|oil/i.test(lower)) return "Food";
-    if (/petrol|fuel|auto|metro|taxi|cab|bus|train|flight|transport|engine|service/i.test(lower)) return "Transport";
+    if (/service/i.test(lower)) return "Service";
+    if (/petrol|fuel|diesel|cng/i.test(lower)) return "Fuel";
+    if (/auto|metro|taxi|cab|bus|train|flight|transport|engine/i.test(lower)) return "Transport";
     if (/medicine|doctor|medical|hospital|clinic|test|icu|ultrasound|sanitary|vaccin/i.test(lower)) return "Medical";
     if (/recharge|bill|wifi|fiber|electricity|rent|room rent|sbi|axis|axix|office\s*365|bulb|locker/i.test(lower)) return "Bills";
     if (/shopping|clothes|sari|saari|shirt|pant|shoes|slippers|amazon|vishal\s*mart|jewellery|nagrela|strap|cover|belt/i.test(lower)) return "Shopping";
@@ -1588,17 +1590,20 @@ function autoEnrichMissingCategoriesAndIcons(ss, listSheet, forceOverride) {
             { pattern: /grocery/i, exactName: 'Grocery', category: 'Food' },
             { pattern: /^oil$/i, exactName: 'Oil', category: 'Food' },
 
-            // Transport
-            { pattern: /scooty.*petrol/i, exactName: 'Scooty Petrol', category: 'Transport' },
-            { pattern: /scooty.*service/i, exactName: 'Scooty Service', category: 'Transport' },
-            { pattern: /car.*petrol/i, exactName: 'Car Petrol', category: 'Transport' },
-            { pattern: /car.*service/i, exactName: 'Car Service', category: 'Transport' },
-            { pattern: /bike.*petrol/i, exactName: 'Bike Petrol', category: 'Transport' },
-            { pattern: /bike.*service/i, exactName: 'Bike Service', category: 'Transport' },
+            // Fuel & Service
+            { pattern: /scooty.*petrol/i, exactName: 'Scooty Petrol', category: 'Fuel' },
+            { pattern: /scooty.*service/i, exactName: 'Scooty Service', category: 'Service' },
+            { pattern: /car.*petrol/i, exactName: 'Car Petrol', category: 'Fuel' },
+            { pattern: /car.*service/i, exactName: 'Car Service', category: 'Service' },
+            { pattern: /bike.*petrol/i, exactName: 'Bike Petrol', category: 'Fuel' },
+            { pattern: /bike.*service/i, exactName: 'Bike Service', category: 'Service' },
+            { pattern: /scooter.*service/i, exactName: 'Scooter Service', category: 'Service' },
+            { pattern: /scooter.*petrol/i, exactName: 'Scooter Petrol', category: 'Fuel' },
             { pattern: /^auto$/i, exactName: 'Auto', category: 'Transport' },
-            { pattern: /^petrol$/i, exactName: 'Petrol', category: 'Transport' },
+            { pattern: /^petrol$/i, exactName: 'Petrol', category: 'Fuel' },
+            { pattern: /^fuel$/i, exactName: 'Fuel', category: 'Fuel' },
             { pattern: /^engine$/i, exactName: 'Engine', category: 'Transport' },
-            { pattern: /^service$/i, exactName: 'Service', category: 'Transport' },
+            { pattern: /^service$/i, exactName: 'Service', category: 'Service' },
             { pattern: /^train$/i, exactName: 'Train', category: 'Transport' },
             { pattern: /^metro$/i, exactName: 'Metro', category: 'Transport' },
 

@@ -6073,34 +6073,6 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             position: relative !important;
         }
 
-        #dashboard-page .table-responsive {
-            display: block !important;
-            width: 100% !important;
-            flex: 1 1 auto !important;
-            height: 100% !important;
-            max-height: 100% !important;
-            min-height: 0 !important;
-            overflow-y: auto !important;
-            overflow-x: auto !important;
-            -webkit-overflow-scrolling: touch !important;
-            touch-action: pan-x pan-y !important;
-            overscroll-behavior-y: none !important;
-            overscroll-behavior-x: none !important;
-            overscroll-behavior: none !important;
-        }
-
-        #reports-page .table-responsive {
-            max-height: calc(100vh - 200px) !important;
-            max-height: calc(100dvh - 200px) !important;
-            overflow-y: auto !important;
-            overflow-x: auto !important;
-            -webkit-overflow-scrolling: touch !important;
-            touch-action: pan-x pan-y !important;
-            overscroll-behavior-y: none !important;
-            overscroll-behavior-x: none !important;
-            overscroll-behavior: none !important;
-        }
-
         [data-theme="dark"] #dashboard-page .table-responsive,
         [data-theme="dark"] #reports-page .table-responsive {
             background: #1e293b !important;
@@ -10827,10 +10799,9 @@ Expense Tracker Pro: 2026 JavaScript Code
     // from reloading/refreshing the app when scrolling up, down, left, or right.
     // =========================================================================
     (function initSmoothScrollAndKillPullToRefresh() {
-        let touchStartY = 0;
-        let touchStartX = 0;
-
-        // Keep 1px scroll offset so Android WebView SwipeRefreshLayout can NEVER intercept swipe-down
+        // Keep 1px scroll offset on mobile touchstart so Android WebView SwipeRefreshLayout
+        // can NEVER intercept swipe-down (because canScrollVertically(-1) remains true).
+        // Zero preventDefault() calls ensures 100% unrestricted native momentum scrolling.
         function ensureScrollOffset() {
             if ((window.scrollY || document.documentElement.scrollTop || 0) === 0) {
                 window.scrollTo(0, 1);
@@ -10840,96 +10811,16 @@ Expense Tracker Pro: 2026 JavaScript Code
         window.addEventListener('load', ensureScrollOffset, { passive: true });
         document.addEventListener('DOMContentLoaded', ensureScrollOffset, { passive: true });
 
-        window.addEventListener('touchstart', function (e) {
-            if (!e.touches || e.touches.length !== 1) return;
-            touchStartY = e.touches[0].clientY;
-            touchStartX = e.touches[0].clientX;
+        window.addEventListener('touchstart', function () {
             ensureScrollOffset();
         }, { passive: true });
-
-        window.addEventListener('touchmove', function (e) {
-            if (!e.touches || e.touches.length !== 1) return;
-            const currentY = e.touches[0].clientY;
-            const currentX = e.touches[0].clientX;
-            const deltaY = currentY - touchStartY;
-            const deltaX = currentX - touchStartX;
-
-            // Allow sliders
-            if (e.target && e.target.type === 'range') return;
-
-            const isVertical = Math.abs(deltaY) >= Math.abs(deltaX);
-
-            if (isVertical) {
-                // If pulling DOWN while at the top (deltaY > 0), kill pull-to-refresh completely
-                if (deltaY > 0) {
-                    const scrollY = window.scrollY || document.documentElement.scrollTop || (document.body ? document.body.scrollTop : 0) || 0;
-                    if (scrollY <= 1) {
-                        if (e.cancelable) e.preventDefault();
-                    }
-                }
-                // When scrolling UP / DOWN through content, NEVER preventDefault! 
-                // Hardware-accelerated 120fps native momentum scrolling remains butter smooth.
-            } else {
-                // Prevent horizontal swipe at extreme screen edges from triggering browser back/forward page navigation
-                if (touchStartX < 25 || touchStartX > window.innerWidth - 25) {
-                    if (e.cancelable) e.preventDefault();
-                }
-            }
-        }, { passive: false });
     })();
 
+    // No-op for table scroll guards to ensure 100% natural, unrestricted mobile momentum scrolling
     function attachTableScrollGuards() {
-        const containers = document.querySelectorAll('.table-responsive, #dashboard-page .table-responsive, #reports-page .table-responsive');
-        containers.forEach(container => {
-            if (container._touchGuarded) return;
-            container._touchGuarded = true;
-
-            let lastY = 0;
-            let lastX = 0;
-            container.addEventListener('touchstart', function (e) {
-                if (e.touches && e.touches.length === 1) {
-                    lastY = e.touches[0].clientY;
-                    lastX = e.touches[0].clientX;
-                }
-            }, { passive: true });
-
-            container.addEventListener('touchmove', function (e) {
-                if (!e.touches || e.touches.length !== 1) return;
-                const currentY = e.touches[0].clientY;
-                const currentX = e.touches[0].clientX;
-                const movingDown = currentY > lastY;
-                const movingUp = currentY < lastY;
-                const movingRight = currentX > lastX;
-                const movingLeft = currentX < lastX;
-                lastY = currentY;
-                lastX = currentX;
-
-                // 1. Pulling down at top -> prevent refresh
-                if (movingDown && container.scrollTop <= 0) {
-                    if (e.cancelable) e.preventDefault();
-                }
-                // 2. Pulling up at bottom -> prevent bounce
-                else if (movingUp && container.scrollTop + container.clientHeight >= container.scrollHeight - 1) {
-                    if (e.cancelable) e.preventDefault();
-                }
-                // 3. Swiping right at left edge -> prevent edge back
-                else if (movingRight && container.scrollLeft <= 0) {
-                    if (e.cancelable) e.preventDefault();
-                }
-                // 4. Swiping left at right edge -> prevent edge forward
-                else if (movingLeft && container.scrollLeft + container.clientWidth >= container.scrollWidth - 1) {
-                    if (e.cancelable) e.preventDefault();
-                }
-            }, { passive: false });
-        });
+        // Deliberately no-op so native 120fps hardware-accelerated up/down scrolling is never blocked
     }
     window.attachTableScrollGuards = attachTableScrollGuards;
-
-    document.addEventListener('DOMContentLoaded', function () {
-        attachTableScrollGuards();
-        setTimeout(attachTableScrollGuards, 500);
-        setTimeout(attachTableScrollGuards, 1500);
-    });
 
     // Global variables
     let expenseData = [];
@@ -10953,8 +10844,8 @@ Expense Tracker Pro: 2026 JavaScript Code
         "battery": "💻 Electronics",
         "bed": "🧹 Household Utilities",
         "belt": "🛍️ Shopping",
-        "bike petrol": "🚗 Transport",
-        "bike service": "🚗 Transport",
+        "bike petrol": "⛽ Fuel",
+        "bike service": "🔧 Service",
         "birthday": "🎬 Entertainment",
         "birthday gift": "🎬 Entertainment",
         "books": "🎓 Education",
@@ -10963,8 +10854,8 @@ Expense Tracker Pro: 2026 JavaScript Code
         "bulb": "🧹 Household Utilities",
         "cake": "🍕 Food",
         "candle & ribbon": "🎬 Entertainment",
-        "car petrol": "🚗 Transport",
-        "car service": "🚗 Transport",
+        "car petrol": "⛽ Fuel",
+        "car service": "🔧 Service",
         "cell": "💻 Electronics",
         "cinema": "🎬 Entertainment",
         "close up": "🧴 Personal Care",
@@ -10993,6 +10884,7 @@ Expense Tracker Pro: 2026 JavaScript Code
         "folding bed": "🧹 Household Utilities",
         "food": "🍕 Food",
         "fruit": "🍕 Food",
+        "fuel": "⛽ Fuel",
         "ganesh chaturthi celebration": "🪔 Festivals",
         "gemini pro": "📌 Other",
         "ghajak": "🍕 Food",
@@ -11038,7 +10930,7 @@ Expense Tracker Pro: 2026 JavaScript Code
         "papers": "🎓 Education",
         "pathology test": "💊 Medical",
         "personal care": "🧴 Personal Care",
-        "petrol": "🚗 Transport",
+        "petrol": "⛽ Fuel",
         "pg": "🧾 Bills",
         "pnb metlife": "🧾 Bills",
         "print out": "🎓 Education",
@@ -11068,8 +10960,11 @@ Expense Tracker Pro: 2026 JavaScript Code
         "school fees may": "🎓 Education",
         "school stationary": "🎓 Education",
         "school transportation": "🎓 Education",
-        "scooty petrol": "🚗 Fuel",
-        "scooty service": "🚗 Transport",
+        "scooter petrol": "⛽ Fuel",
+        "scooter service": "🔧 Service",
+        "scooty petrol": "⛽ Fuel",
+        "scooty service": "🔧 Service",
+        "service": "🔧 Service",
         "shoe": "🛍️ Shopping",
         "shopping": "🛍️ Shopping",
         "slippers": "🛍️ Shopping",
@@ -11827,6 +11722,13 @@ Expense Tracker Pro: 2026 JavaScript Code
      */
     function animateValue(el, endValue, type = 'integer', duration = 600) {
         if (!el) return;
+
+        // Instant 0ms update on mobile for a fast, responsive and delay-free experience
+        const isMobile = window.innerWidth <= 992 || ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+        if (isMobile || duration <= 0) {
+            el.textContent = type === 'currency' ? formatCurrency(endValue) : Math.round(endValue);
+            return;
+        }
 
         // Parse current displayed value as start point
         const rawText = el.textContent.replace(/[^\d.]/g, '');
@@ -12616,7 +12518,7 @@ Expense Tracker Pro: 2026 JavaScript Code
                     <td data-label="Date">${date}</td>
                     <td data-label="Item List">${itemList}</td>
                     <td data-label="Amount">${amount}</td>
-                    <td data-label="Credit & Remark">${creditDisplay}</td>
+                    <td data-label="Credit & Remark">${formatCreditDisplay(creditDisplay, itemList)}</td>
                     <td data-label="Admin">${adminDisplay}</td>
                     <td data-label="Actions"></td>
                 `;
@@ -12687,7 +12589,7 @@ Expense Tracker Pro: 2026 JavaScript Code
                 <td data-label="Date">${date}</td>
                 <td data-label="Item List">${itemList}</td>
                 <td data-label="Amount">${amount}</td>
-                <td data-label="Credit & Remark">${creditDisplay}</td>
+                <td data-label="Credit & Remark">${formatCreditDisplay(creditDisplay, itemList)}</td>
                 <td data-label="Admin">${adminDisplay}</td>
                 <td data-label="Actions"></td>
             `;
@@ -12799,7 +12701,7 @@ Expense Tracker Pro: 2026 JavaScript Code
                 <td data-label="Date">${formatDisplayDate(item.date)}</td>
                 <td data-label="Item List">${item.item}</td>
                 <td data-label="Amount"><strong class="text-primary">${formatCurrency(item.amount)}</strong></td>
-                <td data-label="Credit">${item.credit || ''}</td>
+                <td data-label="Credit">${formatCreditDisplay(item.credit, item.item)}</td>
                 <td data-label="Admin">${item.admin || ''}</td>
                 <td data-label="Actions" style="white-space:nowrap;"></td>
             `;
@@ -13223,8 +13125,8 @@ Expense Tracker Pro: 2026 JavaScript Code
 
         // Transport & Vehicles
         { keywords: ['auto fare', 'autorickshaw', 'auto'], icon: '🛺 Auto' },
-        { keywords: ['car petrol', 'scooty petrol', 'petrol car'], icon: '⛽ Petrol' },
-        { keywords: ['car service', 'scooty service'], icon: '🔧 Service' },
+        { keywords: ['car petrol', 'bike petrol', 'scooty petrol', 'scooter petrol', 'petrol car', 'petrol bike', 'petrol', 'fuel', 'diesel', 'cng'], icon: '⛽ Fuel' },
+        { keywords: ['car service', 'bike service', 'scooty service', 'scooter service', 'service', 'servicing', 'vehicle service'], icon: '🔧 Service' },
         { keywords: ['car battery'], icon: '🔋 Car Battery' },
         { keywords: ['battery'], icon: '🔋 Battery' },
         { keywords: ['car polish'], icon: '✨ Car Polish' },
@@ -13447,6 +13349,10 @@ Expense Tracker Pro: 2026 JavaScript Code
         }
 
         const PRIMARY_CATEGORY_MAP = {
+            'fuel': '⛽ Fuel',
+            'petrol': '⛽ Fuel',
+            'service': '🔧 Service',
+            'servicing': '🔧 Service',
             'medical': '💊 Medical',
             'medicine': '💊 Medical',
             'medicines': '💊 Medical',
@@ -13485,6 +13391,8 @@ Expense Tracker Pro: 2026 JavaScript Code
         }
 
         // Smart keyword fallback
+        if (lower.includes('service')) return '🔧 Service';
+        if (lower.includes('petrol') || lower.includes('diesel') || lower.includes('fuel') || lower.includes('gas') || lower.includes('cng')) return '⛽ Fuel';
         if (lower.includes('fruit') || lower.includes('apple') || lower.includes('mango') || lower.includes('banana')) return '🍎 ' + cleanName;
         if (lower.includes('food') || lower.includes('lunch') || lower.includes('dinner') || lower.includes('meal') || lower.includes('restaurant') || lower.includes('swiggy') || lower.includes('zomato')) return '🍕 ' + cleanName;
         if (lower.includes('veg') || lower.includes('sabzi')) return '🥦 ' + cleanName;
@@ -13511,6 +13419,45 @@ Expense Tracker Pro: 2026 JavaScript Code
         return '📝 ' + cleanName;
     }
     window.getCategoryWithIcon = getCategoryWithIcon;
+
+    /**
+     * Formats the Credit & Remark column to always show proper category/item icons:
+     * - Car Petrol, Bike Petrol, Scooty Petrol, Petrol, Fuel -> ⛽ Fuel
+     * - Car Service, Bike Service, Scooty Service, Scooter Service, Service -> 🔧 Service
+     * - All other categories/items -> Formatted with their verified icons
+     */
+    function formatCreditDisplay(credit, item) {
+        const rawCredit = (credit || '').trim();
+        const rawItem = (item || '').trim();
+        if (!rawCredit && !rawItem) return '';
+
+        const lowerCredit = rawCredit.toLowerCase();
+        const lowerItem = rawItem.toLowerCase();
+
+        // Priority 1: Service (car service, bike service, scooty service, scooter service, service)
+        if (lowerCredit.includes('service') || lowerItem.includes('service')) {
+            return '🔧 Service';
+        }
+
+        // Priority 2: Fuel / Petrol (car petrol, bike petrol, scooty petrol, scooter petrol, petrol, fuel, diesel, cng)
+        if (lowerCredit.includes('petrol') || lowerCredit.includes('fuel') || lowerCredit.includes('diesel') || lowerCredit.includes('cng') ||
+            lowerItem.includes('petrol') || lowerItem.includes('fuel') || lowerItem.includes('diesel') || lowerItem.includes('cng')) {
+            return '⛽ Fuel';
+        }
+
+        // Priority 3: If credit already starts with an emoji, keep it
+        const emojiRegex = /^(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/;
+        if (emojiRegex.test(rawCredit)) {
+            return rawCredit;
+        }
+
+        // Priority 4: Look up category icon
+        if (rawCredit) {
+            return getCategoryWithIcon(rawCredit);
+        }
+        return getCategoryWithIcon(rawItem);
+    }
+    window.formatCreditDisplay = formatCreditDisplay;
 
     function autoUpdateCreditRemark(name) {
         const creditInput = document.getElementById('credit');
@@ -13897,7 +13844,7 @@ Expense Tracker Pro: 2026 JavaScript Code
                     <td data-label="Date">${formatDisplayDate(item.date)}</td>
                     <td data-label="Item List">${item.item}</td>
                     <td data-label="Amount"><strong class="text-primary">${formatCurrency(item.amount)}</strong></td>
-                    <td data-label="Credit">${item.credit || ''}</td>
+                    <td data-label="Credit">${formatCreditDisplay(item.credit, item.item)}</td>
                     <td data-label="Admin">${item.admin || ''}</td>
                     <td data-label="Actions" style="white-space: nowrap;"></td>
                 `;
@@ -14233,7 +14180,7 @@ Expense Tracker Pro: 2026 JavaScript Code
         document.getElementById('view-date').textContent = formatDate(data[2]);
         document.getElementById('view-item').textContent = data[4] || '-';
         document.getElementById('view-amount').textContent = formatCurrency(data[5]);
-        document.getElementById('view-credit').textContent = data[6] || '-';
+        document.getElementById('view-credit').textContent = formatCreditDisplay(data[6], data[4]) || '-';
         document.getElementById('view-user').textContent = data[7] || '-';
         document.getElementById('view-month').textContent = data[3] || month;
         var modalEl = document.getElementById('viewModal');
@@ -14422,7 +14369,7 @@ Expense Tracker Pro: 2026 JavaScript Code
 <td>${month}</td>
 <td>${itemList}</td>
 <td>${amount}</td>
-<td>${credit}</td>
+<td>${formatCreditDisplay(credit, itemList)}</td>
 <td>${adminName}</td>
 <td>
 <button class="btn btn-outline-primary" style="padding: 0.15rem 0.3rem; font-size: 0.7rem;" onclick="editEntry('${uniqueId}', '${month}')">
