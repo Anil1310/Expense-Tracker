@@ -287,15 +287,19 @@ Expense Tracker Pro: 2026 Frontend Code
           </a>
           <ul class="collapse list-unstyled submenu" id="databaseSubmenu">
             <li style="margin-bottom: 1px;">
-              <a class="nav-link" style="cursor: pointer; padding: 4px 6px;"
-                onclick="window.open('https://docs.google.com/spreadsheets/d/1WK0QOkrz4c7Fl-wvkLKrH1gPODxkF3stvYajR5lVM0M/edit?', '_blank')">
+              <a class="nav-link" style="cursor: pointer; padding: 4px 6px; display: flex; align-items: center;"
+                href="https://docs.google.com/spreadsheets/d/1WK0QOkrz4c7Fl-wvkLKrH1gPODxkF3stvYajR5lVM0M/edit"
+                target="_blank" rel="noopener noreferrer"
+                onclick="openDatabaseSheet(event, this.href)">
                 <i class="fas fa-file-excel fa-fw" style="margin-right: 8px; color: #0F9D58;"></i>
                 <span>Sheet</span>
               </a>
             </li>
             <li style="margin-bottom: 0;">
-              <a class="nav-link" style="cursor: pointer; padding: 4px 6px;"
-                onclick="window.open('https://docs.google.com/spreadsheets/d/1lCkNPBkVABweit6dD-3atsP71O0qsBnbuH1rlvzqtV8/edit?', '_blank')">
+              <a class="nav-link" style="cursor: pointer; padding: 4px 6px; display: flex; align-items: center;"
+                href="https://docs.google.com/spreadsheets/d/1lCkNPBkVABweit6dD-3atsP71O0qsBnbuH1rlvzqtV8/edit"
+                target="_blank" rel="noopener noreferrer"
+                onclick="openDatabaseSheet(event, this.href)">
                 <i class="fas fa-database fa-fw" style="margin-right: 8px; color: #4285F4;"></i>
                 <span>Master</span>
               </a>

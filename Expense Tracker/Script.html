@@ -956,6 +956,34 @@ Expense Tracker Pro: 2026 JavaScript Code
         handleSubmenuToggle('databaseNavLink', 'databaseSubmenu', event);
     }
 
+    // Safely open Google Sheets across Desktop, Mobile Browsers, Android WebView & standalone PWAs
+    function openDatabaseSheet(event, url) {
+        if (event) {
+            event.stopPropagation();
+        }
+        if (!url) return false;
+
+        try {
+            const win = window.open(url, '_blank', 'noopener,noreferrer');
+            if (!win || win.closed || typeof win.closed === 'undefined') {
+                // If popups are blocked or multi-window disabled in WebView, navigate top/current window
+                if (window.top && window.top !== window) {
+                    window.top.location.href = url;
+                } else {
+                    window.location.href = url;
+                }
+            }
+        } catch (e) {
+            if (window.top && window.top !== window) {
+                window.top.location.href = url;
+            } else {
+                window.location.href = url;
+            }
+        }
+        return true;
+    }
+    window.openDatabaseSheet = openDatabaseSheet;
+
     // Generic Submenu Toggle Handler
     function handleSubmenuToggle(linkId, submenuId, event) {
         if (event) {
