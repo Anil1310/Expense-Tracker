@@ -1696,7 +1696,7 @@ Expense Tracker Pro: 2026 JavaScript Code
         // Update record count badge (desktop only)
         if (countBadge) {
             countBadge.textContent = `${allLatestData.length} Records`;
-            if (window.innerWidth <= 768) {
+            if (window.innerWidth <= 991) {
                 countBadge.style.display = 'none';
             } else {
                 countBadge.style.display = allLatestData.length > 0 ? 'inline-flex' : 'none';

@@ -5929,18 +5929,22 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.4), 0 4px 20px rgba(0, 0, 0, 0.3) !important;
         }
 
-        /* Table header — mobile layout with search bar BEFORE the buttons and fully expanded */
+        /* ── Mobile 1-Line Table Header: [Mon YYYY] [Compact Searchbar] [4 Buttons] ── */
         #dashboard-page .table-header {
             flex-shrink: 0 !important;
             border-radius: 20px 20px 0 0 !important;
             background: #ffffff !important;
-            padding: 10px 14px 8px 14px !important;
+            padding: 6px 10px !important;
             display: flex !important;
-            flex-direction: column !important;
-            align-items: stretch !important;
-            height: auto !important;
-            min-height: auto !important;
+            flex-direction: row !important;
+            flex-wrap: nowrap !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            height: 38px !important;
+            min-height: 38px !important;
             gap: 6px !important;
+            box-sizing: border-box !important;
+            width: 100% !important;
         }
 
         [data-theme="dark"] #dashboard-page .table-header {
@@ -5949,57 +5953,101 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
 
         #dashboard-page .table-header-left {
             order: 1 !important;
-            width: 100% !important;
+            flex: 0 0 auto !important;
             display: flex !important;
             align-items: center !important;
-            justify-content: space-between !important;
+            gap: 0 !important;
+            margin: 0 !important;
+        }
+
+        #dashboard-page .table-header-left #table-title {
+            margin: 0 !important;
+            display: flex !important;
+            align-items: center !important;
         }
 
         #dashboard-page .table-header-left #table-title-text {
-            font-size: 0.95rem !important;
+            font-size: 0.84rem !important;
             font-weight: 800 !important;
+            white-space: nowrap !important;
+            line-height: 1 !important;
         }
 
-        /* ── Search Bar: BEFORE the buttons, fully expanded 100% width ── */
+        /* Hide records count badge completely in mobile view */
+        #records-counter-badge,
+        #dashboard-filtered-total {
+            display: none !important;
+        }
+
+        /* ── Compact Search Bar: in middle on the SAME line ── */
         #dashboard-page .table-header-center {
             order: 2 !important;
-            width: 100% !important;
+            flex: 1 1 auto !important;
+            min-width: 65px !important;
+            max-width: none !important;
             display: flex !important;
-            justify-content: stretch !important;
-            margin: 2px 0 !important;
+            align-items: center !important;
+            margin: 0 !important;
+            padding: 0 !important;
         }
 
         #dashboard-page .search-wrapper {
             width: 100% !important;
             max-width: 100% !important;
             position: relative !important;
+            margin: 0 !important;
         }
 
         #dashboard-page #month-records-search {
             width: 100% !important;
-            height: 32px !important;
-            font-size: 0.82rem !important;
-            border-radius: 8px !important;
-            padding-left: 30px !important;
+            height: 26px !important;
+            font-size: 0.72rem !important;
+            border-radius: 6px !important;
+            padding-left: 20px !important;
+            padding-right: 6px !important;
+            margin: 0 !important;
+            box-sizing: border-box !important;
         }
 
         #dashboard-page .search-wrapper i {
-            left: 10px !important;
-            font-size: 0.8rem !important;
+            left: 6px !important;
+            font-size: 0.65rem !important;
+            top: 50% !important;
+            transform: translateY(-50%) !important;
         }
 
-        /* ── Action Buttons: placed AFTER the search bar ── */
+        /* ── Action Buttons: on the SAME line on the right ── */
         #dashboard-page .table-header-right {
             order: 3 !important;
-            width: 100% !important;
+            flex: 0 0 auto !important;
             display: flex !important;
-            justify-content: flex-end !important;
             align-items: center !important;
-            margin-top: 2px !important;
+            justify-content: flex-end !important;
+            margin: 0 !important;
+            padding: 0 !important;
         }
 
         #dashboard-page .table-controls {
-            gap: 12px !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 4px !important;
+            white-space: nowrap !important;
+            flex-wrap: nowrap !important;
+            margin: 0 !important;
+        }
+
+        #dashboard-page .table-controls .header-icon-btn {
+            width: 24px !important;
+            height: 24px !important;
+            min-width: 24px !important;
+            border-radius: 50% !important;
+            padding: 0 !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 0.68rem !important;
+            margin: 0 !important;
+            flex-shrink: 0 !important;
         }
 
         #records-counter-badge {
@@ -8363,6 +8411,12 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             white-space: nowrap !important;
         }
 
+        #reports-page .filter-actions .d-flex,
+        #reports-page .reports-action-btns,
+        .reports-action-btns {
+            gap: 4px !important;
+        }
+
         #reports-page .sync-btn-round,
         #reports-page .clear-filters-btn {
             width: 28px !important;
@@ -8375,6 +8429,7 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             font-size: 0.75rem !important;
             padding: 0 !important;
             flex-shrink: 0 !important;
+            margin: 0 !important;
         }
 
         /* ── Reports Table Container & Card Reset ── */
