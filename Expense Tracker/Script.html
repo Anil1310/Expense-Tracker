@@ -1548,9 +1548,10 @@ Expense Tracker Pro: 2026 JavaScript Code
         if (pageTitle) pageTitle.textContent = 'Expenses Tracker Pro';
         const titleText = document.getElementById('table-title-text');
         const isAll = (targetMonth.toLowerCase() === 'all');
+        const isMobile = window.innerWidth <= 768;
         const displayMonthTitle = isAll 
-            ? `${CURRENT_YEAR || 2026} All Expenses (12 Months)` 
-            : `${targetMonth} 2026 Expenses`;
+            ? (isMobile ? 'All 2026' : `${CURRENT_YEAR || 2026} All Expenses (12 Months)`)
+            : (isMobile ? `${targetMonth} 2026` : `${targetMonth} 2026 Expenses`);
 
         if (titleText) titleText.textContent = displayMonthTitle;
         else if (tableTitle) tableTitle.textContent = displayMonthTitle;

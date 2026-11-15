@@ -5804,23 +5804,32 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             font-size: 0.75rem !important;
         }
 
-        /* ── Stats Cards — Light Theme (compact horizontal chips) ── */
+        /* ── Stats Cards — Wider layout matching the exact width of the 2 rows of months ── */
         .stats-cards {
             display: grid !important;
             grid-template-columns: repeat(3, 1fr) !important;
             gap: 5px !important;
             margin-bottom: 8px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+            padding: 0 !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
         }
 
         .stat-card {
+            width: 100% !important;
+            min-width: 0 !important;
+            box-sizing: border-box !important;
             height: auto !important;
-            min-height: 52px !important;
-            padding: 8px 6px !important;
+            min-height: 56px !important;
+            padding: 8px 4px !important;
             display: flex !important;
             flex-direction: column !important;
             align-items: center !important;
             justify-content: center !important;
-            border-radius: 12px !important;
+            border-radius: 14px !important;
             text-align: center !important;
             gap: 2px !important;
             background: #ffffff !important;
@@ -6021,16 +6030,66 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.4), 0 4px 20px rgba(0, 0, 0, 0.3) !important;
         }
 
-        /* Table header — flush with rounded top of card */
+        /* Table header — mobile two-line layout with fully expanded search bar */
         #dashboard-page .table-header {
             flex-shrink: 0 !important;
             border-radius: 20px 20px 0 0 !important;
             background: #ffffff !important;
-            padding: 8px 12px 6px 12px !important;
+            padding: 10px 14px 10px 14px !important;
+            display: flex !important;
+            flex-wrap: wrap !important;
+            align-items: center !important;
+            height: auto !important;
+            min-height: auto !important;
+            gap: 8px 0 !important;
         }
 
         [data-theme="dark"] #dashboard-page .table-header {
             background: #1e293b !important;
+        }
+
+        #dashboard-page .table-header-left {
+            order: 1 !important;
+            flex: 1 1 auto !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+
+        #dashboard-page .table-header-left #table-title-text {
+            font-size: 0.95rem !important;
+            font-weight: 800 !important;
+        }
+
+        #dashboard-page .table-header-right {
+            order: 2 !important;
+            flex: 0 0 auto !important;
+            margin-left: auto !important;
+        }
+
+        #dashboard-page .table-header-center {
+            order: 3 !important;
+            flex: 1 1 100% !important;
+            width: 100% !important;
+            margin-top: 4px !important;
+        }
+
+        #dashboard-page .search-wrapper {
+            width: 100% !important;
+            max-width: 100% !important;
+            position: relative !important;
+        }
+
+        #dashboard-page #month-records-search {
+            width: 100% !important;
+            height: 32px !important;
+            font-size: 0.82rem !important;
+            border-radius: 8px !important;
+            padding-left: 30px !important;
+        }
+
+        #dashboard-page .search-wrapper i {
+            left: 10px !important;
+            font-size: 0.8rem !important;
         }
 
         #records-counter-badge {
@@ -9621,16 +9680,16 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
         <div class="table-container">
           <div class="table-header d-flex justify-content-between align-items-center flex-nowrap"
             style="padding: 0 16px; min-height: 36px; height: 36px;">
-            <div style="flex: 1; display: flex; align-items: center; justify-content: flex-start; gap: 8px;">
+            <div class="table-header-left" style="flex: 1; display: flex; align-items: center; justify-content: flex-start; gap: 8px;">
               <h3 id="table-title" class="table-title mb-0"
                 style="white-space: nowrap; font-size: 0.95rem; font-weight: 800; display: flex; align-items: center;">
-                <span id="table-title-text">January Expenses</span>
+                <span id="table-title-text">Nov 2026</span>
               </h3>
               <span id="records-counter-badge" class="badge d-none d-md-inline-flex"
                 style="font-size: 0.72rem; font-weight: 700; padding: 4px 8px; border-radius: 6px; background: rgba(99, 102, 241, 0.12); color: #4f46e5; border: 1px solid rgba(99, 102, 241, 0.25);">0 Records</span>
             </div>
 
-            <div style="flex: 1; display: flex; justify-content: center; align-items: center;">
+            <div class="table-header-center" style="flex: 1; display: flex; justify-content: center; align-items: center;">
               <!-- Properly Centered Search Bar -->
               <style>
                 #month-records-search::placeholder {
@@ -9656,12 +9715,12 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
                 <i class="fas fa-search"
                   style="position: absolute; left: 8px; top: 50%; transform: translateY(-50%); color: #64748b !important; z-index: 10; font-size: 0.72rem;"></i>
                 <input type="text" id="month-records-search" class="form-control" placeholder="Search..."
-                  style="padding-left: 24px; height: 24px; border-radius: 6px; font-size: 0.78rem; margin: 0 !important;"
+                  style="padding-left: 24px; height: 26px; border-radius: 6px; font-size: 0.78rem; margin: 0 !important;"
                   onkeyup="filterMonthRecords()">
               </div>
             </div>
 
-            <div style="flex: 1; display: flex; align-items: center; justify-content: flex-end; position: relative;">
+            <div class="table-header-right" style="flex: 1; display: flex; align-items: center; justify-content: flex-end; position: relative;">
               <span id="dashboard-filtered-total" class="badge bg-success-soft text-success"
                 style="font-size: 0.72rem; font-weight: 700; display: none; padding: 4px 10px; border-radius: 6px; border: 1px solid rgba(16, 185, 129, 0.3); margin-right: 15px; background: rgba(16, 185, 129, 0.1);"></span>
               <div id="dashboard-pagination" style="margin-right: 10px;"></div>
@@ -12353,9 +12412,10 @@ Expense Tracker Pro: 2026 JavaScript Code
         if (pageTitle) pageTitle.textContent = 'Expenses Tracker Pro';
         const titleText = document.getElementById('table-title-text');
         const isAll = (targetMonth.toLowerCase() === 'all');
+        const isMobile = window.innerWidth <= 768;
         const displayMonthTitle = isAll 
-            ? `${CURRENT_YEAR || 2026} All Expenses (12 Months)` 
-            : `${targetMonth} 2026 Expenses`;
+            ? (isMobile ? 'All 2026' : `${CURRENT_YEAR || 2026} All Expenses (12 Months)`)
+            : (isMobile ? `${targetMonth} 2026` : `${targetMonth} 2026 Expenses`);
 
         if (titleText) titleText.textContent = displayMonthTitle;
         else if (tableTitle) tableTitle.textContent = displayMonthTitle;

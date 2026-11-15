@@ -411,16 +411,16 @@ Expense Tracker Pro: 2026 Frontend Code
         <div class="table-container">
           <div class="table-header d-flex justify-content-between align-items-center flex-nowrap"
             style="padding: 0 16px; min-height: 36px; height: 36px;">
-            <div style="flex: 1; display: flex; align-items: center; justify-content: flex-start; gap: 8px;">
+            <div class="table-header-left" style="flex: 1; display: flex; align-items: center; justify-content: flex-start; gap: 8px;">
               <h3 id="table-title" class="table-title mb-0"
                 style="white-space: nowrap; font-size: 0.95rem; font-weight: 800; display: flex; align-items: center;">
-                <span id="table-title-text">January Expenses</span>
+                <span id="table-title-text">Nov 2026</span>
               </h3>
               <span id="records-counter-badge" class="badge d-none d-md-inline-flex"
                 style="font-size: 0.72rem; font-weight: 700; padding: 4px 8px; border-radius: 6px; background: rgba(99, 102, 241, 0.12); color: #4f46e5; border: 1px solid rgba(99, 102, 241, 0.25);">0 Records</span>
             </div>
 
-            <div style="flex: 1; display: flex; justify-content: center; align-items: center;">
+            <div class="table-header-center" style="flex: 1; display: flex; justify-content: center; align-items: center;">
               <!-- Properly Centered Search Bar -->
               <style>
                 #month-records-search::placeholder {
@@ -446,12 +446,12 @@ Expense Tracker Pro: 2026 Frontend Code
                 <i class="fas fa-search"
                   style="position: absolute; left: 8px; top: 50%; transform: translateY(-50%); color: #64748b !important; z-index: 10; font-size: 0.72rem;"></i>
                 <input type="text" id="month-records-search" class="form-control" placeholder="Search..."
-                  style="padding-left: 24px; height: 24px; border-radius: 6px; font-size: 0.78rem; margin: 0 !important;"
+                  style="padding-left: 24px; height: 26px; border-radius: 6px; font-size: 0.78rem; margin: 0 !important;"
                   onkeyup="filterMonthRecords()">
               </div>
             </div>
 
-            <div style="flex: 1; display: flex; align-items: center; justify-content: flex-end; position: relative;">
+            <div class="table-header-right" style="flex: 1; display: flex; align-items: center; justify-content: flex-end; position: relative;">
               <span id="dashboard-filtered-total" class="badge bg-success-soft text-success"
                 style="font-size: 0.72rem; font-weight: 700; display: none; padding: 4px 10px; border-radius: 6px; border: 1px solid rgba(16, 185, 129, 0.3); margin-right: 15px; background: rgba(16, 185, 129, 0.1);"></span>
               <div id="dashboard-pagination" style="margin-right: 10px;"></div>
