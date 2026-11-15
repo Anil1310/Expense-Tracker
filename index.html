@@ -6030,18 +6030,18 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.4), 0 4px 20px rgba(0, 0, 0, 0.3) !important;
         }
 
-        /* Table header — mobile two-line layout with fully expanded search bar */
+        /* Table header — mobile layout with search bar BEFORE the buttons and fully expanded */
         #dashboard-page .table-header {
             flex-shrink: 0 !important;
             border-radius: 20px 20px 0 0 !important;
             background: #ffffff !important;
-            padding: 10px 14px 10px 14px !important;
+            padding: 10px 14px 8px 14px !important;
             display: flex !important;
-            flex-wrap: wrap !important;
-            align-items: center !important;
+            flex-direction: column !important;
+            align-items: stretch !important;
             height: auto !important;
             min-height: auto !important;
-            gap: 8px 0 !important;
+            gap: 6px !important;
         }
 
         [data-theme="dark"] #dashboard-page .table-header {
@@ -6050,9 +6050,10 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
 
         #dashboard-page .table-header-left {
             order: 1 !important;
-            flex: 1 1 auto !important;
+            width: 100% !important;
             display: flex !important;
             align-items: center !important;
+            justify-content: space-between !important;
         }
 
         #dashboard-page .table-header-left #table-title-text {
@@ -6060,17 +6061,13 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             font-weight: 800 !important;
         }
 
-        #dashboard-page .table-header-right {
-            order: 2 !important;
-            flex: 0 0 auto !important;
-            margin-left: auto !important;
-        }
-
+        /* ── Search Bar: BEFORE the buttons, fully expanded 100% width ── */
         #dashboard-page .table-header-center {
-            order: 3 !important;
-            flex: 1 1 100% !important;
+            order: 2 !important;
             width: 100% !important;
-            margin-top: 4px !important;
+            display: flex !important;
+            justify-content: stretch !important;
+            margin: 2px 0 !important;
         }
 
         #dashboard-page .search-wrapper {
@@ -6090,6 +6087,20 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
         #dashboard-page .search-wrapper i {
             left: 10px !important;
             font-size: 0.8rem !important;
+        }
+
+        /* ── Action Buttons: placed AFTER the search bar ── */
+        #dashboard-page .table-header-right {
+            order: 3 !important;
+            width: 100% !important;
+            display: flex !important;
+            justify-content: flex-end !important;
+            align-items: center !important;
+            margin-top: 2px !important;
+        }
+
+        #dashboard-page .table-controls {
+            gap: 12px !important;
         }
 
         #records-counter-badge {
