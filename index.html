@@ -152,7 +152,22 @@ Expense Tracker Pro: 2026 CSS Style Code
     }
 
     html,
-    body {
+    body,
+    #app,
+    .app-container,
+    .main-content,
+    .page-content,
+    .table-responsive,
+    #dashboard-page,
+    #reports-page,
+    #data-page,
+    #graphs-page,
+    #categories-page,
+    #yearly-chart-page,
+    .modal,
+    .modal-dialog,
+    .modal-content,
+    .modal-body {
         overscroll-behavior: none !important;
         overscroll-behavior-y: none !important;
         overscroll-behavior-x: none !important;
@@ -5515,8 +5530,9 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             overflow-y: auto !important;
             -webkit-overflow-scrolling: touch !important;
             touch-action: pan-x pan-y !important;
-            overscroll-behavior-y: contain !important;
-            overscroll-behavior: contain !important;
+            overscroll-behavior-y: none !important;
+            overscroll-behavior-x: none !important;
+            overscroll-behavior: none !important;
             border-radius: 0 0 12px 12px !important;
             background: #ffffff !important;
             padding-bottom: 25px !important;
@@ -5535,8 +5551,9 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             overflow-x: auto !important;
             -webkit-overflow-scrolling: touch !important;
             touch-action: pan-x pan-y !important;
-            overscroll-behavior-y: contain !important;
-            overscroll-behavior: contain !important;
+            overscroll-behavior-y: none !important;
+            overscroll-behavior-x: none !important;
+            overscroll-behavior: none !important;
         }
 
         #reports-page .table-responsive {
@@ -5546,8 +5563,9 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             overflow-x: auto !important;
             -webkit-overflow-scrolling: touch !important;
             touch-action: pan-x pan-y !important;
-            overscroll-behavior-y: contain !important;
-            overscroll-behavior: contain !important;
+            overscroll-behavior-y: none !important;
+            overscroll-behavior-x: none !important;
+            overscroll-behavior: none !important;
         }
 
         [data-theme="dark"] #dashboard-page .table-responsive,
@@ -8241,6 +8259,7 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             overflow: hidden !important;
             overscroll-behavior: none !important;
             overscroll-behavior-y: none !important;
+            overscroll-behavior-x: none !important;
         }
 
         body.dashboard-active .app-container,
@@ -8250,6 +8269,7 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             overflow: hidden !important;
             overscroll-behavior: none !important;
             overscroll-behavior-y: none !important;
+            overscroll-behavior-x: none !important;
         }
 
         /* Separate pages (Reports, Summary, Analytics, Insights) — natural full-height scrolling */
@@ -8261,6 +8281,9 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             overflow-x: hidden !important;
             overflow-y: auto !important;
             -webkit-overflow-scrolling: touch !important;
+            overscroll-behavior: none !important;
+            overscroll-behavior-y: none !important;
+            overscroll-behavior-x: none !important;
         }
 
         body:not(.dashboard-active) .app-container,
@@ -8271,6 +8294,9 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             max-height: none !important;
             overflow-x: hidden !important;
             overflow-y: visible !important;
+            overscroll-behavior: none !important;
+            overscroll-behavior-y: none !important;
+            overscroll-behavior-x: none !important;
         }
 
         #dashboard-page:not(.d-none) {
@@ -10038,10 +10064,112 @@ Expense Tracker Pro: 2026 JavaScript Code
 
 <script>
     // =========================================================================
-    // Targeted Mobile / Android Studio Table Scroll & Pull-to-Refresh Protection
-    // Ensures vertical scrolling inside tables is completely unrestricted (60fps native momentum)
-    // and prevents Android SwipeRefreshLayout from triggering a reload when pulling down at the top.
+    // Universal Android / Mobile Scroll & Pull-to-Refresh Protection
+    // Ensures vertical and horizontal scrolling inside content is 100% native (60fps),
+    // and PREVENTS Android Chrome / Android Studio SwipeRefreshLayout / Edge-Swipe
+    // from reloading/refreshing the app when scrolling up, down, left, or right.
     // =========================================================================
+    (function initAndroidScrollGuards() {
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let touchLastX = 0;
+        let touchLastY = 0;
+
+        function findScrollable(startEl, axis) {
+            let el = startEl;
+            while (el && el !== document.documentElement && el !== document) {
+                if (el === document.body) {
+                    if (axis === 'y' && document.documentElement.scrollHeight > window.innerHeight + 1) {
+                        return document.scrollingElement || document.documentElement || document.body;
+                    }
+                    break;
+                }
+                const style = window.getComputedStyle(el);
+                if (axis === 'y') {
+                    const overflowY = style.overflowY;
+                    if ((overflowY === 'auto' || overflowY === 'scroll') && el.scrollHeight > el.clientHeight + 1) {
+                        return el;
+                    }
+                } else if (axis === 'x') {
+                    const overflowX = style.overflowX;
+                    if ((overflowX === 'auto' || overflowX === 'scroll') && el.scrollWidth > el.clientWidth + 1) {
+                        return el;
+                    }
+                }
+                el = el.parentElement;
+            }
+            return null;
+        }
+
+        window.addEventListener('touchstart', function (e) {
+            if (!e.touches || e.touches.length !== 1) return;
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+            touchLastX = touchStartX;
+            touchLastY = touchStartY;
+        }, { passive: true });
+
+        window.addEventListener('touchmove', function (e) {
+            if (!e.touches || e.touches.length !== 1) return;
+            const currentX = e.touches[0].clientX;
+            const currentY = e.touches[0].clientY;
+            const deltaX = currentX - touchLastX;
+            const deltaY = currentY - touchLastY;
+            const totalX = currentX - touchStartX;
+            const totalY = currentY - touchStartY;
+            touchLastX = currentX;
+            touchLastY = currentY;
+
+            // Allow normal slider adjustment
+            if (e.target && e.target.type === 'range') return;
+
+            const isVertical = Math.abs(totalY) >= Math.abs(totalX);
+
+            if (isVertical) {
+                const scrollYEl = findScrollable(e.target, 'y');
+                // Dragging DOWN (scrolling UP towards top)
+                if (deltaY > 0) {
+                    const isAtTop = !scrollYEl || (scrollYEl === document.body || scrollYEl === document.documentElement
+                        ? (window.scrollY <= 0)
+                        : (scrollYEl.scrollTop <= 0));
+                    if (isAtTop && e.cancelable) {
+                        // Prevent Android pull-to-refresh
+                        e.preventDefault();
+                    }
+                }
+                // Dragging UP (scrolling DOWN towards bottom)
+                else if (deltaY < 0) {
+                    if (scrollYEl) {
+                        const isAtBottom = (scrollYEl === document.body || scrollYEl === document.documentElement)
+                            ? (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 1)
+                            : (scrollYEl.scrollTop + scrollYEl.clientHeight >= scrollYEl.scrollHeight - 1);
+                        if (isAtBottom && e.cancelable) {
+                            e.preventDefault();
+                        }
+                    } else if (e.cancelable) {
+                        e.preventDefault();
+                    }
+                }
+            } else {
+                // Horizontal swipe (left or right)
+                const scrollXEl = findScrollable(e.target, 'x');
+                if (!scrollXEl) {
+                    // Element does not scroll horizontally — prevent edge swipe history navigation / refresh
+                    if (e.cancelable) e.preventDefault();
+                } else {
+                    // Swiping RIGHT (dragging finger right)
+                    if (deltaX > 0 && scrollXEl.scrollLeft <= 0) {
+                        if (e.cancelable) e.preventDefault();
+                    }
+                    // Swiping LEFT (dragging finger left)
+                    else if (deltaX < 0 && scrollXEl.scrollLeft + scrollXEl.clientWidth >= scrollXEl.scrollWidth - 1) {
+                        if (e.cancelable) e.preventDefault();
+                    }
+                }
+            }
+        }, { passive: false });
+    })();
+
     function attachTableScrollGuards() {
         const containers = document.querySelectorAll('.table-responsive, #dashboard-page .table-responsive, #reports-page .table-responsive');
         containers.forEach(container => {
@@ -10049,27 +10177,41 @@ Expense Tracker Pro: 2026 JavaScript Code
             container._touchGuarded = true;
 
             let lastY = 0;
+            let lastX = 0;
             container.addEventListener('touchstart', function (e) {
                 if (e.touches && e.touches.length === 1) {
                     lastY = e.touches[0].clientY;
+                    lastX = e.touches[0].clientX;
                 }
             }, { passive: true });
 
             container.addEventListener('touchmove', function (e) {
                 if (!e.touches || e.touches.length !== 1) return;
                 const currentY = e.touches[0].clientY;
+                const currentX = e.touches[0].clientX;
                 const movingDown = currentY > lastY;
+                const movingUp = currentY < lastY;
+                const movingRight = currentX > lastX;
+                const movingLeft = currentX < lastX;
                 lastY = currentY;
+                lastX = currentX;
 
-                // Only when pulling downwards at the very top boundary (scrollTop <= 0), prevent default
-                // so Android Studio SwipeRefreshLayout does not reload the app!
+                // 1. Pulling down at top -> prevent refresh
                 if (movingDown && container.scrollTop <= 0) {
-                    if (e.cancelable) {
-                        e.preventDefault();
-                    }
+                    if (e.cancelable) e.preventDefault();
                 }
-                // When container.scrollTop > 0 or when scrolling downwards through records,
-                // preventDefault is NEVER called, allowing 100% native up & down scrolling!
+                // 2. Pulling up at bottom -> prevent bounce
+                else if (movingUp && container.scrollTop + container.clientHeight >= container.scrollHeight - 1) {
+                    if (e.cancelable) e.preventDefault();
+                }
+                // 3. Swiping right at left edge -> prevent edge back
+                else if (movingRight && container.scrollLeft <= 0) {
+                    if (e.cancelable) e.preventDefault();
+                }
+                // 4. Swiping left at right edge -> prevent edge forward
+                else if (movingLeft && container.scrollLeft + container.clientWidth >= container.scrollWidth - 1) {
+                    if (e.cancelable) e.preventDefault();
+                }
             }, { passive: false });
         });
     }

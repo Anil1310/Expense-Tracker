@@ -51,7 +51,22 @@ Expense Tracker Pro: 2026 CSS Style Code
     }
 
     html,
-    body {
+    body,
+    #app,
+    .app-container,
+    .main-content,
+    .page-content,
+    .table-responsive,
+    #dashboard-page,
+    #reports-page,
+    #data-page,
+    #graphs-page,
+    #categories-page,
+    #yearly-chart-page,
+    .modal,
+    .modal-dialog,
+    .modal-content,
+    .modal-body {
         overscroll-behavior: none !important;
         overscroll-behavior-y: none !important;
         overscroll-behavior-x: none !important;
@@ -245,7 +260,12 @@ Expense Tracker Pro: 2026 CSS Style Code
     }
 
     /* Card labels and values - no wrap ever */
-    h1, h2, h3, h4, h5, h6 {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -290,7 +310,8 @@ Expense Tracker Pro: 2026 CSS Style Code
         display: flex;
         flex-direction: column;
         min-height: 100vh;
-        min-height: 100dvh; /* Dynamic viewport for mobile browsers */
+        min-height: 100dvh;
+        /* Dynamic viewport for mobile browsers */
         width: 100%;
         background: linear-gradient(160deg, #0f172a 0%, #1e1b4b 45%, #0f172a 100%);
         position: relative;
@@ -329,12 +350,23 @@ Expense Tracker Pro: 2026 CSS Style Code
     }
 
     @keyframes orb1Move {
-        0%   { transform: translate(0, 0) scale(1); }
-        100% { transform: translate(5%, 8%) scale(1.1); }
+        0% {
+            transform: translate(0, 0) scale(1);
+        }
+
+        100% {
+            transform: translate(5%, 8%) scale(1.1);
+        }
     }
+
     @keyframes orb2Move {
-        0%   { transform: translate(0, 0) scale(1); }
-        100% { transform: translate(-6%, -5%) scale(1.08); }
+        0% {
+            transform: translate(0, 0) scale(1);
+        }
+
+        100% {
+            transform: translate(-6%, -5%) scale(1.08);
+        }
     }
 
     /* ─── HERO SECTION (top portion) ─── */
@@ -379,14 +411,21 @@ Expense Tracker Pro: 2026 CSS Style Code
         position: absolute;
         inset: -3px;
         border-radius: inherit;
-        background: linear-gradient(135deg, rgba(255,255,255,0.25), transparent 60%);
-        border: 1.5px solid rgba(255,255,255,0.18);
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), transparent 60%);
+        border: 1.5px solid rgba(255, 255, 255, 0.18);
         pointer-events: none;
     }
 
     @keyframes floatLogo {
-        0%, 100% { transform: translateY(0) rotate(-1deg); }
-        50%       { transform: translateY(-10px) rotate(1deg); }
+
+        0%,
+        100% {
+            transform: translateY(0) rotate(-1deg);
+        }
+
+        50% {
+            transform: translateY(-10px) rotate(1deg);
+        }
     }
 
     .login-title {
@@ -472,6 +511,7 @@ Expense Tracker Pro: 2026 CSS Style Code
             opacity: 0;
             transform: translateY(60px);
         }
+
         to {
             opacity: 1;
             transform: translateY(0);
@@ -483,6 +523,7 @@ Expense Tracker Pro: 2026 CSS Style Code
             opacity: 0;
             transform: translateY(16px);
         }
+
         to {
             opacity: 1;
             transform: translateY(0);
@@ -494,6 +535,7 @@ Expense Tracker Pro: 2026 CSS Style Code
             opacity: 0;
             transform: translateX(-20px);
         }
+
         to {
             opacity: 1;
             transform: translateX(0);
@@ -592,7 +634,8 @@ Expense Tracker Pro: 2026 CSS Style Code
         border-radius: 16px;
         padding: 0 16px 0 48px;
         font-size: clamp(0.85rem, 3.0vw, 0.92rem);
-        height: clamp(48px, 10vw, 54px); /* slightly smaller touch target */
+        height: clamp(48px, 10vw, 54px);
+        /* slightly smaller touch target */
         color: #0f172a;
         transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         outline: none;
@@ -627,7 +670,7 @@ Expense Tracker Pro: 2026 CSS Style Code
         box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
     }
 
-    .login-input:focus ~ .login-input-icon,
+    .login-input:focus~.login-input-icon,
     .login-input-wrapper:focus-within .login-input-icon {
         color: #6366f1;
     }
@@ -646,11 +689,14 @@ Expense Tracker Pro: 2026 CSS Style Code
         transition: color 0.3s;
         font-size: 1rem;
         z-index: 2;
-        padding: 8px; /* bigger tap area */
+        padding: 8px;
+        /* bigger tap area */
         margin-right: -8px;
     }
 
-    .login-password-toggle:hover { color: #6366f1; }
+    .login-password-toggle:hover {
+        color: #6366f1;
+    }
 
     /* ─── QUICK LOGIN CARDS ─── */
     .quick-login-card {
@@ -686,7 +732,8 @@ Expense Tracker Pro: 2026 CSS Style Code
         border-color: rgba(99, 102, 241, 0.18);
     }
 
-    .quick-login-card:hover, .quick-login-card:active {
+    .quick-login-card:hover,
+    .quick-login-card:active {
         transform: scale(0.97);
         border-color: #6366f1;
         box-shadow: 0 4px 20px rgba(99, 102, 241, 0.15);
@@ -741,7 +788,9 @@ Expense Tracker Pro: 2026 CSS Style Code
         vertical-align: middle;
     }
 
-    [data-theme="dark"] .quick-name { color: #f1f5f9; }
+    [data-theme="dark"] .quick-name {
+        color: #f1f5f9;
+    }
 
     .quick-role {
         font-size: clamp(0.56rem, 2.2vw, 0.66rem);
@@ -766,7 +815,9 @@ Expense Tracker Pro: 2026 CSS Style Code
         max-width: none;
     }
 
-    [data-theme="dark"] .quick-role { color: #94a3b8; }
+    [data-theme="dark"] .quick-role {
+        color: #94a3b8;
+    }
 
     .quick-arrow {
         color: #cbd5e1;
@@ -864,15 +915,34 @@ Expense Tracker Pro: 2026 CSS Style Code
     }
 
     @keyframes shakeError {
-        0%, 100% { transform: translateX(0); }
-        20%, 60% { transform: translateX(-5px); }
-        40%, 80% { transform: translateX(5px); }
+
+        0%,
+        100% {
+            transform: translateX(0);
+        }
+
+        20%,
+        60% {
+            transform: translateX(-5px);
+        }
+
+        40%,
+        80% {
+            transform: translateX(5px);
+        }
     }
 
     /* slideUp retained for compatibility */
     @keyframes slideUp {
-        from { opacity: 0; transform: translateY(24px) scale(0.98); }
-        to   { opacity: 1; transform: translateY(0)   scale(1);    }
+        from {
+            opacity: 0;
+            transform: translateY(24px) scale(0.98);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
     }
 
     /* Left-align selected option text in filter dropdown selects on mobile */
@@ -914,7 +984,9 @@ Expense Tracker Pro: 2026 CSS Style Code
             margin-bottom: 18px;
         }
 
-        .login-feature-pills { justify-content: flex-start; }
+        .login-feature-pills {
+            justify-content: flex-start;
+        }
 
         .login-container {
             flex: 0 0 400px;
@@ -926,7 +998,9 @@ Expense Tracker Pro: 2026 CSS Style Code
             max-height: 90vh;
         }
 
-        .login-container::before { display: none; }
+        .login-container::before {
+            display: none;
+        }
 
         .login-label {
             font-size: 0.78rem;
@@ -2984,8 +3058,8 @@ Expense Tracker Pro: 2026 CSS Style Code
             padding-bottom: 6px;
         }
 
-        .filter-actions > .filter-stats,
-        .filter-actions > .d-flex {
+        .filter-actions>.filter-stats,
+        .filter-actions>.d-flex {
             flex: 0 0 auto;
             min-width: 0;
         }
@@ -3748,10 +3822,12 @@ Expense Tracker Pro: 2026 CSS Style Code
         justify-content: center;
         cursor: pointer;
     }
+
     #reports-pdf-report-btn i {
         font-size: 0.85rem;
         color: #ef4444 !important;
     }
+
     #reports-email-report-btn {
         background: #000000 !important;
         color: #3b82f6 !important;
@@ -3765,6 +3841,7 @@ Expense Tracker Pro: 2026 CSS Style Code
         justify-content: center;
         cursor: pointer;
     }
+
     #reports-email-report-btn i {
         font-size: 0.85rem;
         color: #3b82f6 !important;
@@ -3776,6 +3853,7 @@ Expense Tracker Pro: 2026 CSS Style Code
         border: 1px solid rgba(99, 102, 241, 0.12);
         box-shadow: 0 2px 8px rgba(99, 102, 241, 0.08);
     }
+
     body:not([data-theme="dark"]) .report-stat-card p {
         color: #1e3a8a;
     }
@@ -3879,12 +3957,15 @@ Expense Tracker Pro: 2026 CSS Style Code
         text-align: right;
         padding-right: 4px;
     }
+
     .table tbody td:last-child .action-btn {
         margin-left: 8px;
     }
+
     .table tbody td:last-child .action-btn:first-child {
         margin-left: 0;
     }
+
     .table thead th:last-child {
         text-align: center !important;
     }
@@ -5073,8 +5154,8 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             margin: 8px 0 6px 0 !important;
             width: 100% !important;
             background: #ffffff !important;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04) !important;
-            border: 1px solid rgba(0,0,0,0.06) !important;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+            border: 1px solid rgba(0, 0, 0, 0.06) !important;
             min-height: 50px !important;
             height: 50px !important;
             position: sticky !important;
@@ -5085,8 +5166,8 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
 
         [data-theme="dark"] .header {
             background: #0f172a !important;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.35), 0 1px 6px rgba(0,0,0,0.2) !important;
-            border: 1px solid rgba(255,255,255,0.08) !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35), 0 1px 6px rgba(0, 0, 0, 0.2) !important;
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
         }
 
         /* Title color based on theme */
@@ -5113,7 +5194,7 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             display: inline-flex !important;
             align-items: center !important;
             justify-content: center !important;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
         }
 
         .header .header-icon-btn:hover,
@@ -5127,16 +5208,16 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
         [data-theme="dark"] .header .header-icon-btn,
         [data-theme="dark"] .header .theme-toggle,
         [data-theme="dark"] .header .refresh-btn-header {
-            background: rgba(255,255,255,0.1) !important;
+            background: rgba(255, 255, 255, 0.1) !important;
             color: #cbd5e1 !important;
-            border: 1px solid rgba(255,255,255,0.12) !important;
+            border: 1px solid rgba(255, 255, 255, 0.12) !important;
             box-shadow: none !important;
         }
 
         [data-theme="dark"] .header .header-icon-btn:hover,
         [data-theme="dark"] .header .theme-toggle:hover,
         [data-theme="dark"] .header .refresh-btn-header:hover {
-            background: rgba(255,255,255,0.18) !important;
+            background: rgba(255, 255, 255, 0.18) !important;
             color: #f1f5f9 !important;
         }
 
@@ -5193,8 +5274,8 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             text-align: center !important;
             gap: 2px !important;
             background: #ffffff !important;
-            border: 1px solid rgba(99,102,241,0.12) !important;
-            box-shadow: 0 2px 8px rgba(99,102,241,0.08) !important;
+            border: 1px solid rgba(99, 102, 241, 0.12) !important;
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.08) !important;
         }
 
         .stat-card h6 {
@@ -5225,8 +5306,8 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
         /* ── Stats Cards — Dark Theme ── */
         [data-theme="dark"] .stat-card {
             background: #1e293b !important;
-            border: 1px solid rgba(99,102,241,0.15) !important;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.25) !important;
+            border: 1px solid rgba(99, 102, 241, 0.15) !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25) !important;
             min-height: 52px !important;
             padding: 8px 6px !important;
             align-items: center !important;
@@ -5379,7 +5460,7 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             margin-top: 10px !important;
             border-radius: 20px 20px 0 0 !important;
             background: #ffffff !important;
-            box-shadow: 0 -2px 20px rgba(0,0,0,0.08), 0 4px 20px rgba(0,0,0,0.06) !important;
+            box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.08), 0 4px 20px rgba(0, 0, 0, 0.06) !important;
             display: flex !important;
             flex-direction: column !important;
             overflow: hidden !important;
@@ -5387,7 +5468,7 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
 
         [data-theme="dark"] #dashboard-page .table-container {
             background: #1e293b !important;
-            box-shadow: 0 -2px 20px rgba(0,0,0,0.4), 0 4px 20px rgba(0,0,0,0.3) !important;
+            box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.4), 0 4px 20px rgba(0, 0, 0, 0.3) !important;
         }
 
         /* Table header — flush with rounded top of card */
@@ -5414,8 +5495,9 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             overflow-y: auto !important;
             -webkit-overflow-scrolling: touch !important;
             touch-action: pan-x pan-y !important;
-            overscroll-behavior-y: contain !important;
-            overscroll-behavior: contain !important;
+            overscroll-behavior-y: none !important;
+            overscroll-behavior-x: none !important;
+            overscroll-behavior: none !important;
             border-radius: 0 0 12px 12px !important;
             background: #ffffff !important;
             padding-bottom: 25px !important;
@@ -5434,8 +5516,9 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             overflow-x: auto !important;
             -webkit-overflow-scrolling: touch !important;
             touch-action: pan-x pan-y !important;
-            overscroll-behavior-y: contain !important;
-            overscroll-behavior: contain !important;
+            overscroll-behavior-y: none !important;
+            overscroll-behavior-x: none !important;
+            overscroll-behavior: none !important;
         }
 
         #reports-page .table-responsive {
@@ -5445,14 +5528,15 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             overflow-x: auto !important;
             -webkit-overflow-scrolling: touch !important;
             touch-action: pan-x pan-y !important;
-            overscroll-behavior-y: contain !important;
-            overscroll-behavior: contain !important;
+            overscroll-behavior-y: none !important;
+            overscroll-behavior-x: none !important;
+            overscroll-behavior: none !important;
         }
 
         [data-theme="dark"] #dashboard-page .table-responsive,
         [data-theme="dark"] #reports-page .table-responsive {
             background: #1e293b !important;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3) !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
         }
 
         #dashboard-page .table,
@@ -5481,7 +5565,7 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             text-transform: none !important;
             letter-spacing: 0.02em !important;
             border: none !important;
-            border-bottom: 1px solid rgba(0,0,0,0.1) !important;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
         }
 
@@ -5541,8 +5625,8 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
         [data-theme="dark"] #dashboard-page .table tbody td,
         [data-theme="dark"] #reports-page .table tbody td {
             color: #e2e8f0 !important;
-            border-bottom: 1px solid rgba(255,255,255,0.06) !important;
-            border-right: 1px solid rgba(255,255,255,0.06) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+            border-right: 1px solid rgba(255, 255, 255, 0.06) !important;
         }
 
         #dashboard-page .table thead th:last-child,
@@ -5665,6 +5749,7 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             align-items: center !important;
             border-radius: 4px !important;
         }
+
         #reports-page .table td:last-child .action-btn:first-child {
             margin-left: 0 !important;
         }
@@ -5696,14 +5781,14 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             top: 52px !important;
             z-index: 50 !important;
             background: #f8fafc !important;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.06) !important;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06) !important;
             align-self: flex-start !important;
             overflow: visible !important;
         }
 
         [data-theme="dark"] .month-buttons {
             background: #0f172a !important;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
             gap: 6px !important;
         }
 
@@ -5722,15 +5807,15 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             font-weight: 600 !important;
             background: #ffffff !important;
             color: #475569 !important;
-            border: 1px solid rgba(0,0,0,0.14) !important;
+            border: 1px solid rgba(0, 0, 0, 0.14) !important;
             transition: all 0.2s ease !important;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
         }
 
         [data-theme="dark"] .month-btn {
             background: transparent !important;
             color: #94a3b8 !important;
-            border: 1px solid rgba(255,255,255,0.18) !important;
+            border: 1px solid rgba(255, 255, 255, 0.18) !important;
             box-shadow: none !important;
             border-radius: 14px !important;
         }
@@ -5799,18 +5884,18 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             height: 65px !important;
             background: #ffffff !important;
             display: flex !important;
-            box-shadow: 0 -1px 0 rgba(0,0,0,0.08), 0 -4px 12px rgba(0,0,0,0.05) !important;
+            box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.08), 0 -4px 12px rgba(0, 0, 0, 0.05) !important;
             z-index: 1000 !important;
             padding: 5px 0 8px 0 !important;
-            border-top: 1px solid rgba(0,0,0,0.07) !important;
+            border-top: 1px solid rgba(0, 0, 0, 0.07) !important;
             border-radius: 0 !important;
         }
 
         /* ═══ Bottom Nav — Dark Theme ═══ */
         [data-theme="dark"] .bottom-nav {
             background: #111827 !important;
-            box-shadow: 0 -1px 0 rgba(255,255,255,0.07) !important;
-            border-top: 1px solid rgba(255,255,255,0.07) !important;
+            box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.07) !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.07) !important;
         }
 
         .bottom-nav-item {
@@ -5849,22 +5934,27 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
         .bottom-nav-item[data-page="dashboard"].active i {
             color: #6366f1 !important;
         }
+
         .bottom-nav-item[data-page="reports"].active,
         .bottom-nav-item[data-page="reports"].active i {
             color: #ec4899 !important;
         }
+
         .bottom-nav-item[data-page="data"].active,
         .bottom-nav-item[data-page="data"].active i {
             color: #10b981 !important;
         }
+
         .bottom-nav-item[data-page="graphs"].active,
         .bottom-nav-item[data-page="graphs"].active i {
             color: #f59e0b !important;
         }
+
         .bottom-nav-item[data-page="categories"].active,
         .bottom-nav-item[data-page="categories"].active i {
             color: #f59e0b !important;
         }
+
         .bottom-nav-item:not([data-page]).active,
         .bottom-nav-item:not([data-page]).active i {
             color: #64748b !important;
@@ -5959,9 +6049,11 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
         .clear-notifications-header {
             display: block !important;
         }
+
         .clear-notifications-header .clear-text {
             display: none !important;
         }
+
         .clear-notifications-header .clear-icon {
             display: inline-block !important;
             font-size: 0.68rem !important;
@@ -6469,44 +6561,82 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
 
     /* Desktop specific widths for Reports Page Table to prevent overlapping & squishing */
     @media (min-width: 769px) {
+
         /* Dashboard and Reports table column configurations (Desktop) */
-        #dashboard-page .table th:nth-child(1), #dashboard-page .table td:nth-child(1),
-        #reports-page .table th:nth-child(1), #reports-page .table td:nth-child(1) { width: 5% !important; text-align: center !important; }
-        
-        #dashboard-page .table th:nth-child(2), #dashboard-page .table td:nth-child(2),
-        #reports-page .table th:nth-child(2), #reports-page .table td:nth-child(2) { width: 12% !important; }
-        
-        #dashboard-page .table th:nth-child(3), #dashboard-page .table td:nth-child(3),
-        #reports-page .table th:nth-child(3), #reports-page .table td:nth-child(3) { width: 12% !important; text-align: center !important; }
-        
-        #dashboard-page .table th:nth-child(4), #dashboard-page .table td:nth-child(4),
-        #reports-page .table th:nth-child(4), #reports-page .table td:nth-child(4) { width: 20% !important; text-align: left !important; }
-        
-        #dashboard-page .table th:nth-child(5), #dashboard-page .table td:nth-child(5),
-        #reports-page .table th:nth-child(5), #reports-page .table td:nth-child(5) { width: 11% !important; text-align: right !important; }
-        
-        #dashboard-page .table th:nth-child(6), #dashboard-page .table td:nth-child(6),
-        #reports-page .table th:nth-child(6), #reports-page .table td:nth-child(6) { width: 18% !important; }
-        
-        #dashboard-page .table th:nth-child(7), #dashboard-page .table td:nth-child(7),
-        #reports-page .table th:nth-child(7), #reports-page .table td:nth-child(7) { width: 10% !important; }
-        
+        #dashboard-page .table th:nth-child(1),
+        #dashboard-page .table td:nth-child(1),
+        #reports-page .table th:nth-child(1),
+        #reports-page .table td:nth-child(1) {
+            width: 5% !important;
+            text-align: center !important;
+        }
+
+        #dashboard-page .table th:nth-child(2),
+        #dashboard-page .table td:nth-child(2),
+        #reports-page .table th:nth-child(2),
+        #reports-page .table td:nth-child(2) {
+            width: 12% !important;
+        }
+
+        #dashboard-page .table th:nth-child(3),
+        #dashboard-page .table td:nth-child(3),
+        #reports-page .table th:nth-child(3),
+        #reports-page .table td:nth-child(3) {
+            width: 12% !important;
+            text-align: center !important;
+        }
+
+        #dashboard-page .table th:nth-child(4),
+        #dashboard-page .table td:nth-child(4),
+        #reports-page .table th:nth-child(4),
+        #reports-page .table td:nth-child(4) {
+            width: 20% !important;
+            text-align: left !important;
+        }
+
+        #dashboard-page .table th:nth-child(5),
+        #dashboard-page .table td:nth-child(5),
+        #reports-page .table th:nth-child(5),
+        #reports-page .table td:nth-child(5) {
+            width: 11% !important;
+            text-align: right !important;
+        }
+
+        #dashboard-page .table th:nth-child(6),
+        #dashboard-page .table td:nth-child(6),
+        #reports-page .table th:nth-child(6),
+        #reports-page .table td:nth-child(6) {
+            width: 18% !important;
+        }
+
+        #dashboard-page .table th:nth-child(7),
+        #dashboard-page .table td:nth-child(7),
+        #reports-page .table th:nth-child(7),
+        #reports-page .table td:nth-child(7) {
+            width: 10% !important;
+        }
+
         #dashboard-page .table th.actions-header,
         #reports-page .table th.actions-header {
             width: 12% !important;
             text-align: right !important;
             padding-right: 16px !important;
         }
+
         #dashboard-page .table th.actions-header .actions-header-text,
         #reports-page .table th.actions-header .actions-header-text {
             display: inline-block !important;
             width: 112px !important;
             text-align: center !important;
         }
-        
+
         #dashboard-page .table td:nth-child(8),
-        #reports-page .table td:nth-child(8) { width: 12% !important; text-align: right !important; padding-right: 16px !important; }
-        
+        #reports-page .table td:nth-child(8) {
+            width: 12% !important;
+            text-align: right !important;
+            padding-right: 16px !important;
+        }
+
         #dashboard-page .table td:nth-child(8) .action-btn,
         #reports-page .table td:nth-child(8) .action-btn {
             margin: 0 !important;
@@ -6520,8 +6650,11 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             border: none !important;
             box-shadow: none !important;
         }
-        #dashboard-page .table td:nth-child(8) .action-btn + .action-btn,
-        #reports-page .table td:nth-child(8) .action-btn + .action-btn { margin-left: 20px !important; }
+
+        #dashboard-page .table td:nth-child(8) .action-btn+.action-btn,
+        #reports-page .table td:nth-child(8) .action-btn+.action-btn {
+            margin-left: 20px !important;
+        }
 
         /* Align dashboard table-header export buttons to match action buttons exactly on desktop */
         #dashboard-page .table-controls {
@@ -6532,6 +6665,7 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             align-items: center !important;
             justify-content: flex-end !important;
         }
+
         #dashboard-page .table-controls .header-icon-btn,
         #dashboard-page #email-report-btn {
             width: 24px !important;
@@ -6548,10 +6682,12 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             box-shadow: none !important;
             background: #000000 !important;
         }
+
         #dashboard-page .table-controls .header-icon-btn i,
         #dashboard-page #email-report-btn i {
             font-size: 0.7rem !important;
         }
+
         #dashboard-page .table-controls .header-icon-btn:hover,
         #dashboard-page #email-report-btn:hover {
             background: #111111 !important;
@@ -6563,11 +6699,13 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             padding: 8px 12px !important;
             gap: 6px !important;
         }
+
         .month-buttons {
             gap: 6px !important;
             padding: 0 !important;
             margin-bottom: 2px !important;
         }
+
         .month-btn {
             height: 26px !important;
             min-width: 55px !important;
@@ -6575,36 +6713,44 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             padding: 0 10px !important;
             border-radius: 8px !important;
         }
+
         .stats-cards {
             gap: 8px !important;
             margin-bottom: 6px !important;
         }
+
         .stat-card {
             min-height: 44px !important;
             padding: 4px 12px !important;
             border-radius: 10px !important;
         }
+
         .stat-card h6 {
             margin-bottom: 0px !important;
             font-size: 0.65rem !important;
         }
+
         .stat-card p {
             font-size: 1.1rem !important;
         }
+
         #dashboard-page .table thead th {
             padding: 6px 6px !important;
             font-size: 0.68rem !important;
             vertical-align: middle !important;
         }
+
         #reports-page .table thead th {
             padding: 6px 8px !important;
             font-size: 0.72rem !important;
             vertical-align: middle !important;
         }
+
         #dashboard-page .table tbody td {
             padding: 0.5px 6px !important;
             font-size: 0.68rem !important;
         }
+
         #dashboard-page .table td:nth-child(2) {
             font-size: 0.68rem !important;
         }
@@ -6633,7 +6779,8 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
         overflow-x: auto !important;
         overflow-y: auto !important;
         height: auto !important;
-        max-height: 380px !important; /* Premium summary table height limit */
+        max-height: 380px !important;
+        /* Premium summary table height limit */
         margin-bottom: 0 !important;
         position: relative !important;
     }
@@ -6734,32 +6881,78 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
 
     /* Proportions / Widths for Data Summary Page Tables on Desktop */
     @media (min-width: 769px) {
+
         /* Monthly Comparison Table Column Proportions */
         #monthly-comparison-table th:nth-child(1),
-        #monthly-comparison-table td:nth-child(1) { width: 18% !important; } /* Month */
+        #monthly-comparison-table td:nth-child(1) {
+            width: 18% !important;
+        }
+
+        /* Month */
         #monthly-comparison-table th:nth-child(2),
-        #monthly-comparison-table td:nth-child(2) { width: 20% !important; } /* Total Expenses */
+        #monthly-comparison-table td:nth-child(2) {
+            width: 20% !important;
+        }
+
+        /* Total Expenses */
         #monthly-comparison-table th:nth-child(3),
-        #monthly-comparison-table td:nth-child(3) { width: 18% !important; } /* Avg. Daily */
+        #monthly-comparison-table td:nth-child(3) {
+            width: 18% !important;
+        }
+
+        /* Avg. Daily */
         #monthly-comparison-table th:nth-child(4),
-        #monthly-comparison-table td:nth-child(4) { width: 16% !important; } /* Transactions */
+        #monthly-comparison-table td:nth-child(4) {
+            width: 16% !important;
+        }
+
+        /* Transactions */
         #monthly-comparison-table th:nth-child(5),
-        #monthly-comparison-table td:nth-child(5) { width: 16% !important; } /* Categories */
+        #monthly-comparison-table td:nth-child(5) {
+            width: 16% !important;
+        }
+
+        /* Categories */
         #monthly-comparison-table th:nth-child(6),
-        #monthly-comparison-table td:nth-child(6) { width: 12% !important; } /* Trend */
+        #monthly-comparison-table td:nth-child(6) {
+            width: 12% !important;
+        }
+
+        /* Trend */
 
         /* Top Spending Categories Table Column Proportions */
         #top-categories-table th:nth-child(1),
-        #top-categories-table td:nth-child(1) { width: 25% !important; } /* Category */
+        #top-categories-table td:nth-child(1) {
+            width: 25% !important;
+        }
+
+        /* Category */
         #top-categories-table th:nth-child(2),
-        #top-categories-table td:nth-child(2) { width: 22% !important; } /* Total Amount */
+        #top-categories-table td:nth-child(2) {
+            width: 22% !important;
+        }
+
+        /* Total Amount */
         #top-categories-table th:nth-child(3),
-        #top-categories-table td:nth-child(3) { width: 15% !important; } /* % of Total */
+        #top-categories-table td:nth-child(3) {
+            width: 15% !important;
+        }
+
+        /* % of Total */
         #top-categories-table th:nth-child(4),
-        #top-categories-table td:nth-child(4) { width: 16% !important; } /* Transactions */
+        #top-categories-table td:nth-child(4) {
+            width: 16% !important;
+        }
+
+        /* Transactions */
         #top-categories-table th:nth-child(5),
-        #top-categories-table td:nth-child(5) { width: 22% !important; } /* Avg. per Transaction */
+        #top-categories-table td:nth-child(5) {
+            width: 22% !important;
+        }
+
+        /* Avg. per Transaction */
     }
+
     @media (max-width: 768px) {
 
         /* Slide-up bottom sheet transition for mobile modals */
@@ -6874,7 +7067,7 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             background: #ffffff !important;
             border-radius: 14px !important;
             padding: 10px 12px !important;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.07) !important;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07) !important;
             border: 1px solid #e2e8f0 !important;
             overflow: hidden !important;
         }
@@ -6950,7 +7143,7 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             margin-bottom: 12px !important;
             border-radius: 16px !important;
             overflow: hidden !important;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.07) !important;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07) !important;
             border: 1px solid #e2e8f0 !important;
         }
 
@@ -6997,7 +7190,8 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
         /* ── Compact Table Base ── */
         #data-page .table {
             width: 100% !important;
-            min-width: 400px !important;   /* forces horizontal scroll on small phones */
+            min-width: 400px !important;
+            /* forces horizontal scroll on small phones */
             border-collapse: collapse !important;
             table-layout: fixed !important;
             margin: 0 !important;
@@ -7069,6 +7263,7 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             text-align: left !important;
             padding-left: 8px !important;
         }
+
         #monthly-comparison-table th:nth-child(2),
         #monthly-comparison-table td:nth-child(2) {
             width: 22% !important;
@@ -7076,22 +7271,26 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             padding-right: 8px !important;
             font-weight: 700 !important;
         }
+
         #monthly-comparison-table th:nth-child(3),
         #monthly-comparison-table td:nth-child(3) {
             width: 18% !important;
             text-align: right !important;
             padding-right: 8px !important;
         }
+
         #monthly-comparison-table th:nth-child(4),
         #monthly-comparison-table td:nth-child(4) {
             width: 14% !important;
             text-align: center !important;
         }
+
         #monthly-comparison-table th:nth-child(5),
         #monthly-comparison-table td:nth-child(5) {
             width: 14% !important;
             text-align: center !important;
         }
+
         #monthly-comparison-table th:nth-child(6),
         #monthly-comparison-table td:nth-child(6) {
             width: 14% !important;
@@ -7106,6 +7305,7 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             padding-left: 8px !important;
             font-weight: 700 !important;
         }
+
         #top-categories-table th:nth-child(2),
         #top-categories-table td:nth-child(2) {
             width: 22% !important;
@@ -7113,16 +7313,19 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             padding-right: 8px !important;
             font-weight: 700 !important;
         }
+
         #top-categories-table th:nth-child(3),
         #top-categories-table td:nth-child(3) {
             width: 14% !important;
             text-align: center !important;
         }
+
         #top-categories-table th:nth-child(4),
         #top-categories-table td:nth-child(4) {
             width: 16% !important;
             text-align: center !important;
         }
+
         #top-categories-table th:nth-child(5),
         #top-categories-table td:nth-child(5) {
             width: 20% !important;
@@ -7246,6 +7449,7 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             flex-wrap: nowrap !important;
             gap: 4px !important;
         }
+
         .filter-controls .filter-select {
             min-width: 0 !important;
             width: 0 !important;
@@ -7263,9 +7467,9 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
         body.reports-active #dashboard-page,
         body.reports-active .month-buttons,
         body.reports-active .stats-cards,
-        #reports-page:not(.d-none) ~ #dashboard-page,
-        #reports-page:not(.d-none) ~ * .month-buttons,
-        #reports-page:not(.d-none) ~ * .stats-cards {
+        #reports-page:not(.d-none)~#dashboard-page,
+        #reports-page:not(.d-none)~* .month-buttons,
+        #reports-page:not(.d-none)~* .stats-cards {
             display: none !important;
             visibility: hidden !important;
             height: 0 !important;
@@ -7902,7 +8106,9 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             border-color: rgba(255, 255, 255, 0.1) !important;
         }
 
-    } /* end @media max-width: 768px */
+    }
+
+    /* end @media max-width: 768px */
 
     /* ── Premium Modern Toast Notification ── */
     .modern-toast {
@@ -7922,16 +8128,19 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
         opacity: 0;
         transform: translate3d(120%, 0, 0);
     }
+
     .modern-toast.show {
         opacity: 1;
         transform: translate3d(0, 0, 0);
     }
+
     .modern-toast-content {
         display: flex;
         align-items: center;
         padding: 12px 14px;
         position: relative;
     }
+
     .modern-toast-icon-wrapper {
         width: 36px;
         height: 36px;
@@ -7943,10 +8152,12 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
         margin-right: 12px;
         flex-shrink: 0;
     }
+
     .modern-toast-text {
         flex-grow: 1;
         padding-right: 20px;
     }
+
     .modern-toast-title {
         font-weight: 800;
         font-size: 0.88rem;
@@ -7955,6 +8166,7 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
         font-family: 'Plus Jakarta Sans', sans-serif;
         line-height: 1.2;
     }
+
     .modern-toast-body {
         font-size: 0.75rem;
         color: #475569;
@@ -7962,6 +8174,7 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
         font-family: 'Inter', sans-serif;
         line-height: 1.3;
     }
+
     .modern-toast-close-btn {
         position: absolute;
         top: 50%;
@@ -7976,6 +8189,7 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
         line-height: 1;
         transition: color 0.2s;
     }
+
     .modern-toast-close-btn:hover {
         color: #475569;
     }
@@ -7986,15 +8200,19 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
         border: 1px solid rgba(255, 255, 255, 0.08);
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
     }
+
     [data-theme="dark"] .modern-toast-title {
         color: #f8fafc;
     }
+
     [data-theme="dark"] .modern-toast-body {
         color: #cbd5e1;
     }
+
     [data-theme="dark"] .modern-toast-close-btn {
         color: #64748b;
     }
+
     [data-theme="dark"] .modern-toast-close-btn:hover {
         color: #94a3b8;
     }
@@ -8008,23 +8226,26 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             max-width: none;
             transform: translate3d(0, -120%, 0);
         }
+
         .modern-toast.show {
             transform: translate3d(0, 0, 0);
         }
     }
-    
+
     /* ── Month Expenditure Summary Modal Styles ────────────────────────── */
     .total-expenses-card {
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
     }
+
     .total-expenses-card:hover {
         transform: translateY(-4px) !important;
         box-shadow: 0 12px 24px -4px rgba(37, 99, 235, 0.2), var(--shadow-md) !important;
     }
+
     body[data-theme="dark"] .total-expenses-card:hover {
         box-shadow: 0 12px 24px -4px rgba(59, 130, 246, 0.3), var(--shadow-md) !important;
     }
-    
+
     .summary-kpi-card {
         background: rgba(37, 99, 235, 0.04);
         border: 1px solid rgba(37, 99, 235, 0.1);
@@ -8032,27 +8253,32 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
         transition: all 0.25s ease;
         padding: 8px 12px !important;
     }
+
     .summary-kpi-card span {
         font-size: 0.68rem !important;
         margin-bottom: 2px !important;
     }
+
     .summary-kpi-card h5 {
         font-size: 1.05rem !important;
         font-weight: 800 !important;
         margin-top: 2px;
     }
+
     .summary-kpi-card:hover {
         background: rgba(37, 99, 235, 0.07);
         transform: translateY(-2px);
     }
+
     [data-theme="dark"] .summary-kpi-card {
         background: rgba(59, 130, 246, 0.08) !important;
         border-color: rgba(59, 130, 246, 0.18) !important;
     }
+
     [data-theme="dark"] .summary-kpi-card:hover {
         background: rgba(59, 130, 246, 0.12) !important;
     }
-    
+
     .summary-category-item {
         background: rgba(0, 0, 0, 0.02);
         border: 1px solid rgba(0, 0, 0, 0.04);
@@ -8061,66 +8287,78 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
         margin-bottom: 2px;
         transition: all 0.2s ease;
     }
+
     .summary-category-item:hover {
         background: rgba(0, 0, 0, 0.04);
         border-color: rgba(0, 0, 0, 0.08);
     }
+
     [data-theme="dark"] .summary-category-item {
         background: rgba(255, 255, 255, 0.02) !important;
         border-color: rgba(255, 255, 255, 0.05) !important;
     }
+
     [data-theme="dark"] .summary-category-item:hover {
         background: rgba(255, 255, 255, 0.04) !important;
         border-color: rgba(255, 255, 255, 0.08) !important;
     }
-    
+
     #summary-category-list::-webkit-scrollbar {
         width: 6px;
     }
+
     #summary-category-list::-webkit-scrollbar-track {
         background: transparent;
     }
+
     #summary-category-list::-webkit-scrollbar-thumb {
         background: rgba(0, 0, 0, 0.15);
         border-radius: 10px;
     }
+
     body[data-theme="dark"] #summary-category-list::-webkit-scrollbar-thumb {
         background: rgba(255, 255, 255, 0.15);
     }
-    
+
     @media (min-width: 768px) {
         .border-end-md {
             border-right: 1px solid rgba(0, 0, 0, 0.08) !important;
         }
+
         body[data-theme="dark"] .border-end-md {
             border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
         }
     }
-    
+
     /* ── Item-wise modern summary list styles ─────────────────────────── */
     .item-pivot-row {
         transition: all 0.2s ease !important;
     }
+
     .item-pivot-row:hover {
         transform: translateX(4px);
         background: rgba(234, 179, 8, 0.05) !important;
         border-color: rgba(234, 179, 8, 0.15) !important;
     }
+
     [data-theme="dark"] .item-pivot-row:hover {
         background: rgba(234, 179, 8, 0.1) !important;
         border-color: rgba(234, 179, 8, 0.25) !important;
     }
-    
+
     #item-summary-list::-webkit-scrollbar {
         width: 6px;
     }
+
     #item-summary-list::-webkit-scrollbar-track {
         background: transparent;
     }
+
     #item-summary-list::-webkit-scrollbar-thumb {
         background: rgba(0, 0, 0, 0.15);
         border-radius: 10px;
     }
+
     body[data-theme="dark"] #item-summary-list::-webkit-scrollbar-thumb {
         background: rgba(255, 255, 255, 0.15);
     }
@@ -8140,6 +8378,7 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             overflow: hidden !important;
             overscroll-behavior: none !important;
             overscroll-behavior-y: none !important;
+            overscroll-behavior-x: none !important;
         }
 
         body.dashboard-active .app-container,
@@ -8149,6 +8388,7 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             overflow: hidden !important;
             overscroll-behavior: none !important;
             overscroll-behavior-y: none !important;
+            overscroll-behavior-x: none !important;
         }
 
         /* Separate pages (Reports, Summary, Analytics, Insights) — natural full-height scrolling */
@@ -8160,6 +8400,9 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             overflow-x: hidden !important;
             overflow-y: auto !important;
             -webkit-overflow-scrolling: touch !important;
+            overscroll-behavior: none !important;
+            overscroll-behavior-y: none !important;
+            overscroll-behavior-x: none !important;
         }
 
         body:not(.dashboard-active) .app-container,
@@ -8170,6 +8413,9 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             max-height: none !important;
             overflow-x: hidden !important;
             overflow-y: visible !important;
+            overscroll-behavior: none !important;
+            overscroll-behavior-y: none !important;
+            overscroll-behavior-x: none !important;
         }
 
         #dashboard-page:not(.d-none) {
@@ -8208,6 +8454,7 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             overflow: hidden !important;
         }
     }
+
     /* ── PDF Preview Modal (Full Page on Laptop & Mobile) ── */
     #pdfPreviewModal {
         padding: 0 !important;
