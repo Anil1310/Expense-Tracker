@@ -10732,18 +10732,8 @@ Expense Tracker Pro: 2026 JavaScript Code
                         setTimeout(() => this._successHandler(mockData), 500);
                     },
                     getItemList: function () {
-                        console.log('Mocking getItemList from Data sheet column I');
-                        const mockItems = [
-                            '🍎 Fruit', '🍕 Food', '🥤 Coldrink', '🛺 Auto', '🚇 Metro',
-                            '🍦 Ice Cream', '🥦 Vegetables', '🥛 Milk', '🍿 Snacks', '🛒 Grocery',
-                            '💊 Medicine', '🩺 Doctor Fees', '💊 Medicines', '🔬 Pathology Test',
-                            '🚼 Baby Diaper', '🍼 Bottle', '👶 Rudra Baby 6 Months', '🧪 Medical Test', '🏥 ICU Care',
-                            '🪔 Durga Pooja', '🪔 Diwali', '🎨 Holi', '🌕 Karvachauth', '🏫 School Stationary',
-                            '🪭 Fan', '🪭 Electric Fan', '📺 TV',
-                            '⛽ Petrol', '🥤 Juice', '💇 Hair Color', '✂️ Hair Cut', '📱 Recharge', '🛍️ Shopping',
-                            '🤖 AI', '🏠Room Rent', '🔥 Lighter', '🏠10000 Rent+3000 Security', '🧺 Surf'
-                        ];
-                        setTimeout(() => this._successHandler(mockItems), 300);
+                        console.log('Mocking getItemList from itemsList');
+                        setTimeout(() => this._successHandler(typeof itemsList !== 'undefined' ? itemsList : []), 300);
                     },
                     addEntry: function (entry) {
                         console.log('Mocking addEntry:', entry);
@@ -12032,32 +12022,47 @@ Expense Tracker Pro: 2026 JavaScript Code
     function loadItemsList() {
         const cacheKey = 'items_list';
 
-        // 1. CHECK SERVER-INJECTED DATA
+        // 1. Invalidate stale cache if version changed so new items (Scooty Petrol, etc.) appear immediately
+        const ITEMS_CACHE_VERSION = '2026_11_15_v5';
+        if (localStorage.getItem('expense_items_cache_ver') !== ITEMS_CACHE_VERSION) {
+            if (window.expenseCache) {
+                window.expenseCache.invalidate(cacheKey);
+            }
+            try {
+                localStorage.removeItem('expense_app_cache');
+            } catch (e) {}
+            localStorage.setItem('expense_items_cache_ver', ITEMS_CACHE_VERSION);
+        }
+
+        // 2. CHECK SERVER-INJECTED DATA
         if (window.SERVER_INITIAL_DATA && window.SERVER_INITIAL_DATA.itemsList) {
             const data = window.SERVER_INITIAL_DATA.itemsList;
             window.SERVER_INITIAL_DATA.itemsList = null; // Consume so future refreshes fetch fresh data
-            window.expenseCache.set(cacheKey, data);
+            if (window.expenseCache) window.expenseCache.set(cacheKey, data);
             handleItemsListData(data);
             return;
         }
 
-        // 2. CHECK PERSISTENT CACHE
-        const cachedData = window.expenseCache.get(cacheKey);
+        // 3. CHECK PERSISTENT CACHE (Render immediately for fast UI)
+        const cachedData = window.expenseCache ? window.expenseCache.get(cacheKey) : null;
         if (cachedData) {
             handleItemsListData(cachedData);
-            return;
         }
 
-        // 3. FALLBACK TO NETWORK
-        google.script.run
-            .withSuccessHandler((data) => {
-                window.expenseCache.set(cacheKey, data);
-                handleItemsListData(data);
-            })
-            .withFailureHandler((error) => {
-                console.error("Error loading items list:", error);
-            })
-            .getItemList();
+        // 4. ALWAYS FETCH FRESH IN BACKGROUND (Stale-while-revalidate from Google Sheet Col B & C)
+        if (typeof google !== 'undefined' && google.script && google.script.run) {
+            google.script.run
+                .withSuccessHandler((data) => {
+                    if (data && (Array.isArray(data) ? data.length > 0 : (data.items && data.items.length > 0))) {
+                        if (window.expenseCache) window.expenseCache.set(cacheKey, data);
+                        handleItemsListData(data);
+                    }
+                })
+                .withFailureHandler((error) => {
+                    console.warn("Error loading items list from Google Sheet:", error);
+                })
+                .getItemList();
+        }
     }
 
     function handleItemsListData(data) {
@@ -12083,7 +12088,8 @@ Expense Tracker Pro: 2026 JavaScript Code
             }
         }
         if (items && items.length > 0) {
-            itemsList = [...new Set(items)].sort();
+            // MERGE with existing itemsList so default items (like Scooty Petrol, Bike Petrol, Car Petrol) are NEVER lost
+            itemsList = [...new Set([...itemsList, ...items])].sort();
         }
         populateItemsDropdown();
         populateEnhancedItemFilter();
@@ -15088,9 +15094,17 @@ Expense Tracker Pro: 2026 JavaScript Code
 
                     showAlert(response.message || `Item "${itemName}" added successfully!`, "success");
 
+                    // Push notification for newly added item to List sheet
+                    if (typeof pushNewItemNotification === 'function') {
+                        pushNewItemNotification({
+                            item: cleanName || itemName,
+                            category: catWithIcon || category
+                        });
+                    }
+
                     // Refresh items list in cache
                     if (window.expenseCache) {
-                        window.expenseCache.invalidate('items_list');
+                        window.expenseCache.set('items_list', itemsList);
                     }
 
                 } else {
