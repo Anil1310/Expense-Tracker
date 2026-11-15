@@ -69,6 +69,8 @@ Expense Tracker Pro: 2026 JavaScript Code
         "battery": "💻 Electronics",
         "bed": "🧹 Household Utilities",
         "belt": "🛍️ Shopping",
+        "bike petrol": "🚗 Transport",
+        "bike service": "🚗 Transport",
         "birthday": "🎬 Entertainment",
         "birthday gift": "🎬 Entertainment",
         "books": "🎓 Education",
@@ -77,6 +79,8 @@ Expense Tracker Pro: 2026 JavaScript Code
         "bulb": "🧹 Household Utilities",
         "cake": "🍕 Food",
         "candle & ribbon": "🎬 Entertainment",
+        "car petrol": "🚗 Transport",
+        "car service": "🚗 Transport",
         "cell": "💻 Electronics",
         "cinema": "🎬 Entertainment",
         "close up": "🧴 Personal Care",
@@ -200,9 +204,8 @@ Expense Tracker Pro: 2026 JavaScript Code
         "vishal mart": "🛍️ Shopping",
         "walker": "👶 Baby Care"
     };
-
     let itemCategoryMap = Object.assign({}, DEFAULT_ITEM_CATEGORY_MAP);
-    let itemsList = ["AI", "Amazon", "Amazon Watches", "Anya Prashan", "Apple", "Auto", "Axis", "Baby Carrier Belt", "Baby Diaper", "Baby Oil", "Baby Sleeping Cushion", "Bathroom", "Battery", "Bed", "Belt", "Birthday", "Birthday Gift", "Books", "Bottle", "Bread", "Bulb", "Cake", "Candle & Ribbon", "Cell", "Cinema", "Close Up", "Clothing", "Coffee", "Coldrink", "Cotton & Bandage", "Cover", "Cradle", "Cups & Plates", "Curd", "Dairy", "Decoration", "Dhanteras", "Diwali", "Doctor Fees", "Durga Pooja", "Electric Fan", "Electric Light", "Electric Switch", "Engine", "Fair", "Fan", "Fan Repair", "Flour", "Folding Bed", "Food", "Fruit", "Ganesh Chaturthi Celebration", "Gemini Pro", "Ghajak", "Grocery", "Gujiya", "Hair Color", "Hair Cut", "Holi", "Home", "ICU Care", "Ice Cream", "Jewellery", "Jio Fiber", "Juice", "Jwellery", "Kailash Mela", "Karvachauth", "Katha", "Khoya", "Krishna Janmasthmi", "Labour Charges", "Lighter", "Locker", "Medical + Vaccination", "Medical Powder", "Medical Test", "Medical \u20b9, Apr", "Medicine", "Medicore", "Metro", "Milk", "Mobile", "Money", "Money Distribution", "Money Distribution & Saari", "Mosquito Repellent", "Movie", "Nagrela", "Notebook", "Office", "Oil", "Paneer", "Papers", "Pathology Test", "Personal Care", "Petrol", "Pg", "Pnb Metlife", "Print Out", "Radhika", "Rakhi", "Reception", "Recharge", "Redmi Watch Strap", "Rent+Security", "Room Rent", "Rudra Baby Months", "SBI", "Saari", "Sandals", "Sanitary Pads", "Saving Razor", "School", "School Activity", "School Activity Fees", "School Books", "School Dress", "School Exam Fees", "School Fees", "School Fees Apr", "School Fees Jul", "School Fees Jun", "School Fees May", "School Stationary", "School Transportation", "Scooty Petrol", "Scooty Service", "Shoe", "Shopping", "Slippers", "Snacks", "Soap", "Surf Excel", "Sweets", "TV", "Tap", "Tap Jun 15, 2026", "Thandai", "Toothpaste", "Train", "Ultrasound", "Vegetables", "Vishal Mart", "Walker"];
+    let itemsList = ["AI", "Amazon", "Amazon Watches", "Anya Prashan", "Apple", "Auto", "Axis", "Baby Carrier Belt", "Baby Diaper", "Baby Oil", "Baby Sleeping Cushion", "Bathroom", "Battery", "Bed", "Belt", "Bike Petrol", "Bike Service", "Birthday", "Birthday Gift", "Books", "Bottle", "Bread", "Bulb", "Cake", "Candle & Ribbon", "Car Petrol", "Car Service", "Cell", "Cinema", "Close Up", "Clothing", "Coffee", "Coldrink", "Cotton & Bandage", "Cover", "Cradle", "Cups & Plates", "Curd", "Dairy", "Decoration", "Dhanteras", "Diwali", "Doctor Fees", "Durga Pooja", "Electric Fan", "Electric Light", "Electric Switch", "Engine", "Fair", "Fan", "Fan Repair", "Flour", "Folding Bed", "Food", "Fruit", "Ganesh Chaturthi Celebration", "Gemini Pro", "Ghajak", "Grocery", "Gujiya", "Hair Color", "Hair Cut", "Holi", "Home", "Ice Cream", "ICU Care", "Jewellery", "Jio Fiber", "Juice", "Jwellery", "Kailash Mela", "Karvachauth", "Katha", "Khoya", "Krishna Janmasthmi", "Labour Charges", "Lighter", "Locker", "Medical + Vaccination", "Medical Powder", "Medical Test", "Medical \u20b9, Apr", "Medicine", "Medicore", "Metro", "Milk", "Mobile", "Money", "Money Distribution", "Money Distribution & Saari", "Mosquito Repellent", "Movie", "Nagrela", "Notebook", "Office", "Oil", "Paneer", "Papers", "Pathology Test", "Personal Care", "Petrol", "Pg", "Pnb Metlife", "Print Out", "Radhika", "Rakhi", "Reception", "Recharge", "Redmi Watch Strap", "Rent+Security", "Room Rent", "Rudra Baby Months", "Saari", "Sandals", "Sanitary Pads", "Saving Razor", "SBI", "School", "School Activity", "School Activity Fees", "School Books", "School Dress", "School Exam Fees", "School Fees", "School Fees Apr", "School Fees Jul", "School Fees Jun", "School Fees May", "School Stationary", "School Transportation", "Scooty Petrol", "Scooty Service", "Shoe", "Shopping", "Slippers", "Snacks", "Soap", "Surf Excel", "Sweets", "Tap", "Tap Jun 15, 2026", "Thandai", "Toothpaste", "Train", "TV", "Ultrasound", "Vegetables", "Vishal Mart", "Walker"];
     let currentUser = null;
     let enhancedAllData = [];
     let mainChart, pieChart, barChart, detailedChart;
