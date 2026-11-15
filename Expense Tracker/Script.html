@@ -5950,28 +5950,6 @@ color: #ffc107 !important;
             handleSummaryData(getEmptySummary());
         }
     }
-                    { month: 'Apr', amount: 920, count: 14 },
-                    { month: 'May', amount: 780, count: 11 },
-                    { month: 'Jun', amount: 950, count: 15 },
-                    { month: 'Jul', amount: 1100, count: 16 },
-                    { month: 'Aug', amount: 680, count: 10 },
-                    { month: 'Sep', amount: 820, count: 13 },
-                    { month: 'Oct', amount: 1050, count: 17 },
-                    { month: 'Nov', amount: 900, count: 14 },
-                    { month: 'Dec', amount: 1150, count: 19 }
-                ],
-                categoryBreakdown: [
-                    { category: 'Groceries', amount: 2500, percentage: 33.8 },
-                    { category: 'Fuel', amount: 1800, percentage: 24.3 },
-                    { category: 'Food', amount: 1500, percentage: 20.3 },
-                    { category: 'Transport', amount: 800, percentage: 10.8 },
-                    { category: 'Shopping', amount: 500, percentage: 6.8 },
-                    { category: 'Bills', amount: 296, percentage: 4.0 }
-                ]
-            };
-            handleSummaryData(mockData);
-        }
-    }
 
     function formatNumber(v) {
         return (parseFloat(v) || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 });
@@ -7302,6 +7280,16 @@ color: #ffc107 !important;
             window.mainChart.config.type = newType;
             window.mainChart.update();
             showAlert(`Changed to ${newType} chart`, "info");
+        } else {
+            const typeEl = document.getElementById('graph-type');
+            if (typeEl) {
+                const currentType = typeEl.value;
+                const newType = currentType === 'monthly' ? 'daily' :
+                    currentType === 'daily' ? 'category' :
+                        currentType === 'category' ? 'monthly' : 'monthly';
+                typeEl.value = newType;
+                updateGraphs();
+            }
         }
     }
 
@@ -7327,73 +7315,32 @@ color: #ffc107 !important;
                 showAlert("Error saving chart image", "error");
             }
         } else {
-            showAlert("No chart available to save", "warning");
+            const canvas = document.getElementById('mainChart');
+            if (canvas) {
+                const link = document.createElement('a');
+                link.download = 'expense-chart.png';
+                link.href = canvas.toDataURL();
+                link.click();
+                showAlert("Chart image saved!", "success");
+            } else {
+                showAlert("No chart available to save", "warning");
+            }
         }
-    }
-
-    function updateGraphs() {
-        loadGraphs();
-    }
-
-    function refreshGraphs() {
-        loadGraphs();
     }
 
     function refreshDataSummary() {
         loadDataSummary();
-    }
-
-    function saveChartImage() {
-        if (window.mainChart) {
-            const link = document.createElement('a');
-            link.download = 'expense_chart.png';
-            link.href = window.mainChart.toBase64Image();
-            link.click();
-            showAlert("Chart image saved!", "success");
-        }
+        showAlert("Refreshing data summary", "info");
     }
 
     function exportSummary() {
-        showAlert("Exporting summary", "success");
-        // Implement actual logic if needed later
-    }
-
-    function refreshDataSummary() {
-        loadDataSummary();
-    }
-
-    function refreshGraphs() {
-        loadGraphs();
-    }
-
-    function toggleChartType() {
-        const currentType = document.getElementById('graph-type').value;
-        const newType = currentType === 'monthly' ? 'daily' :
-            currentType === 'daily' ? 'category' :
-                currentType === 'category' ? 'monthly' : 'monthly';
-
-        document.getElementById('graph-type').value = newType;
-        updateGraphs();
-    }
-
-    function updateGraphs() {
-        loadGraphs();
-    }
-
-    function saveChartImage() {
-        const canvas = document.getElementById('mainChart');
-        if (canvas) {
-            const link = document.createElement('a');
-            link.download = 'expense-chart.png';
-            link.href = canvas.toDataURL();
-            link.click();
-        }
-    }
-
-    function exportSummary() {
+        showAlert("Exporting summary...", "info");
         const year = document.getElementById('summary-year') ? document.getElementById('summary-year').value : new Date().getFullYear();
-        const url = "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/export?format=pdf&portrait=false&size=A4&gridlines=false";
-        window.open(url, '_blank');
+        if (typeof google !== 'undefined' && google.script && google.script.run && typeof google.script.run.exportSummaryPDF === 'function') {
+            google.script.run.withSuccessHandler((url) => {
+                if (url) window.open(url, '_blank');
+            }).exportSummaryPDF(year);
+        }
     }
     // SaaS: Top Progress Bar Logic
     const Progress = {
