@@ -228,9 +228,22 @@ function getAllData() {
         let allCategories = new Set();
         let uniqueIdSet = new Set(); // To prevent duplicates
 
+        const ssCache = {};
+        const getSS = (id) => {
+            if (!ssCache[id]) {
+                try {
+                    ssCache[id] = SpreadsheetApp.openById(id);
+                } catch (e) {
+                    console.error("Error opening spreadsheet " + id + ": " + e.message);
+                }
+            }
+            return ssCache[id];
+        };
+
         const loadFromSource = (spreadsheetId, sheetName) => {
             try {
-                const ss = SpreadsheetApp.openById(spreadsheetId);
+                const ss = getSS(spreadsheetId);
+                if (!ss) return;
                 const sheet = ss.getSheetByName(sheetName);
                 if (!sheet || sheet.getLastRow() <= 1) return;
 
@@ -439,37 +452,36 @@ function getMonthlyData(month) {
             };
         }
 
-        // Use getDisplayValues for display, getValues for calculations
+        // Single read of display values for maximum speed
         const displayValues = dataRange.getDisplayValues().slice(1);
-        const rawValues = dataRange.getValues().slice(1);
+        let totalExpenses = 0;
+        const categories = new Set();
+        const dates = new Set();
 
-        // Calculate Summary Stats using raw values for numbers
-        const expenses = rawValues.map(row => {
-            const amount = row[5];
-            return typeof amount === 'number' ? amount : parseFloat(amount) || 0;
+        const tableData = displayValues.map((row, index) => {
+            const rawAmt = row[5];
+            const amount = typeof rawAmt === 'number' ? rawAmt : (parseFloat(String(rawAmt).replace(/[^\d.-]/g, '')) || 0);
+            totalExpenses += amount;
+
+            const cat = row[4];
+            if (cat) categories.add(cat);
+
+            const dt = row[2];
+            if (dt) dates.add(dt);
+
+            const rowCopy = [...row];
+            rowCopy[5] = amount;
+            if (rowCopy.length < 8) {
+                rowCopy[7] = '';
+            }
+            return rowCopy;
         });
-        const totalExpenses = expenses.reduce((sum, amount) => sum + amount, 0);
-
-        const categories = displayValues.map(row => row[4]);
-        const uniqueCategories = new Set(categories.filter(c => c)).size;
-
-        const dates = displayValues.map(row => row[2]);
-        const daysWithExpenses = new Set(dates.filter(d => d)).size;
 
         return {
             totalExpenses: totalExpenses.toFixed(2),
-            uniqueCategories: uniqueCategories,
-            daysWithExpenses: daysWithExpenses,
-            tableData: displayValues.map((row, index) => {
-                // Ensure amount is displayed as number
-                const rowCopy = [...row];
-                rowCopy[5] = expenses[index];
-                // Ensure Admin column exists in return data even if sheet is old
-                if (rowCopy.length < 8) {
-                    rowCopy[7] = '';
-                }
-                return rowCopy;
-            })
+            uniqueCategories: categories.size,
+            daysWithExpenses: dates.size,
+            tableData: tableData
         };
     } catch (e) {
         return {

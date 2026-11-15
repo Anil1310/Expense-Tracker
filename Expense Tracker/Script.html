@@ -312,17 +312,18 @@ Expense Tracker Pro: 2026 JavaScript Code
             const currentYear = now.getFullYear().toString();
 
             this.preloadMonthlyData(currentMonth);
-            this.preloadYearlyData(currentYear);
             this.preloadAllData();
             this.preloadItemsList();
         }
 
         preloadMonthlyData(month) {
             const cacheKey = `monthly_${month}`;
-            if (!this.get(cacheKey)) {
+            if (!this.get(cacheKey) && typeof google !== 'undefined' && google.script && google.script.run) {
                 google.script.run
                     .withSuccessHandler((data) => {
-                        this.set(cacheKey, data);
+                        if (data && !data.error) {
+                            this.set(cacheKey, data);
+                        }
                     })
                     .getMonthlyData(month);
             }
@@ -330,10 +331,12 @@ Expense Tracker Pro: 2026 JavaScript Code
 
         preloadYearlyData(year) {
             const cacheKey = `yearly_${year}`;
-            if (!this.get(cacheKey)) {
+            if (!this.get(cacheKey) && typeof google !== 'undefined' && google.script && google.script.run) {
                 google.script.run
                     .withSuccessHandler((data) => {
-                        this.set(cacheKey, data);
+                        if (data && !data.error) {
+                            this.set(cacheKey, data);
+                        }
                     })
                     .getYearlyData(year);
             }
@@ -341,10 +344,25 @@ Expense Tracker Pro: 2026 JavaScript Code
 
         preloadAllData() {
             const cacheKey = 'all_data';
-            if (!this.get(cacheKey)) {
+            if (!this.get(cacheKey) && typeof google !== 'undefined' && google.script && google.script.run) {
                 google.script.run
                     .withSuccessHandler((data) => {
-                        this.set(cacheKey, data);
+                        if (data && !data.error) {
+                            this.set(cacheKey, data);
+                            if (typeof allExpenseData !== 'undefined' && (!allExpenseData || allExpenseData.length === 0)) {
+                                allExpenseData = data.allExpenses || [];
+                                enhancedAllData = allExpenseData.map((row) => ({
+                                    id: row[7] || "",
+                                    date: row[0],
+                                    month: row[1] || "",
+                                    year: row[5] || "",
+                                    item: row[2] || "",
+                                    amount: parseFloat(row[3]) || 0,
+                                    credit: row[4] || "",
+                                    admin: row[6] || ""
+                                }));
+                            }
+                        }
                     })
                     .getAllData();
             }
@@ -352,10 +370,15 @@ Expense Tracker Pro: 2026 JavaScript Code
 
         preloadItemsList() {
             const cacheKey = 'items_list';
-            if (!this.get(cacheKey)) {
+            if (!this.get(cacheKey) && typeof google !== 'undefined' && google.script && google.script.run) {
                 google.script.run
                     .withSuccessHandler((data) => {
-                        this.set(cacheKey, data);
+                        if (data) {
+                            this.set(cacheKey, data);
+                            if (typeof handleItemsListData === 'function') {
+                                handleItemsListData(data);
+                            }
+                        }
                     })
                     .getItemList();
             }
@@ -384,6 +407,7 @@ Expense Tracker Pro: 2026 JavaScript Code
         loadItemsList();
         populateYearSelector();
         freezeTableHeaders(); // Initialize table header freezing
+        if (typeof renderNotificationsUI === 'function') renderNotificationsUI();
 
         // Initialize Tooltips (Only trigger on hover to prevent double-tap issues on mobile/webviews)
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
@@ -392,6 +416,13 @@ Expense Tracker Pro: 2026 JavaScript Code
                 trigger: 'hover'
             });
         });
+
+        // Eagerly pre-load all page data in background for instant 0ms page switching
+        if (window.expenseCache) {
+            setTimeout(() => {
+                window.expenseCache.preloadCommonData();
+            }, 50);
+        }
 
         // Start Auto Sync
         startAutoSync();
@@ -1447,11 +1478,6 @@ Expense Tracker Pro: 2026 JavaScript Code
         const loadingSpinner = document.getElementById('loading-spinner');
         const tableBody = document.getElementById('expense-table-body');
 
-        if (!isBackground) {
-            showStatSkeletons();
-            showTableSkeletons('expense-table-body', 8);
-        }
-
         const cacheKey = `monthly_${targetMonth}`;
 
         // 1. CHECK SERVER-INJECTED DATA (Fastest — only on initial load, skip on forceRefresh)
@@ -1459,28 +1485,58 @@ Expense Tracker Pro: 2026 JavaScript Code
             console.log("Using injected month data for", targetMonth);
             const data = window.SERVER_INITIAL_DATA.monthlyData;
             window.SERVER_INITIAL_DATA.monthlyData = null; // Consume so future manual refreshes fetch fresh data
-            window.expenseCache.set(cacheKey, data);
+            if (window.expenseCache) window.expenseCache.set(cacheKey, data);
             handleMonthData(data);
             return;
         }
 
-        // 2. CHECK PERSISTENT CACHE (skip on forceRefresh)
+        // 2. CHECK PERSISTENT CACHE (Instant 0ms render)
         if (!forceRefresh) {
-            const cachedData = window.expenseCache.get(cacheKey);
+            const cachedData = window.expenseCache ? window.expenseCache.get(cacheKey) : null;
             if (cachedData) {
                 handleMonthData(cachedData);
                 return;
             }
+
+            // 2b. FAST DERIVE FROM in-memory all_data IF AVAILABLE (Instant 0ms render)
+            const allData = window.expenseCache ? window.expenseCache.get('all_data') : null;
+            const allList = (allData && allData.allExpenses) || (typeof allExpenseData !== 'undefined' ? allExpenseData : null);
+            if (allList && allList.length > 0 && typeof extractMonthlyDataFromAllData === 'function') {
+                const derived = extractMonthlyDataFromAllData(allList, targetMonth);
+                if (derived && derived.tableData && derived.tableData.length > 0) {
+                    handleMonthData(derived);
+                    // Silently refresh in background without interrupting user or flashing skeletons
+                    if (typeof google !== 'undefined' && google.script && google.script.run) {
+                        google.script.run
+                            .withSuccessHandler((fresh) => {
+                                if (fresh && !fresh.error) {
+                                    if (window.expenseCache) window.expenseCache.set(cacheKey, fresh);
+                                    handleMonthData(fresh);
+                                }
+                            })
+                            .getMonthlyData(targetMonth);
+                    }
+                    return;
+                }
+            }
         }
 
-        // 3. NETWORK FETCH
-        google.script.run
-            .withSuccessHandler((data) => {
-                window.expenseCache.set(cacheKey, data);
-                handleMonthData(data);
-            })
-            .withFailureHandler(handleError)
-            .getMonthlyData(targetMonth);
+        // 3. SHOW SKELETON ONLY WHEN ACTUALLY WAITING ON NETWORK
+        if (!isBackground) {
+            showStatSkeletons();
+            showTableSkeletons('expense-table-body', 8);
+        }
+
+        // 4. NETWORK FETCH
+        if (typeof google !== 'undefined' && google.script && google.script.run) {
+            google.script.run
+                .withSuccessHandler((data) => {
+                    if (window.expenseCache) window.expenseCache.set(cacheKey, data);
+                    handleMonthData(data);
+                })
+                .withFailureHandler(handleError)
+                .getMonthlyData(targetMonth);
+        }
     }
 
     function handleMonthData(response) {
@@ -2589,13 +2645,8 @@ Expense Tracker Pro: 2026 JavaScript Code
         const loadingSpinner = document.getElementById('reports-loading-spinner');
         const tableBody = document.getElementById('reports-table-body');
 
-        if (!isBackground) {
-            if (loadingSpinner) loadingSpinner.classList.remove('d-none');
-            if (tableBody) tableBody.innerHTML = '';
-        }
-
         const cacheKey = 'all_data';
-        const cachedData = window.expenseCache.get(cacheKey);
+        const cachedData = window.expenseCache ? window.expenseCache.get(cacheKey) : null;
 
         const dateFilter = document.getElementById('dateFilter');
         if (dateFilter && !dateFilter.value && !isBackground) {
@@ -2606,11 +2657,15 @@ Expense Tracker Pro: 2026 JavaScript Code
             dateFilter.value = `${yyyy}-${mm}-${dd}`;
         }
 
+        // Instant render from cache (0ms delay)
         if (cachedData) {
-            setTimeout(() => {
-                handleEnhancedReportsData(cachedData);
-            }, 100);
+            handleEnhancedReportsData(cachedData);
             return;
+        }
+
+        if (!isBackground) {
+            if (loadingSpinner) loadingSpinner.classList.remove('d-none');
+            if (tableBody) tableBody.innerHTML = '';
         }
 
         // Try to use Google Apps Script with fallback to mock data
@@ -3451,6 +3506,198 @@ Expense Tracker Pro: 2026 JavaScript Code
         tableBody.innerHTML = rowsHtml;
     }
 
+    // ── Instant Client-Side Computations from In-Memory all_data (0ms Page Loading) ──
+    function extractMonthlyDataFromAllData(allExpenses, targetMonth) {
+        if (!allExpenses || !Array.isArray(allExpenses)) return null;
+        const normTarget = String(targetMonth || "").toLowerCase().trim();
+        const monthRows = allExpenses.filter(r => String(r[1] || "").toLowerCase().trim() === normTarget);
+        if (monthRows.length === 0) return null;
+
+        let totalExpenses = 0;
+        const categories = new Set();
+        const days = new Set();
+        const tableData = monthRows.map((r, idx) => {
+            const amt = parseFloat(r[3]) || 0;
+            totalExpenses += amt;
+            if (r[4]) categories.add(r[4]);
+            if (r[0]) days.add(r[0]);
+            return [
+                idx + 1,
+                r[7] || `ID_${idx + 1}`,
+                r[0] || '',
+                r[1] || targetMonth,
+                r[2] || '',
+                amt,
+                r[4] || '',
+                r[6] || ''
+            ];
+        });
+
+        return {
+            totalExpenses: totalExpenses,
+            uniqueCategories: categories.size,
+            daysWithExpenses: days.size,
+            tableData: tableData
+        };
+    }
+
+    function calculateSummaryDataFromAllData(allExpenses, year) {
+        if (!allExpenses || !Array.isArray(allExpenses) || allExpenses.length === 0) return null;
+        const targetYear = (year && year !== 'all') ? year.toString() : new Date().getFullYear().toString();
+
+        let totalAmount = 0;
+        const monthlyTotals = {};
+        const categoryTotals = {};
+        const paymentMethods = { 'Credit': 0, 'Cash': 0 };
+        const yearlyCategoryCounts = {};
+
+        allExpenses.forEach(expense => {
+            const amount = parseFloat(expense[3]) || 0;
+            const month = expense[1];
+            const category = expense[2] || "Uncategorized";
+
+            const creditStr = String(expense[4] || '').toLowerCase();
+            const credit = (creditStr.includes('✓') || creditStr.includes('credit')) ? 'Credit' : 'Cash';
+            const rowYear = String(expense[5] || '');
+
+            if (rowYear === targetYear) {
+                totalAmount += amount;
+                monthlyTotals[month] = (monthlyTotals[month] || 0) + amount;
+                categoryTotals[category] = (categoryTotals[category] || 0) + amount;
+                yearlyCategoryCounts[category] = (yearlyCategoryCounts[category] || 0) + 1;
+                paymentMethods[credit] = (paymentMethods[credit] || 0) + amount;
+            }
+        });
+
+        const currentYearTotal = totalAmount;
+
+        const topCategories = Object.entries(categoryTotals)
+            .map(([cat, amt]) => ({
+                category: cat,
+                total: amt,
+                percentage: currentYearTotal > 0 ? parseFloat(((amt / currentYearTotal) * 100).toFixed(1)) : 0,
+                transactions: yearlyCategoryCounts[cat] || 0,
+                avgPer: yearlyCategoryCounts[cat] ? amt / yearlyCategoryCounts[cat] : 0
+            }))
+            .sort((a, b) => b.total - a.total)
+            .slice(0, 5);
+
+        const catDist = Object.entries(categoryTotals)
+            .map(([cat, amt]) => ({
+                category: cat,
+                percentage: currentYearTotal > 0 ? parseFloat(((amt / currentYearTotal) * 100).toFixed(1)) : 0
+            }))
+            .sort((a, b) => b.percentage - a.percentage)
+            .slice(0, 5);
+
+        const payMethods = Object.entries(paymentMethods)
+            .map(([method, amt]) => ({
+                method: method,
+                amount: amt,
+                percentage: currentYearTotal > 0 ? parseFloat(((amt / currentYearTotal) * 100).toFixed(1)) : 0
+            }));
+
+        const monthsArr = Object.entries(monthlyTotals)
+            .map(([m, amt]) => ({ month: m, amount: amt }))
+            .sort((a, b) => b.amount - a.amount);
+
+        const highest = monthsArr.length > 0 ? monthsArr[0] : { month: '-', amount: 0 };
+        const lowest = monthsArr.length > 0 ? monthsArr[monthsArr.length - 1] : { month: '-', amount: 0 };
+
+        const monthlyComparison = MONTHS.map(m => {
+            const amt = monthlyTotals[m] || 0;
+            return {
+                month: m,
+                total: amt,
+                dailyAvg: amt / 30,
+                transactions: 0,
+                categories: 0,
+                trend: amt > (currentYearTotal / 12) ? 'up' : 'down'
+            };
+        });
+
+        return {
+            yearlyTotal: currentYearTotal,
+            monthlyAverage: currentYearTotal / 12,
+            highestMonth: highest,
+            lowestMonth: lowest,
+            categoryDistribution: catDist,
+            userSpending: [{ user: 'Admin', amount: currentYearTotal, percentage: 100 }],
+            paymentMethods: payMethods,
+            monthlyComparison: monthlyComparison,
+            topCategories: topCategories
+        };
+    }
+
+    function calculateGraphsDataFromAllData(allExpenses, type, year, user) {
+        if (!allExpenses || !Array.isArray(allExpenses) || allExpenses.length === 0) return null;
+        const targetYear = String(year || new Date().getFullYear());
+        const filteredRows = allExpenses.filter(expense => {
+            const matchesYear = String(expense[5] || '') === targetYear;
+            const matchesUser = (!user || user === 'all') ? true : String(expense[6] || '').toLowerCase() === user.toLowerCase();
+            return matchesYear && matchesUser;
+        });
+
+        const monthlyData = new Array(12).fill(0);
+        MONTHS.forEach((m, i) => {
+            monthlyData[i] = filteredRows
+                .filter(r => String(r[1] || '') === m)
+                .reduce((sum, r) => sum + (parseFloat(r[3]) || 0), 0);
+        });
+
+        const mainChart = {
+            labels: MONTHS,
+            datasets: [{
+                label: 'Monthly Expenses',
+                data: monthlyData,
+                borderColor: '#4361ee',
+                backgroundColor: 'rgba(67, 97, 238, 0.1)',
+                fill: true,
+                tension: 0.4
+            }]
+        };
+
+        const catTotals = {};
+        filteredRows.forEach(r => {
+            const cat = r[2] || 'Other';
+            catTotals[cat] = (catTotals[cat] || 0) + (parseFloat(r[3]) || 0);
+        });
+        const pieChart = {
+            labels: Object.keys(catTotals),
+            datasets: [{
+                data: Object.values(catTotals),
+                backgroundColor: ['#4361ee', '#3a0ca3', '#7209b7', '#f72585', '#4cc9f0', '#fee440', '#9b5de5', '#00bbf9', '#10b981', '#f59e0b']
+            }]
+        };
+
+        const barChart = {
+            labels: MONTHS,
+            datasets: [{
+                label: 'Total Expenses',
+                data: monthlyData,
+                backgroundColor: '#4361ee'
+            }]
+        };
+
+        const detailedChart = {
+            labels: MONTHS,
+            datasets: [{
+                label: 'Expenses',
+                data: monthlyData,
+                borderColor: '#10b981',
+                backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                fill: true
+            }]
+        };
+
+        return {
+            mainChart: mainChart,
+            pieChart: pieChart,
+            barChart: barChart,
+            detailedChart: detailedChart
+        };
+    }
+
     // Enhanced Yearly Data Functions - FIXED VERSION
     function calculateYearlyDataFromAllData(year) {
         const targetYear = year || getCurrentYear();
@@ -3498,9 +3745,7 @@ Expense Tracker Pro: 2026 JavaScript Code
             const cachedData = window.expenseCache.get(cacheKey);
 
             if (cachedData) {
-                setTimeout(() => {
-                    handleYearlyData(cachedData);
-                }, 100);
+                handleYearlyData(cachedData);
                 return;
             }
 
@@ -5472,12 +5717,8 @@ color: #ffc107 !important;
 
         // Auto-refresh the app every 2 minutes for updates in the background (silent & smooth)
         setInterval(() => {
-            if (window.expenseCache) {
-                window.expenseCache.invalidate('all_data');
-                window.expenseCache.invalidate(`monthly_${CURRENT_MONTH}`);
-            }
-            // Silently refresh the currently visible page only without interrupting scrolling
-            autoRefreshData();
+            // Silently refresh the currently visible page without cache deletion or scrolling interruption
+            autoRefreshData(true);
         }, 2 * 60 * 1000); // Exactly every 2 minutes
 
         // Add enter key support for login
@@ -5655,10 +5896,30 @@ color: #ffc107 !important;
     function loadDataSummary(isBackground = false) {
         const yearSelect = document.getElementById('summary-year');
         const year = yearSelect ? yearSelect.value : new Date().getFullYear().toString();
+        const cacheKey = `summary_${year}`;
 
-        // Show loading indicator
+        // 1. Instant check from cache (0ms delay)
+        const cachedSummary = window.expenseCache ? window.expenseCache.get(cacheKey) : null;
+        if (cachedSummary) {
+            handleSummaryData(cachedSummary);
+            return;
+        }
+
+        // 2. Instant calculation from in-memory all_data (0ms delay)
+        const allData = window.expenseCache ? window.expenseCache.get('all_data') : null;
+        const expenses = (allData && allData.allExpenses) || (typeof allExpenseData !== 'undefined' ? allExpenseData : null);
+        if (expenses && expenses.length > 0 && typeof calculateSummaryDataFromAllData === 'function') {
+            const calculated = calculateSummaryDataFromAllData(expenses, year);
+            if (calculated) {
+                if (window.expenseCache) window.expenseCache.set(cacheKey, calculated);
+                handleSummaryData(calculated);
+                return;
+            }
+        }
+
+        // Show loading indicator only when waiting on network
         const page = document.getElementById('data-page');
-        if (page && !isBackground) {
+        if (page && !isBackground && !page.querySelector('.spinner-container')) {
             const loadingDiv = document.createElement('div');
             loadingDiv.className = 'spinner-container';
             loadingDiv.innerHTML = '<div class="spinner"></div>';
@@ -5669,65 +5930,26 @@ color: #ffc107 !important;
         if (typeof google !== 'undefined' && google.script && google.script.run) {
             google.script.run
                 .withSuccessHandler((data) => {
+                    if (window.expenseCache) window.expenseCache.set(cacheKey, data);
                     handleSummaryData(data);
-                    // Remove loading indicator
-                    const loadingDiv = page.querySelector('.spinner-container');
+                    const loadingDiv = page ? page.querySelector('.spinner-container') : null;
                     if (loadingDiv) loadingDiv.remove();
                 })
                 .withFailureHandler((error) => {
                     console.error("Error loading summary data:", error);
-                    showAlert("Error loading summary data. Using mock data instead.", "warning");
-                    // Remove loading indicator
-                    const loadingDiv = page?.querySelector('.spinner-container');
+                    const loadingDiv = page ? page.querySelector('.spinner-container') : null;
                     if (loadingDiv) loadingDiv.remove();
-
-                    // Use mock data as fallback
-                    const mockData = {
-                        yearlyTotal: 7396,
-                        monthlyAverage: 616.33,
-                        highestMonth: { month: 'Mar', amount: 1250 },
-                        lowestMonth: { month: 'Feb', amount: 450 },
-                        monthlyBreakdown: [
-                            { month: 'Jan', amount: 850, count: 12 },
-                            { month: 'Feb', amount: 450, count: 8 },
-                            { month: 'Mar', amount: 1250, count: 18 },
-                            { month: 'Apr', amount: 920, count: 14 },
-                            { month: 'May', amount: 780, count: 11 },
-                            { month: 'Jun', amount: 950, count: 15 },
-                            { month: 'Jul', amount: 1100, count: 16 },
-                            { month: 'Aug', amount: 680, count: 10 },
-                            { month: 'Sep', amount: 820, count: 13 },
-                            { month: 'Oct', amount: 1050, count: 17 },
-                            { month: 'Nov', amount: 900, count: 14 },
-                            { month: 'Dec', amount: 1150, count: 19 }
-                        ],
-                        categoryBreakdown: [
-                            { category: 'Groceries', amount: 2500, percentage: 33.8 },
-                            { category: 'Fuel', amount: 1800, percentage: 24.3 },
-                            { category: 'Food', amount: 1500, percentage: 20.3 },
-                            { category: 'Transport', amount: 800, percentage: 10.8 },
-                            { category: 'Shopping', amount: 500, percentage: 6.8 },
-                            { category: 'Bills', amount: 296, percentage: 4.0 }
-                        ]
-                    };
+                    const mockData = getEmptySummary();
                     handleSummaryData(mockData);
                 })
                 .getSummaryData(year);
         } else {
-            // Google Apps Script not available, use mock data immediately
-            console.log("Google Apps Script not available, using mock data for summary");
-            const loadingDiv = page?.querySelector('.spinner-container');
+            console.log("Using local calculation or empty summary");
+            const loadingDiv = page ? page.querySelector('.spinner-container') : null;
             if (loadingDiv) loadingDiv.remove();
-
-            const mockData = {
-                yearlyTotal: 7396,
-                monthlyAverage: 616.33,
-                highestMonth: { month: 'Mar', amount: 1250 },
-                lowestMonth: { month: 'Feb', amount: 450 },
-                monthlyBreakdown: [
-                    { month: 'Jan', amount: 850, count: 12 },
-                    { month: 'Feb', amount: 450, count: 8 },
-                    { month: 'Mar', amount: 1250, count: 18 },
+            handleSummaryData(getEmptySummary());
+        }
+    }
                     { month: 'Apr', amount: 920, count: 14 },
                     { month: 'May', amount: 780, count: 11 },
                     { month: 'Jun', amount: 950, count: 15 },
@@ -6445,35 +6667,65 @@ color: #ffc107 !important;
     // GRAPHS PAGE FUNCTIONS - FIXED WITH FALLBACK
     // =======================================
     function loadGraphs(isBackground = false) {
-        const type = document.getElementById('graph-type').value;
-        const year = document.getElementById('graph-year').value;
-        const user = document.getElementById('graph-user').value;
+        const typeEl = document.getElementById('graph-type');
+        const yearEl = document.getElementById('graph-year');
+        const userEl = document.getElementById('graph-user');
 
-        // Show loading indicator
+        const type = typeEl ? typeEl.value : 'line';
+        const year = yearEl ? yearEl.value : new Date().getFullYear().toString();
+        const user = userEl ? userEl.value : 'all';
+        const cacheKey = `graphs_${type}_${year}_${user}`;
+
+        // Update chart title immediately
+        const titleEl = document.getElementById('main-chart-title');
+        if (titleEl) titleEl.textContent = getChartTitle(type);
+
+        // 1. Instant check from cache (0ms delay)
+        const cachedGraphs = window.expenseCache ? window.expenseCache.get(cacheKey) : null;
+        if (cachedGraphs) {
+            handleGraphsData(cachedGraphs, type, year, user);
+            return;
+        }
+
+        // 2. Instant calculation from in-memory all_data (0ms delay)
+        const allData = window.expenseCache ? window.expenseCache.get('all_data') : null;
+        const expenses = (allData && allData.allExpenses) || (typeof allExpenseData !== 'undefined' ? allExpenseData : null);
+        if (expenses && expenses.length > 0 && typeof calculateGraphsDataFromAllData === 'function') {
+            const calculated = calculateGraphsDataFromAllData(expenses, type, year, user);
+            if (calculated) {
+                if (window.expenseCache) window.expenseCache.set(cacheKey, calculated);
+                handleGraphsData(calculated, type, year, user);
+                return;
+            }
+        }
+
+        // Show loading indicator only when waiting on network
         const page = document.getElementById('graphs-page');
-        if (page && !isBackground) {
+        if (page && !isBackground && !document.getElementById('graphs-loading')) {
             const loadingDiv = document.createElement('div');
             loadingDiv.className = 'spinner-container';
             loadingDiv.innerHTML = '<div class="spinner"></div>';
             loadingDiv.id = 'graphs-loading';
             page.appendChild(loadingDiv);
-
-            // Update chart title
-            document.getElementById('main-chart-title').textContent = getChartTitle(type);
         }
 
         // Try to get data from backend
-        google.script.run
-            .withSuccessHandler((data) => {
-                handleGraphsData(data, type, year, user);
-            })
-            .withFailureHandler((error) => {
-                console.warn("Backend error, using fallback data:", error);
-                // Use fallback data if backend fails
-                const fallbackData = generateFallbackGraphData(type, year, user);
-                handleGraphsData(fallbackData, type, year, user);
-            })
-            .getGraphsData(type, year, user);
+        if (typeof google !== 'undefined' && google.script && google.script.run) {
+            google.script.run
+                .withSuccessHandler((data) => {
+                    if (window.expenseCache) window.expenseCache.set(cacheKey, data);
+                    handleGraphsData(data, type, year, user);
+                })
+                .withFailureHandler((error) => {
+                    console.warn("Backend error, using fallback data:", error);
+                    const fallbackData = generateFallbackGraphData(type, year, user);
+                    handleGraphsData(fallbackData, type, year, user);
+                })
+                .getGraphsData(type, year, user);
+        } else {
+            const fallbackData = generateFallbackGraphData(type, year, user);
+            handleGraphsData(fallbackData, type, year, user);
+        }
     }
 
     function handleGraphsData(data, type, year, user) {
