@@ -136,8 +136,8 @@ function doGet(e) {
             .setMimeType(ContentService.MimeType.JSON);
     }
 
-    if (page === 'updateListCategories') {
-        const result = updateAllListCategories();
+    if (page === 'updateListCategories' || page === 'populateList') {
+        const result = populateListWithUserItems();
         return ContentService.createTextOutput(JSON.stringify(result))
             .setMimeType(ContentService.MimeType.JSON);
     }
@@ -1274,210 +1274,194 @@ function ensureListSheet() {
 /**
  * Updates Column C (Category) for all items in the 'List' sheet
  */
-function updateAllListCategories() {
+/**
+ * Completely populates Column A (ID), Column B (Item List), and Column C (Category) in the 'List' sheet
+ */
+function populateListWithUserItems() {
     try {
         const ss = SpreadsheetApp.openById(MAIN_ID);
-        const listSheet = ss.getSheetByName("List");
+        let listSheet = ss.getSheetByName("List");
         if (!listSheet) {
-            return { success: false, error: "List sheet not found" };
+            listSheet = ss.insertSheet("List");
         }
 
-        const categoryMap = {
-            "AI": "Bills",
-            "Amazon": "Shopping",
-            "Amazon Watches": "Shopping",
-            "Anil Chahar": "Other",
-            "Anya Prashan": "Festivals",
-            "Apple": "Food",
-            "Auto": "Transport",
-            "Auto Fare": "Transport",
-            "Axis": "Bills",
-            "Baby Carrier Belt": "Baby Care",
-            "Baby Cradle": "Baby Care",
-            "Baby Diaper": "Baby Care",
-            "Baby Oil": "Baby Care",
-            "Baby Sleeping Cushion": "Baby Care",
-            "Bathroom": "Household Utilities",
-            "Battery": "Electronics",
-            "Bed": "Household Utilities",
-            "Belt": "Shopping",
-            "Birthday": "Festivals",
-            "Birthday Gift": "Festivals",
-            "Books": "Education",
-            "Bottle": "Household Utilities",
-            "Bread": "Food",
-            "Bulb": "Household Utilities",
-            "Bulb ": "Household Utilities",
-            "Bulb Jan 4, 2026 - Jan 4, 2028": "Household Utilities",
-            "Bulb Jun 15, 26 - June 15, 27": "Household Utilities",
-            "Cake": "Food",
-            "Candle & Ribbon": "Household Utilities",
-            "Car Petrol": "Transport",
-            "Cell": "Electronics",
-            "Cinema": "Entertainment",
-            "Close Up": "Personal Care",
-            "Close-up": "Personal Care",
-            "Clothing": "Shopping",
-            "Coffee": "Food",
-            "Coldrink": "Food",
-            "Cotton & Bandage": "Medical",
-            "Cover": "Household Utilities",
-            "Cradle": "Baby Care",
-            "Cups & Plates": "Household Utilities",
-            "Curd": "Food",
-            "Dairy": "Food",
-            "Decoration": "Household Utilities",
-            "Dhanteras": "Festivals",
-            "Diwali": "Festivals",
-            "Doctor Fees": "Medical",
-            "Durga Pooja": "Festivals",
-            "Electric Fan": "Household Utilities",
-            "Electric Switch": "Household Utilities",
-            "Engine": "Transport",
-            "Fair": "Entertainment",
-            "Fan": "Household Utilities",
-            "Fan Repair": "Household Utilities",
-            "Feb - Mar": "Bills",
-            "Flour": "Food",
-            "Folding Bed": "Household Utilities",
-            "Food": "Food",
-            "Fruit": "Food",
-            "Ganesh Chaturthi": "Festivals",
-            "Gemini Pro": "Bills",
-            "Ghajak": "Food",
-            "Grocery": "Food",
-            "Gujiya": "Food",
-            "Hair Color": "Personal Care",
-            "Hair Cut": "Personal Care",
-            "Holi": "Festivals",
-            "Home": "Bills",
-            "Ice Cream": "Food",
-            "Ice-cream": "Food",
-            "ICU Care": "Medical",
-            "Item List": "Other",
-            "Jewellery": "Shopping",
-            "Jio Fiber": "Bills",
-            "Juice": "Food",
-            "Jwellery": "Shopping",
-            "Kailash Mela": "Festivals",
-            "Karvachauth": "Festivals",
-            "Katha": "Festivals",
-            "Khoya": "Food",
-            "Krishna Janmasthmi": "Festivals",
-            "Labour Charges": "Household Utilities",
-            "Lighter": "Household Utilities",
-            "Locker": "Bills",
-            "Medical + Vaccination": "Medical",
-            "Medical ₹, Apr": "Medical",
-            "Medical Powder": "Medical",
-            "Medical Test": "Medical",
-            "Medicine": "Medical",
-            "Medicines": "Medical",
-            "Medicore": "Medical",
-            "Metro": "Transport",
-            "Milk": "Food",
-            "Mob-Recharge": "Bills",
-            "Mobile": "Electronics",
-            "Money": "Other",
-            "Money Distribution": "Other",
-            "Money Distribution & Saari": "Other",
-            "Mosquito Repellent": "Household Utilities",
-            "Movie": "Entertainment",
-            "Nagrela": "Shopping",
-            "Notebook": "Education",
-            "Office": "Household Utilities",
-            "Oil": "Food",
-            "Paneer": "Food",
-            "Papers": "Education",
-            "Pathology Test": "Medical",
-            "Personal Care": "Personal Care",
-            "Petrol": "Transport",
-            "Pg": "Bills",
-            "Phone Battery": "Electronics",
-            "Pnb Metlife": "Bills",
-            "Print Out": "Education",
-            "Radhika": "Other",
-            "Radhika Chahar": "Other",
-            "Rakhi": "Festivals",
-            "Reception": "Festivals",
-            "Recharge": "Bills",
-            "Redmi Watch Strap": "Electronics",
-            "Rent+Security": "Bills",
-            "Room Rent": "Bills",
-            "Rudra Baby Months": "Baby Care",
-            "Saari": "Shopping",
-            "Sandals": "Shopping",
-            "Sanitary Pads": "Personal Care",
-            "Saving Razor": "Personal Care",
-            "SBI": "Bills",
-            "School": "Education",
-            "School Activity": "Education",
-            "School Activity Fees": "Education",
-            "School Books": "Education",
-            "School Dress": "Education",
-            "School Exam Fees": "Education",
-            "School Fees": "Education",
-            "School Fees Apr": "Education",
-            "School Fees Jul": "Education",
-            "School Fees Jun": "Education",
-            "School Fees May": "Education",
-            "School Stationary": "Education",
-            "School Transportation": "Transport",
-            "Scooty Petrol": "Transport",
-            "Scooty Service": "Transport",
-            "Service": "Household Utilities",
-            "Shoes": "Shopping",
-            "Shoes & Slippers": "Shopping",
-            "Shopping": "Shopping",
-            "Shopping Radhika": "Shopping",
-            "Slippers": "Shopping",
-            "Snacks": "Food",
-            "Soap": "Personal Care",
-            "Surf": "Household Utilities",
-            "Surf Excel": "Household Utilities",
-            "Sweets": "Food",
-            "Tap": "Household Utilities",
-            "Tap Jun 15, 2026": "Household Utilities",
-            "Thandai": "Food",
-            "Toothpaste": "Personal Care",
-            "Train": "Transport",
-            "TV": "Electronics",
-            "Ultrasound": "Medical",
-            "Vegetables": "Food",
-            "Vishal Mart": "Shopping",
-            "Walker": "Baby Care",
-            "Watch": "Electronics"
-        };
+        const items = [
+            [1, "AI", "Other", new Date(), "Web App"],
+            [2, "Amazon", "Shopping", new Date(), "Web App"],
+            [3, "Amazon Watches", "Shopping", new Date(), "Web App"],
+            [4, "Anya Prashan", "Festivals", new Date(), "Web App"],
+            [5, "Apple", "Food", new Date(), "Web App"],
+            [6, "Auto", "Transport", new Date(), "Web App"],
+            [7, "Axis", "Bills", new Date(), "Web App"],
+            [8, "Baby Carrier Belt", "Baby Care", new Date(), "Web App"],
+            [9, "Baby Diaper", "Baby Care", new Date(), "Web App"],
+            [10, "Baby Oil", "Baby Care", new Date(), "Web App"],
+            [11, "Baby Sleeping Cushion", "Baby Care", new Date(), "Web App"],
+            [12, "Bathroom", "Household Utilities", new Date(), "Web App"],
+            [13, "Battery", "Electronics", new Date(), "Web App"],
+            [14, "Bed", "Household Utilities", new Date(), "Web App"],
+            [15, "Belt", "Shopping", new Date(), "Web App"],
+            [16, "Birthday", "Entertainment", new Date(), "Web App"],
+            [17, "Birthday Gift", "Entertainment", new Date(), "Web App"],
+            [18, "Books", "Education", new Date(), "Web App"],
+            [19, "Bottle", "Baby Care", new Date(), "Web App"],
+            [20, "Bread", "Food", new Date(), "Web App"],
+            [21, "Bulb", "Household Utilities", new Date(), "Web App"],
+            [22, "Cake", "Food", new Date(), "Web App"],
+            [23, "Candle & Ribbon", "Entertainment", new Date(), "Web App"],
+            [24, "Cell", "Electronics", new Date(), "Web App"],
+            [25, "Cinema", "Entertainment", new Date(), "Web App"],
+            [26, "Close Up", "Personal Care", new Date(), "Web App"],
+            [27, "Clothing", "Shopping", new Date(), "Web App"],
+            [28, "Coffee", "Food", new Date(), "Web App"],
+            [29, "Coldrink", "Food", new Date(), "Web App"],
+            [30, "Cotton & Bandage", "Medical", new Date(), "Web App"],
+            [31, "Cover", "Shopping", new Date(), "Web App"],
+            [32, "Cradle", "Baby Care", new Date(), "Web App"],
+            [33, "Cups & Plates", "Household Utilities", new Date(), "Web App"],
+            [34, "Curd", "Food", new Date(), "Web App"],
+            [35, "Dairy", "Food", new Date(), "Web App"],
+            [36, "Decoration", "Festivals", new Date(), "Web App"],
+            [37, "Dhanteras", "Festivals", new Date(), "Web App"],
+            [38, "Diwali", "Festivals", new Date(), "Web App"],
+            [39, "Doctor Fees", "Medical", new Date(), "Web App"],
+            [40, "Durga Pooja", "Festivals", new Date(), "Web App"],
+            [41, "Electric Fan", "Electronics", new Date(), "Web App"],
+            [42, "Electric Light", "Electronics", new Date(), "Web App"],
+            [43, "Electric Switch", "Electronics", new Date(), "Web App"],
+            [44, "Engine", "Transport", new Date(), "Web App"],
+            [45, "Fair", "Entertainment", new Date(), "Web App"],
+            [46, "Fan", "Electronics", new Date(), "Web App"],
+            [47, "Fan Repair", "Household Utilities", new Date(), "Web App"],
+            [48, "Flour", "Food", new Date(), "Web App"],
+            [49, "Folding Bed", "Household Utilities", new Date(), "Web App"],
+            [50, "Food", "Food", new Date(), "Web App"],
+            [51, "Fruit", "Food", new Date(), "Web App"],
+            [52, "Ganesh Chaturthi Celebration", "Festivals", new Date(), "Web App"],
+            [53, "Gemini Pro", "Other", new Date(), "Web App"],
+            [54, "Ghajak", "Food", new Date(), "Web App"],
+            [55, "Grocery", "Food", new Date(), "Web App"],
+            [56, "Gujiya", "Food", new Date(), "Web App"],
+            [57, "Hair Color", "Personal Care", new Date(), "Web App"],
+            [58, "Hair Cut", "Personal Care", new Date(), "Web App"],
+            [59, "Holi", "Festivals", new Date(), "Web App"],
+            [60, "Home", "Household Utilities", new Date(), "Web App"],
+            [61, "Ice Cream", "Food", new Date(), "Web App"],
+            [62, "ICU Care", "Medical", new Date(), "Web App"],
+            [63, "Jewellery", "Shopping", new Date(), "Web App"],
+            [64, "Jio Fiber", "Bills", new Date(), "Web App"],
+            [65, "Juice", "Food", new Date(), "Web App"],
+            [66, "Jwellery", "Shopping", new Date(), "Web App"],
+            [67, "Kailash Mela", "Festivals", new Date(), "Web App"],
+            [68, "Karvachauth", "Festivals", new Date(), "Web App"],
+            [69, "Katha", "Festivals", new Date(), "Web App"],
+            [70, "Khoya", "Food", new Date(), "Web App"],
+            [71, "Krishna Janmasthmi", "Festivals", new Date(), "Web App"],
+            [72, "Labour Charges", "Household Utilities", new Date(), "Web App"],
+            [73, "Lighter", "Household Utilities", new Date(), "Web App"],
+            [74, "Locker", "Bills", new Date(), "Web App"],
+            [75, "Medical + Vaccination", "Medical", new Date(), "Web App"],
+            [76, "Medical ₹, Apr", "Medical", new Date(), "Web App"],
+            [77, "Medical Powder", "Medical", new Date(), "Web App"],
+            [78, "Medical Test", "Medical", new Date(), "Web App"],
+            [79, "Medicine", "Medical", new Date(), "Web App"],
+            [80, "Medicore", "Medical", new Date(), "Web App"],
+            [81, "Metro", "Transport", new Date(), "Web App"],
+            [82, "Milk", "Food", new Date(), "Web App"],
+            [83, "Mobile", "Electronics", new Date(), "Web App"],
+            [84, "Money", "Other", new Date(), "Web App"],
+            [85, "Money Distribution", "Other", new Date(), "Web App"],
+            [86, "Money Distribution & Saari", "Shopping", new Date(), "Web App"],
+            [87, "Mosquito Repellent", "Household Utilities", new Date(), "Web App"],
+            [88, "Movie", "Entertainment", new Date(), "Web App"],
+            [89, "Nagrela", "Shopping", new Date(), "Web App"],
+            [90, "Notebook", "Education", new Date(), "Web App"],
+            [91, "Office", "Household Utilities", new Date(), "Web App"],
+            [92, "Oil", "Food", new Date(), "Web App"],
+            [93, "Paneer", "Food", new Date(), "Web App"],
+            [94, "Papers", "Education", new Date(), "Web App"],
+            [95, "Pathology Test", "Medical", new Date(), "Web App"],
+            [96, "Personal Care", "Personal Care", new Date(), "Web App"],
+            [97, "Petrol", "Transport", new Date(), "Web App"],
+            [98, "Pg", "Bills", new Date(), "Web App"],
+            [99, "Pnb Metlife", "Bills", new Date(), "Web App"],
+            [100, "Print Out", "Education", new Date(), "Web App"],
+            [101, "Radhika", "Personal Care", new Date(), "Web App"],
+            [102, "Rakhi", "Festivals", new Date(), "Web App"],
+            [103, "Reception", "Entertainment", new Date(), "Web App"],
+            [104, "Recharge", "Bills", new Date(), "Web App"],
+            [105, "Redmi Watch Strap", "Shopping", new Date(), "Web App"],
+            [106, "Rent+Security", "Bills", new Date(), "Web App"],
+            [107, "Room Rent", "Bills", new Date(), "Web App"],
+            [108, "Rudra Baby Months", "Baby Care", new Date(), "Web App"],
+            [109, "Saari", "Shopping", new Date(), "Web App"],
+            [110, "Sandals", "Shopping", new Date(), "Web App"],
+            [111, "Sanitary Pads", "Personal Care", new Date(), "Web App"],
+            [112, "Saving Razor", "Personal Care", new Date(), "Web App"],
+            [113, "SBI", "Bills", new Date(), "Web App"],
+            [114, "School", "Education", new Date(), "Web App"],
+            [115, "School Activity", "Education", new Date(), "Web App"],
+            [116, "School Activity Fees", "Education", new Date(), "Web App"],
+            [117, "School Books", "Education", new Date(), "Web App"],
+            [118, "School Dress", "Education", new Date(), "Web App"],
+            [119, "School Exam Fees", "Education", new Date(), "Web App"],
+            [120, "School Fees", "Education", new Date(), "Web App"],
+            [121, "School Fees Apr", "Education", new Date(), "Web App"],
+            [122, "School Fees Jul", "Education", new Date(), "Web App"],
+            [123, "School Fees Jun", "Education", new Date(), "Web App"],
+            [124, "School Fees May", "Education", new Date(), "Web App"],
+            [125, "School Stationary", "Education", new Date(), "Web App"],
+            [126, "School Transportation", "Education", new Date(), "Web App"],
+            [127, "Scooty Service", "Transport", new Date(), "Web App"],
+            [128, "Shoe", "Shopping", new Date(), "Web App"],
+            [129, "Shopping", "Shopping", new Date(), "Web App"],
+            [130, "Slippers", "Shopping", new Date(), "Web App"],
+            [131, "Snacks", "Food", new Date(), "Web App"],
+            [132, "Soap", "Personal Care", new Date(), "Web App"],
+            [133, "Surf Excel", "Personal Care", new Date(), "Web App"],
+            [134, "Sweets", "Food", new Date(), "Web App"],
+            [135, "Tap", "Household Utilities", new Date(), "Web App"],
+            [136, "Tap Jun 15, 2026", "Household Utilities", new Date(), "Web App"],
+            [137, "Thandai", "Food", new Date(), "Web App"],
+            [138, "Toothpaste", "Personal Care", new Date(), "Web App"],
+            [139, "Train", "Transport", new Date(), "Web App"],
+            [140, "TV", "Electronics", new Date(), "Web App"],
+            [141, "Ultrasound", "Medical", new Date(), "Web App"],
+            [142, "Vegetables", "Food", new Date(), "Web App"],
+            [143, "Vishal Mart", "Shopping", new Date(), "Web App"],
+            [144, "Walker", "Baby Care", new Date(), "Web App"],
+            [145, "Scooty Petrol", "Transport", new Date(), "Web App"]
+        ];
 
+        // Ensure headers
+        listSheet.getRange(1, 1, 1, 5).setValues([["ID", "Item List", "Category", "Date Added", "Added By"]]);
+
+        // Clear existing data rows below header if any
         const lastRow = listSheet.getLastRow();
-        if (lastRow <= 1) {
-            return { success: false, error: "No data rows in List sheet" };
+        if (lastRow > 1) {
+            listSheet.getRange(2, 1, lastRow - 1, 5).clearContent();
         }
 
-        const itemValues = listSheet.getRange(2, 2, lastRow - 1, 1).getValues();
-        const categoryOutput = [];
-
-        for (let i = 0; i < itemValues.length; i++) {
-            const rawItem = itemValues[i][0] ? itemValues[i][0].toString() : "";
-            const trimmedItem = rawItem.trim();
-            const matchedCategory = categoryMap[rawItem] || categoryMap[trimmedItem] || inferCategoryForItem(trimmedItem);
-            categoryOutput.push([matchedCategory]);
-        }
-
-        listSheet.getRange(2, 3, categoryOutput.length, 1).setValues(categoryOutput);
+        // Set the unique rows
+        listSheet.getRange(2, 1, items.length, 5).setValues(items);
 
         return {
             success: true,
-            updatedCount: categoryOutput.length
+            totalRows: items.length
         };
     } catch (e) {
-        return { success: false, error: e.message };
+        return {
+            success: false,
+            error: e.message
+        };
     }
 }
 
-/**
- * Infer category name based on item keywords
- */
+
+function updateAllListCategories() {
+    return populateListWithUserItems();
+}
+
 /**
  * Infer category name based on item keywords
  */
