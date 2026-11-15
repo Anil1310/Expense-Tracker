@@ -420,8 +420,8 @@ Expense Tracker Pro: 2026 Frontend Code
                 style="font-size: 0.72rem; font-weight: 700; padding: 4px 8px; border-radius: 6px; background: rgba(99, 102, 241, 0.12); color: #4f46e5; border: 1px solid rgba(99, 102, 241, 0.25); display: inline-flex; align-items: center;">0 Records</span>
             </div>
 
-            <div style="flex: 1; display: flex; justify-content: center; align-items: center; gap: 6px;">
-              <!-- Properly Centered Search Bar & Quick Scroll Controls -->
+            <div style="flex: 1; display: flex; justify-content: center; align-items: center;">
+              <!-- Properly Centered Search Bar -->
               <style>
                 #month-records-search::placeholder {
                   color: #64748b !important;
@@ -441,102 +441,13 @@ Expense Tracker Pro: 2026 Frontend Code
                   color: #e2e8f0 !important;
                   border: 1px solid rgba(255, 255, 255, 0.12) !important;
                 }
-
-                .btn-quick-scroll {
-                  height: 24px;
-                  padding: 0 8px;
-                  font-size: 0.72rem;
-                  font-weight: 600;
-                  border-radius: 6px;
-                  background: #f1f5f9;
-                  color: #334155;
-                  border: 1px solid #cbd5e1;
-                  display: inline-flex;
-                  align-items: center;
-                  justify-content: center;
-                  gap: 4px;
-                  cursor: pointer;
-                  transition: all 0.2s ease;
-                  white-space: nowrap;
-                }
-
-                .btn-quick-scroll:hover {
-                  background: #e2e8f0;
-                  color: #0f172a;
-                }
-
-                body[data-theme="dark"] .btn-quick-scroll {
-                  background: #334155;
-                  color: #e2e8f0;
-                  border-color: #475569;
-                }
-
-                body[data-theme="dark"] .btn-quick-scroll:hover {
-                  background: #475569;
-                  color: #ffffff;
-                }
-
-                .floating-scroll-nav {
-                  position: fixed;
-                  bottom: 85px;
-                  left: 18px;
-                  z-index: 1050;
-                  display: flex;
-                  flex-direction: column;
-                  gap: 8px;
-                }
-
-                .floating-scroll-btn {
-                  width: 36px;
-                  height: 36px;
-                  border-radius: 50%;
-                  background: #ffffff;
-                  color: #4f46e5;
-                  border: 1px solid rgba(99, 102, 241, 0.3);
-                  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-                  display: flex;
-                  align-items: center;
-                  justify-content: center;
-                  font-size: 0.85rem;
-                  cursor: pointer;
-                  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-                }
-
-                .floating-scroll-btn:active, .floating-scroll-btn:hover {
-                  transform: scale(1.08);
-                  background: #4f46e5;
-                  color: #ffffff;
-                }
-
-                body[data-theme="dark"] .floating-scroll-btn {
-                  background: #1e293b;
-                  color: #818cf8;
-                  border-color: rgba(129, 140, 248, 0.3);
-                  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-                }
-
-                body[data-theme="dark"] .floating-scroll-btn:active, body[data-theme="dark"] .floating-scroll-btn:hover {
-                  background: #6366f1;
-                  color: #ffffff;
-                }
               </style>
-              <div class="search-wrapper" style="position: relative; width: 140px; margin: 0;">
+              <div class="search-wrapper" style="position: relative; width: 170px; margin: 0;">
                 <i class="fas fa-search"
                   style="position: absolute; left: 8px; top: 50%; transform: translateY(-50%); color: #64748b !important; z-index: 10; font-size: 0.72rem;"></i>
                 <input type="text" id="month-records-search" class="form-control" placeholder="Search..."
                   style="padding-left: 24px; height: 24px; border-radius: 6px; font-size: 0.78rem; margin: 0 !important;"
                   onkeyup="filterMonthRecords()">
-              </div>
-              <div class="quick-scroll-group d-flex align-items-center" style="gap: 4px;">
-                <button type="button" class="btn-quick-scroll" onclick="scrollToTableTop()" title="Scroll to Top (Record 1)">
-                  <i class="fas fa-arrow-up"></i> Top
-                </button>
-                <button type="button" class="btn-quick-scroll" onclick="scrollToTableBottom()" title="Scroll to Bottom (Last Record)">
-                  <i class="fas fa-arrow-down"></i> End
-                </button>
-                <button type="button" class="btn-quick-scroll" onclick="toggleSortOrder()" title="Toggle Order 1→140 / 140→1" id="order-toggle-btn">
-                  <i class="fas fa-sort-numeric-down"></i> 1→140
-                </button>
               </div>
             </div>
 
@@ -596,15 +507,6 @@ Expense Tracker Pro: 2026 Frontend Code
         </div>
 
         <!-- Floating Scroll Up / Down Navigation on Mobile (Effortlessly scroll 1-140 records) -->
-        <div class="floating-scroll-nav d-md-none" id="mobile-floating-scroll">
-          <button type="button" class="floating-scroll-btn" onclick="scrollToTableTop()" title="Scroll to Top (Record 1)">
-            <i class="fas fa-arrow-up"></i>
-          </button>
-          <button type="button" class="floating-scroll-btn" onclick="scrollToTableBottom()" title="Scroll to Bottom (Record 140)">
-            <i class="fas fa-arrow-down"></i>
-          </button>
-        </div>
-
       </div>
 
       <!-- Enhanced Reports Page -->

@@ -22,7 +22,10 @@ Expense Tracker Pro: 2026 JavaScript Code
         window.addEventListener('load', ensureScrollOffset, { passive: true });
         document.addEventListener('DOMContentLoaded', ensureScrollOffset, { passive: true });
 
-        window.addEventListener('touchstart', function () {
+        window.addEventListener('touchstart', function (e) {
+            if (e.target && e.target.closest && e.target.closest('.table-responsive')) {
+                return; // Let user swipe freely up/down and left/right inside table
+            }
             ensureScrollOffset();
         }, { passive: true });
     })();

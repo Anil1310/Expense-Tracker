@@ -5899,19 +5899,20 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             color: #3b82f6 !important;
         }
 
-        /* ── Table Section — Natural Height on Mobile for Page Scrolling ── */
+        /* ── Table Section — Contained Scrollable Card on Mobile ── */
         #dashboard-page .table-container {
             height: auto !important;
             min-height: 250px !important;
             max-height: none !important;
-            padding-bottom: 95px !important;
+            padding-bottom: 0 !important;
             margin-top: 10px !important;
-            border-radius: 20px 20px 0 0 !important;
+            margin-bottom: 75px !important;
+            border-radius: 20px !important;
             background: #ffffff !important;
             box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.08), 0 4px 20px rgba(0, 0, 0, 0.06) !important;
             display: flex !important;
             flex-direction: column !important;
-            overflow: visible !important;
+            overflow: hidden !important;
         }
 
         [data-theme="dark"] #dashboard-page .table-container {
@@ -5936,18 +5937,16 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             width: 100% !important;
             flex: 1 1 auto !important;
             height: auto !important;
-            max-height: none !important;
-            min-height: 0 !important;
+            max-height: calc(100vh - 290px) !important;
+            max-height: calc(100dvh - 290px) !important;
+            min-height: 250px !important;
             overflow-x: auto !important;
-            overflow-y: visible !important;
+            overflow-y: auto !important;
             -webkit-overflow-scrolling: touch !important;
             touch-action: pan-x pan-y !important;
-            overscroll-behavior-y: none !important;
-            overscroll-behavior-x: none !important;
-            overscroll-behavior: none !important;
-            border-radius: 0 0 12px 12px !important;
+            border-radius: 0 0 16px 16px !important;
             background: #ffffff !important;
-            padding-bottom: 60px !important;
+            padding-bottom: 15px !important;
             box-shadow: none !important;
             position: relative !important;
         }
@@ -5957,17 +5956,16 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             width: 100% !important;
             flex: 1 1 auto !important;
             height: auto !important;
-            max-height: none !important;
+            max-height: calc(100vh - 290px) !important;
+            max-height: calc(100dvh - 290px) !important;
+            min-height: 250px !important;
             overflow-x: auto !important;
-            overflow-y: visible !important;
+            overflow-y: auto !important;
             -webkit-overflow-scrolling: touch !important;
             touch-action: pan-x pan-y !important;
-            overscroll-behavior-y: none !important;
-            overscroll-behavior-x: none !important;
-            overscroll-behavior: none !important;
-            border-radius: 0 0 12px 12px !important;
+            border-radius: 0 0 16px 16px !important;
             background: #ffffff !important;
-            padding-bottom: 60px !important;
+            padding-bottom: 15px !important;
             box-shadow: none !important;
             position: relative !important;
         }
@@ -7612,17 +7610,19 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             color: #818cf8 !important;
         }
 
-        /* ── Table Responsive Wrapper: horizontal scroll, no vertical clip ── */
+        /* ── Table Responsive Wrapper: horizontal and vertical scroll with finger/thumb ── */
         #data-page .table-responsive {
             width: 100% !important;
             overflow-x: auto !important;
-            overflow-y: visible !important;
+            overflow-y: auto !important;
             -webkit-overflow-scrolling: touch !important;
+            touch-action: pan-x pan-y !important;
             border-radius: 0 !important;
             border: none !important;
-            max-height: none !important;
+            max-height: calc(100vh - 290px) !important;
+            max-height: calc(100dvh - 290px) !important;
             box-shadow: none !important;
-            padding-bottom: 0 !important;
+            padding-bottom: 15px !important;
         }
 
         /* ── Compact Table Base ── */
@@ -8383,16 +8383,18 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             border: none !important;
         }
 
-        /* ── Table Responsive Wrapper (Smooth Swipe, No Clip) ── */
+        /* ── Table Responsive Wrapper (Smooth Swipe in both directions) ── */
         #reports-page .table-responsive {
             width: 100% !important;
             overflow-x: auto !important;
-            overflow-y: visible !important;
+            overflow-y: auto !important;
             -webkit-overflow-scrolling: touch !important;
-            max-height: none !important;
+            touch-action: pan-x pan-y !important;
+            max-height: calc(100vh - 290px) !important;
+            max-height: calc(100dvh - 290px) !important;
             height: auto !important;
-            padding-bottom: 0 !important;
-            border-radius: 0 !important;
+            padding-bottom: 15px !important;
+            border-radius: 0 0 16px 16px !important;
             border: none !important;
             position: relative !important;
         }

@@ -6000,19 +6000,20 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             color: #3b82f6 !important;
         }
 
-        /* ── Table Section — Natural Height on Mobile for Page Scrolling ── */
+        /* ── Table Section — Contained Scrollable Card on Mobile ── */
         #dashboard-page .table-container {
             height: auto !important;
             min-height: 250px !important;
             max-height: none !important;
-            padding-bottom: 95px !important;
+            padding-bottom: 0 !important;
             margin-top: 10px !important;
-            border-radius: 20px 20px 0 0 !important;
+            margin-bottom: 75px !important;
+            border-radius: 20px !important;
             background: #ffffff !important;
             box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.08), 0 4px 20px rgba(0, 0, 0, 0.06) !important;
             display: flex !important;
             flex-direction: column !important;
-            overflow: visible !important;
+            overflow: hidden !important;
         }
 
         [data-theme="dark"] #dashboard-page .table-container {
@@ -6037,18 +6038,16 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             width: 100% !important;
             flex: 1 1 auto !important;
             height: auto !important;
-            max-height: none !important;
-            min-height: 0 !important;
+            max-height: calc(100vh - 290px) !important;
+            max-height: calc(100dvh - 290px) !important;
+            min-height: 250px !important;
             overflow-x: auto !important;
-            overflow-y: visible !important;
+            overflow-y: auto !important;
             -webkit-overflow-scrolling: touch !important;
             touch-action: pan-x pan-y !important;
-            overscroll-behavior-y: none !important;
-            overscroll-behavior-x: none !important;
-            overscroll-behavior: none !important;
-            border-radius: 0 0 12px 12px !important;
+            border-radius: 0 0 16px 16px !important;
             background: #ffffff !important;
-            padding-bottom: 60px !important;
+            padding-bottom: 15px !important;
             box-shadow: none !important;
             position: relative !important;
         }
@@ -6058,17 +6057,16 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             width: 100% !important;
             flex: 1 1 auto !important;
             height: auto !important;
-            max-height: none !important;
+            max-height: calc(100vh - 290px) !important;
+            max-height: calc(100dvh - 290px) !important;
+            min-height: 250px !important;
             overflow-x: auto !important;
-            overflow-y: visible !important;
+            overflow-y: auto !important;
             -webkit-overflow-scrolling: touch !important;
             touch-action: pan-x pan-y !important;
-            overscroll-behavior-y: none !important;
-            overscroll-behavior-x: none !important;
-            overscroll-behavior: none !important;
-            border-radius: 0 0 12px 12px !important;
+            border-radius: 0 0 16px 16px !important;
             background: #ffffff !important;
-            padding-bottom: 60px !important;
+            padding-bottom: 15px !important;
             box-shadow: none !important;
             position: relative !important;
         }
@@ -7713,17 +7711,19 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             color: #818cf8 !important;
         }
 
-        /* ── Table Responsive Wrapper: horizontal scroll, no vertical clip ── */
+        /* ── Table Responsive Wrapper: horizontal and vertical scroll with finger/thumb ── */
         #data-page .table-responsive {
             width: 100% !important;
             overflow-x: auto !important;
-            overflow-y: visible !important;
+            overflow-y: auto !important;
             -webkit-overflow-scrolling: touch !important;
+            touch-action: pan-x pan-y !important;
             border-radius: 0 !important;
             border: none !important;
-            max-height: none !important;
+            max-height: calc(100vh - 290px) !important;
+            max-height: calc(100dvh - 290px) !important;
             box-shadow: none !important;
-            padding-bottom: 0 !important;
+            padding-bottom: 15px !important;
         }
 
         /* ── Compact Table Base ── */
@@ -8484,16 +8484,18 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             border: none !important;
         }
 
-        /* ── Table Responsive Wrapper (Smooth Swipe, No Clip) ── */
+        /* ── Table Responsive Wrapper (Smooth Swipe in both directions) ── */
         #reports-page .table-responsive {
             width: 100% !important;
             overflow-x: auto !important;
-            overflow-y: visible !important;
+            overflow-y: auto !important;
             -webkit-overflow-scrolling: touch !important;
-            max-height: none !important;
+            touch-action: pan-x pan-y !important;
+            max-height: calc(100vh - 290px) !important;
+            max-height: calc(100dvh - 290px) !important;
             height: auto !important;
-            padding-bottom: 0 !important;
-            border-radius: 0 !important;
+            padding-bottom: 15px !important;
+            border-radius: 0 0 16px 16px !important;
             border: none !important;
             position: relative !important;
         }
@@ -9624,8 +9626,8 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
                 style="font-size: 0.72rem; font-weight: 700; padding: 4px 8px; border-radius: 6px; background: rgba(99, 102, 241, 0.12); color: #4f46e5; border: 1px solid rgba(99, 102, 241, 0.25); display: inline-flex; align-items: center;">0 Records</span>
             </div>
 
-            <div style="flex: 1; display: flex; justify-content: center; align-items: center; gap: 6px;">
-              <!-- Properly Centered Search Bar & Quick Scroll Controls -->
+            <div style="flex: 1; display: flex; justify-content: center; align-items: center;">
+              <!-- Properly Centered Search Bar -->
               <style>
                 #month-records-search::placeholder {
                   color: #64748b !important;
@@ -9645,102 +9647,13 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
                   color: #e2e8f0 !important;
                   border: 1px solid rgba(255, 255, 255, 0.12) !important;
                 }
-
-                .btn-quick-scroll {
-                  height: 24px;
-                  padding: 0 8px;
-                  font-size: 0.72rem;
-                  font-weight: 600;
-                  border-radius: 6px;
-                  background: #f1f5f9;
-                  color: #334155;
-                  border: 1px solid #cbd5e1;
-                  display: inline-flex;
-                  align-items: center;
-                  justify-content: center;
-                  gap: 4px;
-                  cursor: pointer;
-                  transition: all 0.2s ease;
-                  white-space: nowrap;
-                }
-
-                .btn-quick-scroll:hover {
-                  background: #e2e8f0;
-                  color: #0f172a;
-                }
-
-                body[data-theme="dark"] .btn-quick-scroll {
-                  background: #334155;
-                  color: #e2e8f0;
-                  border-color: #475569;
-                }
-
-                body[data-theme="dark"] .btn-quick-scroll:hover {
-                  background: #475569;
-                  color: #ffffff;
-                }
-
-                .floating-scroll-nav {
-                  position: fixed;
-                  bottom: 85px;
-                  left: 18px;
-                  z-index: 1050;
-                  display: flex;
-                  flex-direction: column;
-                  gap: 8px;
-                }
-
-                .floating-scroll-btn {
-                  width: 36px;
-                  height: 36px;
-                  border-radius: 50%;
-                  background: #ffffff;
-                  color: #4f46e5;
-                  border: 1px solid rgba(99, 102, 241, 0.3);
-                  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-                  display: flex;
-                  align-items: center;
-                  justify-content: center;
-                  font-size: 0.85rem;
-                  cursor: pointer;
-                  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-                }
-
-                .floating-scroll-btn:active, .floating-scroll-btn:hover {
-                  transform: scale(1.08);
-                  background: #4f46e5;
-                  color: #ffffff;
-                }
-
-                body[data-theme="dark"] .floating-scroll-btn {
-                  background: #1e293b;
-                  color: #818cf8;
-                  border-color: rgba(129, 140, 248, 0.3);
-                  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-                }
-
-                body[data-theme="dark"] .floating-scroll-btn:active, body[data-theme="dark"] .floating-scroll-btn:hover {
-                  background: #6366f1;
-                  color: #ffffff;
-                }
               </style>
-              <div class="search-wrapper" style="position: relative; width: 140px; margin: 0;">
+              <div class="search-wrapper" style="position: relative; width: 170px; margin: 0;">
                 <i class="fas fa-search"
                   style="position: absolute; left: 8px; top: 50%; transform: translateY(-50%); color: #64748b !important; z-index: 10; font-size: 0.72rem;"></i>
                 <input type="text" id="month-records-search" class="form-control" placeholder="Search..."
                   style="padding-left: 24px; height: 24px; border-radius: 6px; font-size: 0.78rem; margin: 0 !important;"
                   onkeyup="filterMonthRecords()">
-              </div>
-              <div class="quick-scroll-group d-flex align-items-center" style="gap: 4px;">
-                <button type="button" class="btn-quick-scroll" onclick="scrollToTableTop()" title="Scroll to Top (Record 1)">
-                  <i class="fas fa-arrow-up"></i> Top
-                </button>
-                <button type="button" class="btn-quick-scroll" onclick="scrollToTableBottom()" title="Scroll to Bottom (Last Record)">
-                  <i class="fas fa-arrow-down"></i> End
-                </button>
-                <button type="button" class="btn-quick-scroll" onclick="toggleSortOrder()" title="Toggle Order 1→140 / 140→1" id="order-toggle-btn">
-                  <i class="fas fa-sort-numeric-down"></i> 1→140
-                </button>
               </div>
             </div>
 
@@ -9800,15 +9713,6 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
         </div>
 
         <!-- Floating Scroll Up / Down Navigation on Mobile (Effortlessly scroll 1-140 records) -->
-        <div class="floating-scroll-nav d-md-none" id="mobile-floating-scroll">
-          <button type="button" class="floating-scroll-btn" onclick="scrollToTableTop()" title="Scroll to Top (Record 1)">
-            <i class="fas fa-arrow-up"></i>
-          </button>
-          <button type="button" class="floating-scroll-btn" onclick="scrollToTableBottom()" title="Scroll to Bottom (Record 140)">
-            <i class="fas fa-arrow-down"></i>
-          </button>
-        </div>
-
       </div>
 
       <!-- Enhanced Reports Page -->
@@ -10919,7 +10823,10 @@ Expense Tracker Pro: 2026 JavaScript Code
         window.addEventListener('load', ensureScrollOffset, { passive: true });
         document.addEventListener('DOMContentLoaded', ensureScrollOffset, { passive: true });
 
-        window.addEventListener('touchstart', function () {
+        window.addEventListener('touchstart', function (e) {
+            if (e.target && e.target.closest && e.target.closest('.table-responsive')) {
+                return; // Let user swipe freely up/down and left/right inside table
+            }
             ensureScrollOffset();
         }, { passive: true });
     })();
