@@ -136,6 +136,12 @@ function doGet(e) {
             .setMimeType(ContentService.MimeType.JSON);
     }
 
+    if (page === 'updateListCategories') {
+        const result = updateAllListCategories();
+        return ContentService.createTextOutput(JSON.stringify(result))
+            .setMimeType(ContentService.MimeType.JSON);
+    }
+
     const template = HtmlService.createTemplateFromFile('Expense Tracker/Index');
 
     // PRE-LOAD INITIAL DATA (Faster Start)
@@ -184,7 +190,8 @@ function doPost(e) {
             restoreEntry: (...args) => restoreEntry(...args),
             runCompleteProcess: (...args) => runCompleteProcess(...args),
             saveProfilePhoto: (...args) => saveProfilePhoto(...args),
-            cleanAllColumnEIconsAndStopTriggers: (...args) => cleanAllColumnEIconsAndStopTriggers(...args)
+            cleanAllColumnEIconsAndStopTriggers: (...args) => cleanAllColumnEIconsAndStopTriggers(...args),
+            updateAllListCategories: (...args) => updateAllListCategories(...args)
         };
 
         if (!request || typeof request.method !== "string" ||
@@ -1262,6 +1269,210 @@ function ensureListSheet() {
     autoEnrichMissingCategoriesAndIcons(ss, listSheet);
 
     return listSheet;
+}
+
+/**
+ * Updates Column C (Category) for all items in the 'List' sheet
+ */
+function updateAllListCategories() {
+    try {
+        const ss = SpreadsheetApp.openById(MAIN_ID);
+        const listSheet = ss.getSheetByName("List");
+        if (!listSheet) {
+            return { success: false, error: "List sheet not found" };
+        }
+
+        const categoryMap = {
+            "AI": "Bills",
+            "Amazon": "Shopping",
+            "Amazon Watches": "Shopping",
+            "Anil Chahar": "Other",
+            "Anya Prashan": "Festivals",
+            "Apple": "Food",
+            "Auto": "Transport",
+            "Auto Fare": "Transport",
+            "Axis": "Bills",
+            "Baby Carrier Belt": "Baby Care",
+            "Baby Cradle": "Baby Care",
+            "Baby Diaper": "Baby Care",
+            "Baby Oil": "Baby Care",
+            "Baby Sleeping Cushion": "Baby Care",
+            "Bathroom": "Household Utilities",
+            "Battery": "Electronics",
+            "Bed": "Household Utilities",
+            "Belt": "Shopping",
+            "Birthday": "Festivals",
+            "Birthday Gift": "Festivals",
+            "Books": "Education",
+            "Bottle": "Household Utilities",
+            "Bread": "Food",
+            "Bulb": "Household Utilities",
+            "Bulb ": "Household Utilities",
+            "Bulb Jan 4, 2026 - Jan 4, 2028": "Household Utilities",
+            "Bulb Jun 15, 26 - June 15, 27": "Household Utilities",
+            "Cake": "Food",
+            "Candle & Ribbon": "Household Utilities",
+            "Car Petrol": "Transport",
+            "Cell": "Electronics",
+            "Cinema": "Entertainment",
+            "Close Up": "Personal Care",
+            "Close-up": "Personal Care",
+            "Clothing": "Shopping",
+            "Coffee": "Food",
+            "Coldrink": "Food",
+            "Cotton & Bandage": "Medical",
+            "Cover": "Household Utilities",
+            "Cradle": "Baby Care",
+            "Cups & Plates": "Household Utilities",
+            "Curd": "Food",
+            "Dairy": "Food",
+            "Decoration": "Household Utilities",
+            "Dhanteras": "Festivals",
+            "Diwali": "Festivals",
+            "Doctor Fees": "Medical",
+            "Durga Pooja": "Festivals",
+            "Electric Fan": "Household Utilities",
+            "Electric Switch": "Household Utilities",
+            "Engine": "Transport",
+            "Fair": "Entertainment",
+            "Fan": "Household Utilities",
+            "Fan Repair": "Household Utilities",
+            "Feb - Mar": "Bills",
+            "Flour": "Food",
+            "Folding Bed": "Household Utilities",
+            "Food": "Food",
+            "Fruit": "Food",
+            "Ganesh Chaturthi": "Festivals",
+            "Gemini Pro": "Bills",
+            "Ghajak": "Food",
+            "Grocery": "Food",
+            "Gujiya": "Food",
+            "Hair Color": "Personal Care",
+            "Hair Cut": "Personal Care",
+            "Holi": "Festivals",
+            "Home": "Bills",
+            "Ice Cream": "Food",
+            "Ice-cream": "Food",
+            "ICU Care": "Medical",
+            "Item List": "Other",
+            "Jewellery": "Shopping",
+            "Jio Fiber": "Bills",
+            "Juice": "Food",
+            "Jwellery": "Shopping",
+            "Kailash Mela": "Festivals",
+            "Karvachauth": "Festivals",
+            "Katha": "Festivals",
+            "Khoya": "Food",
+            "Krishna Janmasthmi": "Festivals",
+            "Labour Charges": "Household Utilities",
+            "Lighter": "Household Utilities",
+            "Locker": "Bills",
+            "Medical + Vaccination": "Medical",
+            "Medical ₹, Apr": "Medical",
+            "Medical Powder": "Medical",
+            "Medical Test": "Medical",
+            "Medicine": "Medical",
+            "Medicines": "Medical",
+            "Medicore": "Medical",
+            "Metro": "Transport",
+            "Milk": "Food",
+            "Mob-Recharge": "Bills",
+            "Mobile": "Electronics",
+            "Money": "Other",
+            "Money Distribution": "Other",
+            "Money Distribution & Saari": "Other",
+            "Mosquito Repellent": "Household Utilities",
+            "Movie": "Entertainment",
+            "Nagrela": "Shopping",
+            "Notebook": "Education",
+            "Office": "Household Utilities",
+            "Oil": "Food",
+            "Paneer": "Food",
+            "Papers": "Education",
+            "Pathology Test": "Medical",
+            "Personal Care": "Personal Care",
+            "Petrol": "Transport",
+            "Pg": "Bills",
+            "Phone Battery": "Electronics",
+            "Pnb Metlife": "Bills",
+            "Print Out": "Education",
+            "Radhika": "Other",
+            "Radhika Chahar": "Other",
+            "Rakhi": "Festivals",
+            "Reception": "Festivals",
+            "Recharge": "Bills",
+            "Redmi Watch Strap": "Electronics",
+            "Rent+Security": "Bills",
+            "Room Rent": "Bills",
+            "Rudra Baby Months": "Baby Care",
+            "Saari": "Shopping",
+            "Sandals": "Shopping",
+            "Sanitary Pads": "Personal Care",
+            "Saving Razor": "Personal Care",
+            "SBI": "Bills",
+            "School": "Education",
+            "School Activity": "Education",
+            "School Activity Fees": "Education",
+            "School Books": "Education",
+            "School Dress": "Education",
+            "School Exam Fees": "Education",
+            "School Fees": "Education",
+            "School Fees Apr": "Education",
+            "School Fees Jul": "Education",
+            "School Fees Jun": "Education",
+            "School Fees May": "Education",
+            "School Stationary": "Education",
+            "School Transportation": "Transport",
+            "Scooty Petrol": "Transport",
+            "Scooty Service": "Transport",
+            "Service": "Household Utilities",
+            "Shoes": "Shopping",
+            "Shoes & Slippers": "Shopping",
+            "Shopping": "Shopping",
+            "Shopping Radhika": "Shopping",
+            "Slippers": "Shopping",
+            "Snacks": "Food",
+            "Soap": "Personal Care",
+            "Surf": "Household Utilities",
+            "Surf Excel": "Household Utilities",
+            "Sweets": "Food",
+            "Tap": "Household Utilities",
+            "Tap Jun 15, 2026": "Household Utilities",
+            "Thandai": "Food",
+            "Toothpaste": "Personal Care",
+            "Train": "Transport",
+            "TV": "Electronics",
+            "Ultrasound": "Medical",
+            "Vegetables": "Food",
+            "Vishal Mart": "Shopping",
+            "Walker": "Baby Care",
+            "Watch": "Electronics"
+        };
+
+        const lastRow = listSheet.getLastRow();
+        if (lastRow <= 1) {
+            return { success: false, error: "No data rows in List sheet" };
+        }
+
+        const itemValues = listSheet.getRange(2, 2, lastRow - 1, 1).getValues();
+        const categoryOutput = [];
+
+        for (let i = 0; i < itemValues.length; i++) {
+            const rawItem = itemValues[i][0] ? itemValues[i][0].toString() : "";
+            const trimmedItem = rawItem.trim();
+            const matchedCategory = categoryMap[rawItem] || categoryMap[trimmedItem] || inferCategoryForItem(trimmedItem);
+            categoryOutput.push([matchedCategory]);
+        }
+
+        listSheet.getRange(2, 3, categoryOutput.length, 1).setValues(categoryOutput);
+
+        return {
+            success: true,
+            updatedCount: categoryOutput.length
+        };
+    } catch (e) {
+        return { success: false, error: e.message };
+    }
 }
 
 /**
