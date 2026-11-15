@@ -8810,10 +8810,6 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
               onclick="showMonthSummaryModal()" title="Month Summary">
               <i class="fas fa-chart-pie" style="color: #3b82f6;"></i>
             </button>
-            <button class="add-item-btn" data-bs-toggle="tooltip" data-bs-placement="bottom"
-              onclick="showAddItemModal()" title="Add Item">
-              <i class="fas fa-plus"></i>
-            </button>
             <button class="header-icon-btn" data-bs-toggle="tooltip" data-bs-placement="bottom"
               onclick="showTrashModal()" title="Recycle Bin">
               <i class="fas fa-trash-restore" style="color: #ef4444;"></i>
@@ -8979,10 +8975,6 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             </button>
             <button class="refresh-btn-header" onclick="refreshReports()" title="Refresh">
               <i class="fas fa-sync-alt"></i>
-            </button>
-            <button class="add-item-btn" onclick="showAddItemModal()" title="Add Item" data-bs-toggle="tooltip"
-              data-bs-placement="bottom">
-              <i class="fas fa-plus"></i>
             </button>
             <button class="header-icon-btn pdf-btn" id="reports-pdf-report-btn" onclick="downloadMonthReport(document.getElementById('monthFilter')?.value || CURRENT_MONTH)" title="View PDF">
               <i class="fas fa-file-pdf"></i>
@@ -9628,9 +9620,10 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
                   style="font-weight: 700; font-size: 0.85rem; color: #1e293b;">
                   <i class="fas fa-list me-1" style="color: #6366f1;"></i> Item Dropdown List
                 </label>
-                <button type="button" class="btn btn-sm btn-outline-success py-0 px-2" onclick="showAddItemModal()"
-                  style="font-size: 0.75rem; border-radius: 6px; font-weight: 600;" title="Add new item to List sheet">
-                  <i class="fas fa-plus me-1"></i>+ Add New Item
+                <button type="button" class="add-item-btn" onclick="showAddItemModal()"
+                  data-bs-toggle="tooltip" data-bs-placement="top" title="Add New Item & Category"
+                  style="width: 30px !important; height: 30px !important; display: inline-flex !important; align-items: center !important; justify-content: center !important; border-radius: 50% !important; background: #ffffff !important; box-shadow: 0 3px 6px rgba(0,0,0,0.08) !important; border: 1px solid rgba(0,0,0,0.06) !important; cursor: pointer;">
+                  <i class="fas fa-plus" style="color: #10b981 !important; font-size: 0.95rem !important; font-weight: 900 !important;"></i>
                 </button>
               </div>
               <div class="position-relative">
