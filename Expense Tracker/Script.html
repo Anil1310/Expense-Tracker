@@ -446,7 +446,7 @@ Expense Tracker Pro: 2026 JavaScript Code
         // Remember Me support
         const rememberMe = document.getElementById('remember-me');
         if (rememberMe && rememberMe.checked) {
-            try { localStorage.setItem('divine_remember_id', username); } catch (e) {}
+            try { localStorage.setItem('divine_remember_id', username); } catch (e) { }
         }
 
         // Instant local authentication (0ms) for known admin/user accounts with PIN 4566
@@ -1511,7 +1511,7 @@ Expense Tracker Pro: 2026 JavaScript Code
         const pageTitle = document.getElementById('page-title');
         const tableTitle = document.getElementById('table-title');
 
-        if (pageTitle) pageTitle.textContent = `${targetMonth} Expenses`;
+        if (pageTitle) pageTitle.textContent = 'Expenses Tracker Pro';
         const titleText = document.getElementById('table-title-text');
         if (titleText) titleText.textContent = `${targetMonth} Expenses`;
         else if (tableTitle) tableTitle.textContent = `${targetMonth} Expenses`;
@@ -1653,11 +1653,8 @@ Expense Tracker Pro: 2026 JavaScript Code
         const totalItems = allLatestData.length;
 
         if (isMobile) {
-            // Mobile: Infinite scroll — store full dataset, render first batch
-            mobileDashboardAllData = allLatestData;
-            mobileDashboardLoadedCount = 0;
-            latestData = [];
-            currentDashboardPage = 1;
+            // Mobile: Render all records of the month immediately so user can scroll up and down with their finger to see all records to the very last record
+            latestData = allLatestData;
         } else {
             // Desktop: Standard pagination
             totalPages = Math.ceil(totalItems * 1.0 / DASHBOARD_PER_PAGE) || 1;
@@ -1668,32 +1665,7 @@ Expense Tracker Pro: 2026 JavaScript Code
             latestData = allLatestData.slice(startIndex, endIndex);
         }
 
-        if (isMobile && mobileDashboardAllData.length === 0) {
-            // Mobile empty state
-            tableBody.innerHTML = `
-                <tr>
-                    <td colspan="8" class="text-center py-5">
-                        <div class="empty-state" style="animation: fadeIn 0.5s ease;">
-                            <i class="fas fa-receipt mb-3" style="font-size: 3.5rem; opacity: 0.1; color: var(--primary-color);"></i>
-                            <h5 class="fw-bold" style="color: var(--primary-color);">No Expenses Recorded</h5>
-                            <p class="text-muted small mb-4">You haven't added any expenses for ${CURRENT_MONTH} yet.</p>
-                            <button class="btn btn-primary px-4 rounded-pill" onclick="showAddModal()" style="box-shadow: var(--shadow-md);">
-                                <i class="fas fa-plus me-2"></i> Add First Expense
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            `;
-            if (paginationContainer) paginationContainer.innerHTML = '';
-            if (pageInfo) pageInfo.textContent = '';
-        } else if (isMobile) {
-            // Mobile: Infinite Scroll — render first batch
-            tableBody.innerHTML = '';
-            if (mobileDashboardObserver) mobileDashboardObserver.disconnect();
-            mobileDashboardLoadedCount = 0;
-            appendDashboardBatch(tableBody);
-            renderNotificationsUI();
-        } else if (latestData.length === 0) {
+        if (latestData.length === 0) {
             tableBody.innerHTML = `
                 <tr>
                     <td colspan="8" class="text-center py-5">
@@ -1713,6 +1685,7 @@ Expense Tracker Pro: 2026 JavaScript Code
         } else {
             tableBody.innerHTML = ''; // Clear before appending
 
+            const fragment = document.createDocumentFragment();
             latestData.forEach((row, index) => {
                 const sn = row.sn;
                 const uniqueId = row[1];
@@ -1755,12 +1728,25 @@ Expense Tracker Pro: 2026 JavaScript Code
                 actionTd.appendChild(viewBtn);
                 actionTd.appendChild(editBtn);
                 actionTd.appendChild(deleteBtn);
-                tableBody.appendChild(tr);
+                fragment.appendChild(tr);
             });
+            tableBody.appendChild(fragment);
 
-
-
-            renderPagination(totalPages, currentDashboardPage, 'dashboard-pagination', 'dashboard-page-info', 'goToDashboardPage');
+            if (isMobile) {
+                // Mobile: Add clean end footer showing all records loaded
+                const footer = document.createElement('tr');
+                footer.className = 'scroll-sentinel';
+                footer.innerHTML = `
+                    <td colspan="8" class="scroll-sentinel-cell scroll-end" style="text-align: center; padding: 14px 8px; font-weight: 600; color: #64748b; font-size: 0.8rem; background: transparent;">
+                        <i class="fas fa-check-circle me-1" style="color:var(--success-color);"></i>
+                        All ${latestData.length} records loaded
+                    </td>`;
+                tableBody.appendChild(footer);
+                if (paginationContainer) paginationContainer.innerHTML = '';
+                if (pageInfo) pageInfo.textContent = '';
+            } else {
+                renderPagination(totalPages, currentDashboardPage, 'dashboard-pagination', 'dashboard-page-info', 'goToDashboardPage');
+            }
             renderNotificationsUI();
         }
     }
