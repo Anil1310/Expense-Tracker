@@ -53,7 +53,156 @@ Expense Tracker Pro: 2026 JavaScript Code
     let yearlyData = {};
     let yearlyExpenseChart;
     let yearlyExpenseBarChart;
-    let itemsList = [];
+    const DEFAULT_ITEM_CATEGORY_MAP = {
+        "ai": "📌 Other",
+        "amazon": "🛍️ Shopping",
+        "amazon watches": "🛍️ Shopping",
+        "anya prashan": "🪔 Festivals",
+        "apple": "🍕 Food",
+        "auto": "🚗 Transport",
+        "axis": "🧾 Bills",
+        "baby carrier belt": "👶 Baby Care",
+        "baby diaper": "👶 Baby Care",
+        "baby oil": "👶 Baby Care",
+        "baby sleeping cushion": "👶 Baby Care",
+        "bathroom": "🧹 Household Utilities",
+        "battery": "💻 Electronics",
+        "bed": "🧹 Household Utilities",
+        "belt": "🛍️ Shopping",
+        "birthday": "🎬 Entertainment",
+        "birthday gift": "🎬 Entertainment",
+        "books": "🎓 Education",
+        "bottle": "👶 Baby Care",
+        "bread": "🍕 Food",
+        "bulb": "🧹 Household Utilities",
+        "cake": "🍕 Food",
+        "candle & ribbon": "🎬 Entertainment",
+        "cell": "💻 Electronics",
+        "cinema": "🎬 Entertainment",
+        "close up": "🧴 Personal Care",
+        "clothing": "🛍️ Shopping",
+        "coffee": "🍕 Food",
+        "coldrink": "🍕 Food",
+        "cotton & bandage": "💊 Medical",
+        "cover": "🛍️ Shopping",
+        "cradle": "👶 Baby Care",
+        "cups & plates": "🧹 Household Utilities",
+        "curd": "🍕 Food",
+        "dairy": "🍕 Food",
+        "decoration": "🪔 Festivals",
+        "dhanteras": "🪔 Festivals",
+        "diwali": "🪔 Festivals",
+        "doctor fees": "💊 Medical",
+        "durga pooja": "🪔 Festivals",
+        "electric fan": "💻 Electronics",
+        "electric light": "💻 Electronics",
+        "electric switch": "💻 Electronics",
+        "engine": "🚗 Transport",
+        "fair": "🎬 Entertainment",
+        "fan": "💻 Electronics",
+        "fan repair": "🧹 Household Utilities",
+        "flour": "🍕 Food",
+        "folding bed": "🧹 Household Utilities",
+        "food": "🍕 Food",
+        "fruit": "🍕 Food",
+        "ganesh chaturthi celebration": "🪔 Festivals",
+        "gemini pro": "📌 Other",
+        "ghajak": "🍕 Food",
+        "grocery": "🍕 Food",
+        "gujiya": "🍕 Food",
+        "hair color": "🧴 Personal Care",
+        "hair cut": "🧴 Personal Care",
+        "holi": "🪔 Festivals",
+        "home": "🧹 Household Utilities",
+        "ice cream": "🍕 Food",
+        "icu care": "💊 Medical",
+        "jewellery": "🛍️ Shopping",
+        "jio fiber": "🧾 Bills",
+        "juice": "🍕 Food",
+        "jwellery": "🛍️ Shopping",
+        "kailash mela": "🪔 Festivals",
+        "karvachauth": "🪔 Festivals",
+        "katha": "🪔 Festivals",
+        "khoya": "🍕 Food",
+        "krishna janmasthmi": "🪔 Festivals",
+        "labour charges": "🧹 Household Utilities",
+        "lighter": "🧹 Household Utilities",
+        "locker": "🧾 Bills",
+        "medical + vaccination": "💊 Medical",
+        "medical powder": "💊 Medical",
+        "medical test": "💊 Medical",
+        "medical ₹, apr": "💊 Medical",
+        "medicine": "💊 Medical",
+        "medicore": "💊 Medical",
+        "metro": "🚗 Transport",
+        "milk": "🍕 Food",
+        "mobile": "💻 Electronics",
+        "money": "📌 Other",
+        "money distribution": "📌 Other",
+        "money distribution & saari": "🛍️ Shopping",
+        "mosquito repellent": "🧹 Household Utilities",
+        "movie": "🎬 Entertainment",
+        "nagrela": "🛍️ Shopping",
+        "notebook": "🎓 Education",
+        "office": "🧹 Household Utilities",
+        "oil": "🍕 Food",
+        "paneer": "🍕 Food",
+        "papers": "🎓 Education",
+        "pathology test": "💊 Medical",
+        "personal care": "🧴 Personal Care",
+        "petrol": "🚗 Transport",
+        "pg": "🧾 Bills",
+        "pnb metlife": "🧾 Bills",
+        "print out": "🎓 Education",
+        "radhika": "🧴 Personal Care",
+        "rakhi": "🪔 Festivals",
+        "reception": "🎬 Entertainment",
+        "recharge": "🧾 Bills",
+        "redmi watch strap": "🛍️ Shopping",
+        "rent+security": "🧾 Bills",
+        "room rent": "🧾 Bills",
+        "rudra baby months": "👶 Baby Care",
+        "saari": "🛍️ Shopping",
+        "sandals": "🛍️ Shopping",
+        "sanitary pads": "🧴 Personal Care",
+        "saving razor": "🧴 Personal Care",
+        "sbi": "🧾 Bills",
+        "school": "🎓 Education",
+        "school activity": "🎓 Education",
+        "school activity fees": "🎓 Education",
+        "school books": "🎓 Education",
+        "school dress": "🎓 Education",
+        "school exam fees": "🎓 Education",
+        "school fees": "🎓 Education",
+        "school fees apr": "🎓 Education",
+        "school fees jul": "🎓 Education",
+        "school fees jun": "🎓 Education",
+        "school fees may": "🎓 Education",
+        "school stationary": "🎓 Education",
+        "school transportation": "🎓 Education",
+        "scooty petrol": "🚗 Transport",
+        "scooty service": "🚗 Transport",
+        "shoe": "🛍️ Shopping",
+        "shopping": "🛍️ Shopping",
+        "slippers": "🛍️ Shopping",
+        "snacks": "🍕 Food",
+        "soap": "🧴 Personal Care",
+        "surf excel": "🧴 Personal Care",
+        "sweets": "🍕 Food",
+        "tap": "🧹 Household Utilities",
+        "tap jun 15, 2026": "🧹 Household Utilities",
+        "thandai": "🍕 Food",
+        "toothpaste": "🧴 Personal Care",
+        "train": "🚗 Transport",
+        "tv": "💻 Electronics",
+        "ultrasound": "💊 Medical",
+        "vegetables": "🍕 Food",
+        "vishal mart": "🛍️ Shopping",
+        "walker": "👶 Baby Care"
+    };
+
+    let itemCategoryMap = Object.assign({}, DEFAULT_ITEM_CATEGORY_MAP);
+    let itemsList = ["AI", "Amazon", "Amazon Watches", "Anya Prashan", "Apple", "Auto", "Axis", "Baby Carrier Belt", "Baby Diaper", "Baby Oil", "Baby Sleeping Cushion", "Bathroom", "Battery", "Bed", "Belt", "Birthday", "Birthday Gift", "Books", "Bottle", "Bread", "Bulb", "Cake", "Candle & Ribbon", "Cell", "Cinema", "Close Up", "Clothing", "Coffee", "Coldrink", "Cotton & Bandage", "Cover", "Cradle", "Cups & Plates", "Curd", "Dairy", "Decoration", "Dhanteras", "Diwali", "Doctor Fees", "Durga Pooja", "Electric Fan", "Electric Light", "Electric Switch", "Engine", "Fair", "Fan", "Fan Repair", "Flour", "Folding Bed", "Food", "Fruit", "Ganesh Chaturthi Celebration", "Gemini Pro", "Ghajak", "Grocery", "Gujiya", "Hair Color", "Hair Cut", "Holi", "Home", "ICU Care", "Ice Cream", "Jewellery", "Jio Fiber", "Juice", "Jwellery", "Kailash Mela", "Karvachauth", "Katha", "Khoya", "Krishna Janmasthmi", "Labour Charges", "Lighter", "Locker", "Medical + Vaccination", "Medical Powder", "Medical Test", "Medical \u20b9, Apr", "Medicine", "Medicore", "Metro", "Milk", "Mobile", "Money", "Money Distribution", "Money Distribution & Saari", "Mosquito Repellent", "Movie", "Nagrela", "Notebook", "Office", "Oil", "Paneer", "Papers", "Pathology Test", "Personal Care", "Petrol", "Pg", "Pnb Metlife", "Print Out", "Radhika", "Rakhi", "Reception", "Recharge", "Redmi Watch Strap", "Rent+Security", "Room Rent", "Rudra Baby Months", "SBI", "Saari", "Sandals", "Sanitary Pads", "Saving Razor", "School", "School Activity", "School Activity Fees", "School Books", "School Dress", "School Exam Fees", "School Fees", "School Fees Apr", "School Fees Jul", "School Fees Jun", "School Fees May", "School Stationary", "School Transportation", "Scooty Petrol", "Scooty Service", "Shoe", "Shopping", "Slippers", "Snacks", "Soap", "Surf Excel", "Sweets", "TV", "Tap", "Tap Jun 15, 2026", "Thandai", "Toothpaste", "Train", "Ultrasound", "Vegetables", "Vishal Mart", "Walker"];
     let currentUser = null;
     let enhancedAllData = [];
     let mainChart, pieChart, barChart, detailedChart;
@@ -1874,11 +2023,31 @@ Expense Tracker Pro: 2026 JavaScript Code
             .getItemList();
     }
 
-    function handleItemsListData(items) {
-        itemsList = (items || []).map(item => {
-            if (!item || typeof item !== 'string') return item;
-            return getItemDisplayName(item.trim());
-        });
+    function handleItemsListData(data) {
+        let items = [];
+        if (Array.isArray(data)) {
+            items = data.map(item => {
+                if (typeof item === 'object' && item !== null) {
+                    if (item.name && item.category) {
+                        itemCategoryMap[item.name.toLowerCase().trim()] = getCategoryWithIcon(item.category);
+                    }
+                    return getItemDisplayName(item.name || "");
+                }
+                return getItemDisplayName(item.trim());
+            });
+        } else if (data && typeof data === 'object') {
+            if (data.items) {
+                items = data.items.map(item => getItemDisplayName(item));
+            }
+            if (data.categoryMap) {
+                for (const k in data.categoryMap) {
+                    itemCategoryMap[k.toLowerCase().trim()] = getCategoryWithIcon(data.categoryMap[k]);
+                }
+            }
+        }
+        if (items && items.length > 0) {
+            itemsList = [...new Set(items)].sort();
+        }
         populateItemsDropdown();
         populateEnhancedItemFilter();
     }
@@ -1928,12 +2097,26 @@ Expense Tracker Pro: 2026 JavaScript Code
         return str.trim();
     }
 
+    function quickAddNewItem(itemName) {
+        const newItemNameInput = document.getElementById('newItemName');
+        if (newItemNameInput) newItemNameInput.value = itemName || "";
+        showAddItemModal();
+    }
+    window.quickAddNewItem = quickAddNewItem;
+
     function renderResults(list) {
         const resultsContainer = document.getElementById('autocompleteResults');
         if (!resultsContainer) return;
 
+        const searchVal = (document.getElementById('itemSearchInput')?.value || "").trim();
+
         if (list.length === 0) {
-            resultsContainer.innerHTML = '<div class="autocomplete-item text-muted">No results found</div>';
+            resultsContainer.innerHTML = `
+                <div class="autocomplete-item text-muted" style="padding: 10px 12px; font-size: 0.85rem;">No matching items found</div>
+                <div class="autocomplete-item text-success fw-bold border-top" onclick="quickAddNewItem('${searchVal.replace(/'/g, "\\'")}')" style="padding: 10px 12px; cursor: pointer; background: #f0fdf4; font-size: 0.85rem;">
+                    <i class="fas fa-plus-circle me-1"></i>+ Add "${searchVal}" to List sheet
+                </div>
+            `;
             resultsContainer.classList.remove('d-none');
             return;
         }
@@ -1941,11 +2124,30 @@ Expense Tracker Pro: 2026 JavaScript Code
         resultsContainer.innerHTML = "";
         list.forEach((item, index) => {
             const div = document.createElement('div');
-            div.className = 'autocomplete-item' + (index === activeItemIndex ? ' active' : '');
-            div.textContent = getItemDisplayName(item);
+            div.className = 'autocomplete-item d-flex justify-content-between align-items-center' + (index === activeItemIndex ? ' active' : '');
+            div.style.padding = '8px 12px';
+            div.style.cursor = 'pointer';
+            const clean = getItemDisplayName(item);
+            const cat = getCategoryWithIcon(clean);
+            div.innerHTML = `
+                <span class="item-name fw-semibold" style="color: #1e293b;">${clean}</span>
+                <span class="badge bg-light text-secondary border ms-2" style="font-size: 0.72rem; font-weight: 500;">${cat}</span>
+            `;
             div.onclick = () => selectItem(item);
             resultsContainer.appendChild(div);
         });
+
+        if (searchVal && !list.some(it => it.toLowerCase() === searchVal.toLowerCase())) {
+            const addDiv = document.createElement('div');
+            addDiv.className = 'autocomplete-item text-success fw-bold border-top';
+            addDiv.style.padding = '8px 12px';
+            addDiv.style.background = '#f0fdf4';
+            addDiv.style.cursor = 'pointer';
+            addDiv.innerHTML = `<i class="fas fa-plus-circle me-1"></i>+ Add "${searchVal}" to List sheet`;
+            addDiv.onclick = () => quickAddNewItem(searchVal);
+            resultsContainer.appendChild(addDiv);
+        }
+
         resultsContainer.classList.remove('d-none');
     }
 
@@ -2227,16 +2429,24 @@ Expense Tracker Pro: 2026 JavaScript Code
      */
     function getCategoryWithIcon(name) {
         if (!name) return '';
-        const cleanName = getItemDisplayName(name);
+        const cleanName = getItemDisplayName(name).trim();
         if (!cleanName) return '';
+
+        const lower = cleanName.toLowerCase();
+
+        // 1. Direct match in List sheet category mapping (Col B -> Col C)
+        if (typeof itemCategoryMap !== 'undefined' && itemCategoryMap[lower]) {
+            return itemCategoryMap[lower];
+        }
+        if (typeof DEFAULT_ITEM_CATEGORY_MAP !== 'undefined' && DEFAULT_ITEM_CATEGORY_MAP[lower]) {
+            return DEFAULT_ITEM_CATEGORY_MAP[lower];
+        }
 
         // Check if original name already starts with an emoji/icon
         const emojiRegex = /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/;
         if (emojiRegex.test(name.substring(0, 5))) {
             return name.trim();
         }
-
-        const lower = cleanName.toLowerCase().trim();
 
         const PRIMARY_CATEGORY_MAP = {
             'medical': '💊 Medical',
@@ -3543,6 +3753,21 @@ Expense Tracker Pro: 2026 JavaScript Code
             user: entryUser
         };
 
+        // If this item is new and not in itemsList, automatically append to List sheet (Col B & C)
+        if (itemListValue && !itemsList.some(it => it.toLowerCase() === itemListValue.toLowerCase())) {
+            itemsList.push(itemListValue);
+            itemsList.sort();
+            const cleanCat = getCategoryWithIcon(creditValue || itemListValue);
+            if (typeof itemCategoryMap !== 'undefined') {
+                itemCategoryMap[itemListValue.toLowerCase()] = cleanCat;
+            }
+            try {
+                google.script.run.addItemToList(itemListValue, creditValue);
+            } catch (err) {
+                console.warn("Could not append new item to List sheet:", err);
+            }
+        }
+
         console.log("Sending entry data:", entryData);
 
         // Show saving state
@@ -4774,6 +4999,26 @@ Expense Tracker Pro: 2026 JavaScript Code
                     if (addToDropdown) {
                         updateItemDropdowns(itemName);
                     }
+
+                    const cleanName = getItemDisplayName(itemName);
+                    const catWithIcon = getCategoryWithIcon(category || response.category || cleanName);
+
+                    // Add to local itemsList and itemCategoryMap
+                    if (!itemsList.includes(cleanName)) {
+                        itemsList.push(cleanName);
+                        itemsList.sort();
+                    }
+                    if (typeof itemCategoryMap !== 'undefined') {
+                        itemCategoryMap[cleanName.toLowerCase()] = catWithIcon;
+                    }
+
+                    // Auto-fill into open Add New Record modal (#entryModal)
+                    const itemSearchInput = document.getElementById('itemSearchInput');
+                    const itemList = document.getElementById('itemList');
+                    const credit = document.getElementById('credit');
+                    if (itemSearchInput) itemSearchInput.value = cleanName;
+                    if (itemList) itemList.value = cleanName;
+                    if (credit) credit.value = catWithIcon;
 
                     // Clear form and close modal
                     if (itemNameInput) itemNameInput.value = '';

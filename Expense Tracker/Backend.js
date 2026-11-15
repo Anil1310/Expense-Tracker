@@ -559,6 +559,48 @@ function getItemList() {
 }
 
 /**
+ * Gets all items from Column B along with their Category from Column C of 'List' sheet
+ */
+function getItemListWithCategories() {
+    try {
+        ensureListSheet();
+        const ss = SpreadsheetApp.openById(MAIN_ID);
+        const sheet = ss.getSheetByName("List");
+        if (!sheet) {
+            return { items: [], categoryMap: {} };
+        }
+
+        const dataRange = sheet.getDataRange();
+        if (dataRange.getNumRows() <= 1) {
+            return { items: [], categoryMap: {} };
+        }
+
+        const values = dataRange.getValues();
+        const items = [];
+        const categoryMap = {};
+
+        for (let i = 1; i < values.length; i++) {
+            const item = values[i][1] ? values[i][1].toString().trim() : "";
+            const cat = values[i][2] ? values[i][2].toString().trim() : "";
+            if (item) {
+                items.push(item);
+                if (cat) {
+                    categoryMap[item.toLowerCase()] = cat;
+                }
+            }
+        }
+
+        return {
+            items: [...new Set(items)].sort(),
+            categoryMap: categoryMap
+        };
+    } catch (e) {
+        Logger.log('Error in getItemListWithCategories: ' + e.message);
+        return { items: [], categoryMap: {} };
+    }
+}
+
+/**
 * Ensures a sheet exists and has headers with proper formatting
 * @param {string} sheetName - Name of the sheet
 * @param {Array} headers - Array of header names
@@ -2345,33 +2387,31 @@ function addItemToList(itemName, category) {
             };
         }
 
-        // Get the next ID
+        // Get the next ID (since row 1 is header, lastRow equals next sequential ID)
         const lastRow = listSheet.getLastRow();
-        const nextId = lastRow + 1;
+        const nextId = Math.max(1, lastRow);
 
         // Format date
         const now = new Date();
-        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        const formattedDate = `${monthNames[now.getMonth()]} ${now.getDate()} ${now.getFullYear()}`;
+        const formattedDate = now.toISOString();
 
-        let finalItemName = itemName.trim();
-        let finalCategory = (category && category.trim()) ? category.trim() : inferCategoryForItem(finalItemName);
+        let finalItemName = stripEmojiIcon(itemName.trim());
+        let finalCategory = (category && category.trim()) ? stripEmojiIcon(category.trim()) : inferCategoryForItem(finalItemName);
 
-        finalItemName = stripEmojiIcon(finalItemName);
-
-        // Add the new item
+        // Add the new item to List sheet: Col A: ID, Col B: Item, Col C: Category, Col D: Date, Col E: Added By
         listSheet.appendRow([
             nextId,
             finalItemName,
             finalCategory,
             formattedDate,
-            currentUser ? currentUser.name : "Web App"
+            "Web App"
         ]);
 
         return {
             success: true,
-            message: `"${finalItemName}" Added Successfully 2 List!`,
-            newItem: finalItemName
+            message: `"${finalItemName}" added successfully to List sheet!`,
+            newItem: finalItemName,
+            category: finalCategory
         };
 
     } catch (error) {
