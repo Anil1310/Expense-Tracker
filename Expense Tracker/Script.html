@@ -1636,14 +1636,22 @@ Expense Tracker Pro: 2026 JavaScript Code
         const tableBody = document.getElementById('expense-table-body');
         const paginationContainer = document.getElementById('dashboard-pagination');
         const pageInfo = document.getElementById('dashboard-page-info');
+        const countBadge = document.getElementById('records-counter-badge');
         if (!tableBody) return;
 
         // Assign stable S.N. to each row before sorting/reversing
         let allLatestData = data.map((row, index) => {
             let r = [...row];
-            r.sn = index + 1; // S.N increments chronologically
+            const parsedSn = parseInt(row[0]);
+            r.sn = (!isNaN(parsedSn) && parsedSn > 0) ? parsedSn : (index + 1);
             return r;
         });
+
+        // Update record count badge
+        if (countBadge) {
+            countBadge.textContent = `${allLatestData.length} Records`;
+            countBadge.style.display = allLatestData.length > 0 ? 'inline-flex' : 'none';
+        }
 
         // Sorting and limiting to latest if no sort
         if (dashboardSortCol) {
@@ -1664,27 +1672,12 @@ Expense Tracker Pro: 2026 JavaScript Code
                 if (valA > valB) return dashboardSortDir === 'asc' ? 1 : -1;
                 return 0;
             });
-        } else {
-            allLatestData = allLatestData.reverse(); // Default: Newest first
         }
 
-        const isMobile = window.innerWidth <= 992 || (('ontouchstart' in window || navigator.maxTouchPoints > 0) && window.innerWidth <= 1024);
-        let latestData;
-        let totalPages = 1;
-        const totalItems = allLatestData.length;
-
-        if (isMobile) {
-            // Mobile: Render all records of the month immediately so user can scroll up and down with their finger to see all records to the very last record
-            latestData = allLatestData;
-        } else {
-            // Desktop: Standard pagination
-            totalPages = Math.ceil(totalItems * 1.0 / DASHBOARD_PER_PAGE) || 1;
-            if (currentDashboardPage > totalPages) currentDashboardPage = totalPages;
-
-            const startIndex = (currentDashboardPage - 1) * DASHBOARD_PER_PAGE;
-            const endIndex = startIndex + DASHBOARD_PER_PAGE;
-            latestData = allLatestData.slice(startIndex, endIndex);
-        }
+        // Render ALL records of the month (1-140) on BOTH Desktop and Mobile so user can smoothly scroll up and down through every record
+        const latestData = allLatestData;
+        if (paginationContainer) paginationContainer.innerHTML = '';
+        if (pageInfo) pageInfo.textContent = '';
 
         if (latestData.length === 0) {
             tableBody.innerHTML = `
@@ -2007,17 +2000,17 @@ Expense Tracker Pro: 2026 JavaScript Code
     function getFilteredDashboardData() {
         const query = (document.getElementById('month-records-search')?.value || '').toLowerCase().trim();
         if (!expenseData) return [];
-        if (!query || query.length < 2) return expenseData;
-        let filtered = expenseData.filter(row => {
+        if (!query || query.length === 0) return expenseData;
+        return expenseData.filter(row => {
+            const snText = String(row[0] || '').toLowerCase();
+            const uidText = String(row[1] || '').toLowerCase();
+            const dateText = String(row[2] || '').toLowerCase();
             const itemText = String(row[4] || '').toLowerCase();
-            return itemText.includes(query);
+            const amtText = String(row[5] || '').toLowerCase();
+            const creditText = String(row[6] || '').toLowerCase();
+            const adminText = String(row[7] || '').toLowerCase();
+            return itemText.includes(query) || uidText.includes(query) || dateText.includes(query) || creditText.includes(query) || snText === query || amtText.includes(query) || adminText.includes(query);
         });
-        filtered.sort((a, b) => {
-            const itemA = String(a[4] || '').toLowerCase();
-            const itemB = String(b[4] || '').toLowerCase();
-            return itemA.localeCompare(itemB);
-        });
-        return filtered;
     }
 
     function goToDashboardPage(page) {
@@ -2033,10 +2026,57 @@ Expense Tracker Pro: 2026 JavaScript Code
             dashboardSortCol = col;
             dashboardSortDir = 'asc';
         }
+        const btn = document.getElementById('order-toggle-btn');
+        if (btn && col === 'sn') {
+            btn.innerHTML = (dashboardSortDir === 'desc')
+                ? '<i class="fas fa-sort-numeric-up me-1"></i> 140→1'
+                : '<i class="fas fa-sort-numeric-down me-1"></i> 1→140';
+        }
         currentDashboardPage = 1;
         const filtered = getFilteredDashboardData();
         renderDashboardTable(filtered);
     }
+
+    function toggleSortOrder() {
+        if (!dashboardSortCol) {
+            dashboardSortCol = 'sn';
+            dashboardSortDir = 'desc';
+        } else if (dashboardSortDir === 'asc') {
+            dashboardSortDir = 'desc';
+        } else {
+            dashboardSortDir = 'asc';
+        }
+        const btn = document.getElementById('order-toggle-btn');
+        if (btn) {
+            btn.innerHTML = (dashboardSortDir === 'desc')
+                ? '<i class="fas fa-sort-numeric-up me-1"></i> 140→1'
+                : '<i class="fas fa-sort-numeric-down me-1"></i> 1→140';
+        }
+        const filtered = getFilteredDashboardData();
+        renderDashboardTable(filtered);
+    }
+    window.toggleSortOrder = toggleSortOrder;
+
+    function scrollToTableTop() {
+        const tableContainer = document.querySelector('#dashboard-page .table-responsive');
+        if (tableContainer) {
+            tableContainer.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    window.scrollToTableTop = scrollToTableTop;
+
+    function scrollToTableBottom() {
+        const tableContainer = document.querySelector('#dashboard-page .table-responsive');
+        if (tableContainer) {
+            tableContainer.scrollTo({ top: tableContainer.scrollHeight, behavior: 'smooth' });
+        }
+        const table = document.getElementById('expense-table-body');
+        if (table && table.lastElementChild) {
+            table.lastElementChild.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        }
+    }
+    window.scrollToTableBottom = scrollToTableBottom;
 
     function getTodayFormattedString() {
         const today = new Date();
@@ -3621,6 +3661,22 @@ Expense Tracker Pro: 2026 JavaScript Code
             return String(r[1] || "").toLowerCase().trim() === normTarget;
         });
 
+        // Sort chronologically ascending (e.g. Apr 1 -> Apr 30, S.N 1 -> 140)
+        monthRows.sort((a, b) => {
+            const numA = parseInt(String(a[7] || '').split('-')[0]) || 0;
+            const numB = parseInt(String(b[7] || '').split('-')[0]) || 0;
+            if (numA && numB) return numA - numB;
+            try {
+                const dateA = new Date(a[0]);
+                const dateB = new Date(b[0]);
+                if (!isNaN(dateA.getTime()) && !isNaN(dateB.getTime())) {
+                    const diff = dateA - dateB;
+                    if (diff !== 0) return diff;
+                }
+            } catch (e) { }
+            return 0;
+        });
+
         let totalExpenses = 0;
         const categories = new Set();
         const days = new Set();
@@ -3629,9 +3685,11 @@ Expense Tracker Pro: 2026 JavaScript Code
             totalExpenses += amt;
             if (r[4]) categories.add(r[4]);
             if (r[0]) days.add(r[0]);
+            const parsedSn = parseInt(String(r[7] || '').split('-')[0]);
+            const sn = (!isNaN(parsedSn) && parsedSn > 0) ? parsedSn : (idx + 1);
             return [
-                idx + 1,
-                r[7] || `ID_${idx + 1}`,
+                sn,
+                r[7] || `${sn}-${r[2] || 'Expense'}`,
                 r[0] || '',
                 r[1] || targetMonth,
                 r[2] || '',
