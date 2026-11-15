@@ -5485,20 +5485,19 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             color: #3b82f6 !important;
         }
 
-        /* ── Table Section — Floating Rounded Card with gap at top ── */
+        /* ── Table Section — Natural Height on Mobile for Page Scrolling ── */
         #dashboard-page .table-container {
-            height: calc(100vh - 195px) !important;
-            height: calc(100dvh - 195px) !important;
-            max-height: calc(100vh - 195px) !important;
-            max-height: calc(100dvh - 195px) !important;
-            padding-bottom: 0 !important;
+            height: auto !important;
+            min-height: 250px !important;
+            max-height: none !important;
+            padding-bottom: 25px !important;
             margin-top: 10px !important;
             border-radius: 20px 20px 0 0 !important;
             background: #ffffff !important;
             box-shadow: 0 -2px 20px rgba(0,0,0,0.08), 0 4px 20px rgba(0,0,0,0.06) !important;
             display: flex !important;
             flex-direction: column !important;
-            overflow: hidden !important;
+            overflow: visible !important;
         }
 
         [data-theme="dark"] #dashboard-page .table-container {
@@ -5518,16 +5517,35 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             background: #1e293b !important;
         }
 
-        #dashboard-page .table-responsive,
+        #dashboard-page .table-responsive {
+            display: block !important;
+            width: 100% !important;
+            flex: 1 1 auto !important;
+            height: auto !important;
+            max-height: none !important;
+            min-height: 0 !important;
+            overflow-x: auto !important;
+            overflow-y: visible !important;
+            -webkit-overflow-scrolling: touch !important;
+            touch-action: pan-x pan-y !important;
+            overscroll-behavior-y: none !important;
+            overscroll-behavior-x: none !important;
+            overscroll-behavior: none !important;
+            border-radius: 0 0 12px 12px !important;
+            background: #ffffff !important;
+            padding-bottom: 25px !important;
+            box-shadow: none !important;
+            position: relative !important;
+        }
+
         #reports-page .table-responsive {
             display: block !important;
             width: 100% !important;
             flex: 1 1 auto !important;
-            height: 100% !important;
-            max-height: 100% !important;
-            min-height: 0 !important;
+            height: auto !important;
+            max-height: none !important;
             overflow-x: auto !important;
-            overflow-y: auto !important;
+            overflow-y: visible !important;
             -webkit-overflow-scrolling: touch !important;
             touch-action: pan-x pan-y !important;
             overscroll-behavior-y: none !important;
@@ -7268,6 +7286,43 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             opacity: 0.3 !important;
         }
 
+        /* ── Visual Analytics (Graphs Page) Mobile Enhancements ── */
+        #graphs-page .filter-controls {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            gap: 6px !important;
+            margin-bottom: 12px !important;
+        }
+
+        #graphs-page .filter-select {
+            flex: 1 1 calc(50% - 6px) !important;
+            min-width: 120px !important;
+            height: 34px !important;
+            font-size: 0.76rem !important;
+            padding: 4px 8px !important;
+            border-radius: 8px !important;
+        }
+
+        #graphs-page .chart-card {
+            background: #ffffff !important;
+            border-radius: 16px !important;
+            padding: 12px !important;
+            margin-bottom: 12px !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06) !important;
+            border: 1px solid #e2e8f0 !important;
+        }
+
+        [data-theme="dark"] #graphs-page .chart-card {
+            background: #1e293b !important;
+            border-color: #334155 !important;
+        }
+
+        #graphs-page .chart-container {
+            position: relative !important;
+            height: 250px !important;
+            width: 100% !important;
+        }
+
         /* ── Category Insights Page Mobile Enhancements ── */
         #categories-page .categories-kpi-card {
             padding: 8px 10px !important;
@@ -7845,6 +7900,43 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             opacity: 0.3 !important;
         }
 
+        /* ── Visual Analytics (Graphs Page) Mobile Enhancements ── */
+        #graphs-page .filter-controls {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            gap: 6px !important;
+            margin-bottom: 12px !important;
+        }
+
+        #graphs-page .filter-select {
+            flex: 1 1 calc(50% - 6px) !important;
+            min-width: 120px !important;
+            height: 34px !important;
+            font-size: 0.76rem !important;
+            padding: 4px 8px !important;
+            border-radius: 8px !important;
+        }
+
+        #graphs-page .chart-card {
+            background: #ffffff !important;
+            border-radius: 16px !important;
+            padding: 12px !important;
+            margin-bottom: 12px !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06) !important;
+            border: 1px solid #e2e8f0 !important;
+        }
+
+        [data-theme="dark"] #graphs-page .chart-card {
+            background: #1e293b !important;
+            border-color: #334155 !important;
+        }
+
+        #graphs-page .chart-container {
+            position: relative !important;
+            height: 250px !important;
+            width: 100% !important;
+        }
+
         /* ── Reports Table Base ── */
         #reports-page .table {
             display: table !important;
@@ -8246,33 +8338,14 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
 
     @media (max-width: 768px) {
         html {
-            height: 100% !important;
-            height: 100vh !important;
-            height: 100dvh !important;
+            height: auto !important;
+            min-height: 100% !important;
             overflow-x: hidden !important;
         }
 
-        body.dashboard-active {
-            height: 100% !important;
-            height: 100vh !important;
-            height: 100dvh !important;
-            overflow: hidden !important;
-            overscroll-behavior: none !important;
-            overscroll-behavior-y: none !important;
-            overscroll-behavior-x: none !important;
-        }
-
-        body.dashboard-active .app-container,
-        body.dashboard-active .main-content {
-            height: 100% !important;
-            max-height: 100dvh !important;
-            overflow: hidden !important;
-            overscroll-behavior: none !important;
-            overscroll-behavior-y: none !important;
-            overscroll-behavior-x: none !important;
-        }
-
-        /* Separate pages (Reports, Summary, Analytics, Insights) — natural full-height scrolling */
+        /* Home Page (Dashboard) & All Pages — Full Natural Mobile Scrolling Up & Down */
+        body,
+        body.dashboard-active,
         body:not(.dashboard-active),
         body.reports-active {
             height: auto !important;
@@ -8286,6 +8359,10 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             overscroll-behavior-x: none !important;
         }
 
+        .app-container,
+        .main-content,
+        body.dashboard-active .app-container,
+        body.dashboard-active .main-content,
         body:not(.dashboard-active) .app-container,
         body:not(.dashboard-active) .main-content,
         body.reports-active .app-container,
@@ -8300,10 +8377,11 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
         }
 
         #dashboard-page:not(.d-none) {
-            height: calc(100% - 48px) !important;
+            height: auto !important;
+            min-height: 100% !important;
             display: flex !important;
             flex-direction: column !important;
-            overflow: hidden !important;
+            overflow: visible !important;
         }
 
         /* Strictly isolate each page — when a page is hidden, hide all its elements */
@@ -9191,6 +9269,7 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             </button>
             <select id="summary-year" class="filter-select" onchange="refreshDataSummary()"
               style="padding: 0.2rem; border-radius: 6px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-primary); margin-right: auto; font-weight: bold; height: 38px;">
+              <option value="all">All Years</option>
               <option value="2021">2021</option>
               <option value="2022">2022</option>
               <option value="2023">2023</option>
@@ -10126,45 +10205,24 @@ Expense Tracker Pro: 2026 JavaScript Code
             const isVertical = Math.abs(totalY) >= Math.abs(totalX);
 
             if (isVertical) {
-                const scrollYEl = findScrollable(e.target, 'y');
-                // Dragging DOWN (scrolling UP towards top)
+                // Dragging DOWN (user pulling downwards)
                 if (deltaY > 0) {
-                    const isAtTop = !scrollYEl || (scrollYEl === document.body || scrollYEl === document.documentElement
-                        ? (window.scrollY <= 0)
-                        : (scrollYEl.scrollTop <= 0));
-                    if (isAtTop && e.cancelable) {
-                        // Prevent Android pull-to-refresh
-                        e.preventDefault();
-                    }
-                }
-                // Dragging UP (scrolling DOWN towards bottom)
-                else if (deltaY < 0) {
-                    if (scrollYEl) {
-                        const isAtBottom = (scrollYEl === document.body || scrollYEl === document.documentElement)
-                            ? (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 1)
-                            : (scrollYEl.scrollTop + scrollYEl.clientHeight >= scrollYEl.scrollHeight - 1);
-                        if (isAtBottom && e.cancelable) {
+                    const scrollY = window.scrollY || document.documentElement.scrollTop || (document.body ? document.body.scrollTop : 0) || 0;
+                    if (scrollY <= 0) {
+                        const scrollYEl = findScrollable(e.target, 'y');
+                        const isContainerAtTop = !scrollYEl || scrollYEl === document.body || scrollYEl === document.documentElement || scrollYEl.scrollTop <= 0;
+                        if (isContainerAtTop && e.cancelable) {
+                            // Stop Android / browser pull-to-refresh reload completely
                             e.preventDefault();
                         }
-                    } else if (e.cancelable) {
-                        e.preventDefault();
                     }
                 }
+                // Dragging UP (user scrolling DOWN through page records):
+                // NEVER call preventDefault! Native scrolling down the page is completely unrestricted.
             } else {
-                // Horizontal swipe (left or right)
-                const scrollXEl = findScrollable(e.target, 'x');
-                if (!scrollXEl) {
-                    // Element does not scroll horizontally — prevent edge swipe history navigation / refresh
+                // Horizontal gestures: block screen-edge swipes from triggering browser back/forward navigation reload
+                if (touchStartX < 25 || touchStartX > window.innerWidth - 25) {
                     if (e.cancelable) e.preventDefault();
-                } else {
-                    // Swiping RIGHT (dragging finger right)
-                    if (deltaX > 0 && scrollXEl.scrollLeft <= 0) {
-                        if (e.cancelable) e.preventDefault();
-                    }
-                    // Swiping LEFT (dragging finger left)
-                    else if (deltaX < 0 && scrollXEl.scrollLeft + scrollXEl.clientWidth >= scrollXEl.scrollWidth - 1) {
-                        if (e.cancelable) e.preventDefault();
-                    }
                 }
             }
         }, { passive: false });
@@ -10360,7 +10418,7 @@ Expense Tracker Pro: 2026 JavaScript Code
         "school fees may": "🎓 Education",
         "school stationary": "🎓 Education",
         "school transportation": "🎓 Education",
-        "scooty petrol": "🚗 Transport",
+        "scooty petrol": "🚗 Fuel",
         "scooty service": "🚗 Transport",
         "shoe": "🛍️ Shopping",
         "shopping": "🛍️ Shopping",
@@ -11474,7 +11532,17 @@ Expense Tracker Pro: 2026 JavaScript Code
             yearsSet.add(year.toString());
         }
 
-        // Add years from data if available
+        // Add years from all available data
+        const allDataCache = window.expenseCache ? window.expenseCache.get('all_data') : null;
+        const allList = (allDataCache && allDataCache.allExpenses) || (typeof allExpenseData !== 'undefined' ? allExpenseData : []);
+        if (allList && allList.length > 0) {
+            allList.forEach(item => {
+                const y = parseInt(item[5] || item.year);
+                if (!isNaN(y) && y >= startYear) {
+                    yearsSet.add(y.toString());
+                }
+            });
+        }
         if (window.enhancedAllData && window.enhancedAllData.length > 0) {
             window.enhancedAllData.forEach(item => {
                 if (item.year) {
@@ -11498,8 +11566,11 @@ Expense Tracker Pro: 2026 JavaScript Code
 
             if (includeAllOption) {
                 const allOption = document.createElement('option');
-                allOption.value = "";
+                allOption.value = "all";
                 allOption.textContent = "All Years";
+                if (currentValue === "all" || currentValue === "") {
+                    allOption.selected = true;
+                }
                 selectElement.appendChild(allOption);
             }
 
@@ -11507,7 +11578,7 @@ Expense Tracker Pro: 2026 JavaScript Code
                 const option = document.createElement('option');
                 option.value = year;
                 option.textContent = year;
-                if (year === currentYear && !currentValue && !includeAllOption) {
+                if (!includeAllOption && year === currentYear && !currentValue) {
                     option.selected = true;
                 } else if (currentValue && year === currentValue) {
                     option.selected = true;
@@ -11516,11 +11587,11 @@ Expense Tracker Pro: 2026 JavaScript Code
             });
         };
 
-        // Populate the dropdowns
-        populateSelect(yearSelector);
-        populateSelect(yearFilter, true); // Reports filter needs "All Years"
-        populateSelect(summaryYear);
-        populateSelect(graphYear, true); // Graphs might allow "All Years" or specific handling
+        // Populate the dropdowns with All Years support across pages
+        populateSelect(yearSelector, true);
+        populateSelect(yearFilter, true);   // Reports filter
+        populateSelect(summaryYear, true);  // Data Summary
+        populateSelect(graphYear, true);    // Analytics / Graphs
     }
 
     // Page navigation
@@ -12228,7 +12299,7 @@ Expense Tracker Pro: 2026 JavaScript Code
             }
             try {
                 localStorage.removeItem('expense_app_cache');
-            } catch (e) {}
+            } catch (e) { }
             localStorage.setItem('expense_items_cache_ver', ITEMS_CACHE_VERSION);
         }
 
@@ -12334,7 +12405,7 @@ Expense Tracker Pro: 2026 JavaScript Code
         str = str.replace(/^[^\w\s"'(+\-\u0900-\u097F]+/u, '');
         try {
             str = str.replace(/^[\p{Extended_Pictographic}\p{Emoji_Presentation}\p{Emoji}\s]+/u, '');
-        } catch (e) {}
+        } catch (e) { }
         return str.trim();
     }
 
@@ -13719,13 +13790,15 @@ Expense Tracker Pro: 2026 JavaScript Code
 
     function calculateSummaryDataFromAllData(allExpenses, year) {
         if (!allExpenses || !Array.isArray(allExpenses) || allExpenses.length === 0) return null;
-        const targetYear = (year && year !== 'all') ? year.toString() : new Date().getFullYear().toString();
+        const isAllYears = (!year || year === 'all');
+        const targetYear = isAllYears ? '' : year.toString();
 
         let totalAmount = 0;
         const monthlyTotals = {};
         const categoryTotals = {};
         const paymentMethods = { 'Credit': 0, 'Cash': 0 };
         const yearlyCategoryCounts = {};
+        const userTotals = {};
 
         allExpenses.forEach(expense => {
             const amount = parseFloat(expense[3]) || 0;
@@ -13736,12 +13809,15 @@ Expense Tracker Pro: 2026 JavaScript Code
             const credit = (creditStr.includes('✓') || creditStr.includes('credit')) ? 'Credit' : 'Cash';
             const rowYear = String(expense[5] || '');
 
-            if (rowYear === targetYear) {
+            if (isAllYears || rowYear === targetYear) {
                 totalAmount += amount;
-                monthlyTotals[month] = (monthlyTotals[month] || 0) + amount;
+                if (month) monthlyTotals[month] = (monthlyTotals[month] || 0) + amount;
                 categoryTotals[category] = (categoryTotals[category] || 0) + amount;
                 yearlyCategoryCounts[category] = (yearlyCategoryCounts[category] || 0) + 1;
                 paymentMethods[credit] = (paymentMethods[credit] || 0) + amount;
+
+                const user = expense[6] || 'Admin';
+                userTotals[user] = (userTotals[user] || 0) + amount;
             }
         });
 
@@ -13792,13 +13868,19 @@ Expense Tracker Pro: 2026 JavaScript Code
             };
         });
 
+        const userSpending = Object.entries(userTotals).map(([user, amt]) => ({
+            user: user,
+            amount: amt,
+            percentage: currentYearTotal > 0 ? parseFloat(((amt / currentYearTotal) * 100).toFixed(1)) : 0
+        }));
+
         return {
             yearlyTotal: currentYearTotal,
             monthlyAverage: currentYearTotal / 12,
             highestMonth: highest,
             lowestMonth: lowest,
             categoryDistribution: catDist,
-            userSpending: [{ user: 'Admin', amount: currentYearTotal, percentage: 100 }],
+            userSpending: userSpending.length > 0 ? userSpending : [{ user: 'Admin', amount: currentYearTotal, percentage: 100 }],
             paymentMethods: payMethods,
             monthlyComparison: monthlyComparison,
             topCategories: topCategories
@@ -13807,9 +13889,10 @@ Expense Tracker Pro: 2026 JavaScript Code
 
     function calculateGraphsDataFromAllData(allExpenses, type, year, user) {
         if (!allExpenses || !Array.isArray(allExpenses) || allExpenses.length === 0) return null;
-        const targetYear = String(year || new Date().getFullYear());
+        const isAllYears = (!year || year === 'all');
+        const targetYear = isAllYears ? '' : String(year);
         const filteredRows = allExpenses.filter(expense => {
-            const matchesYear = String(expense[5] || '') === targetYear;
+            const matchesYear = isAllYears ? true : String(expense[5] || '') === targetYear;
             const matchesUser = (!user || user === 'all') ? true : String(expense[6] || '').toLowerCase() === user.toLowerCase();
             return matchesYear && matchesUser;
         });
@@ -14418,7 +14501,7 @@ Expense Tracker Pro: 2026 JavaScript Code
         try {
             const targetMonth = monthName || CURRENT_MONTH;
             let dataSource = [];
-            
+
             if (targetMonth === CURRENT_MONTH) {
                 // Use active dashboard data
                 dataSource = expenseData.map((row, idx) => ({
@@ -14443,12 +14526,12 @@ Expense Tracker Pro: 2026 JavaScript Code
                     remark: item.credit || ''
                 }));
             }
-            
+
             if (dataSource.length === 0) {
                 showAlert(`No data available to export for ${targetMonth}`, "warning");
                 return;
             }
-            
+
             // Generate Excel file using SheetJS
             const headers = ["S.N.", "Unique ID", "Date", "Month", "Item List", "Amount", "Credit/Remark"];
             const rows = dataSource.map(item => [
@@ -14460,10 +14543,10 @@ Expense Tracker Pro: 2026 JavaScript Code
                 item.amount,
                 item.remark
             ]);
-            
+
             const data = [headers, ...rows];
             const ws = XLSX.utils.aoa_to_sheet(data);
-            
+
             // Adjust column widths automatically
             const colWidths = headers.map((h, i) => {
                 let maxLen = h.length;
@@ -14474,11 +14557,11 @@ Expense Tracker Pro: 2026 JavaScript Code
                 return { wch: maxLen + 3 };
             });
             ws['!cols'] = colWidths;
-            
+
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, targetMonth);
             XLSX.writeFile(wb, `Expenses_${targetMonth}_${new Date().getFullYear()}.xlsx`);
-            
+
             showAlert(`Successfully exported ${targetMonth} expenses to Excel!`, "success");
         } catch (e) {
             console.error("Export month failed:", e);
@@ -14492,7 +14575,7 @@ Expense Tracker Pro: 2026 JavaScript Code
                 showAlert("Database records are still loading, please wait...", "warning");
                 return;
             }
-            
+
             // Generate Excel file using SheetJS for all consolidated data
             const headers = ["Unique ID", "Date", "Month", "Year", "Item List", "Amount", "Credit/Remark", "Admin/Tracker"];
             const rows = enhancedAllData.map(item => [
@@ -14505,10 +14588,10 @@ Expense Tracker Pro: 2026 JavaScript Code
                 item.credit || '',
                 item.admin || ''
             ]);
-            
+
             const data = [headers, ...rows];
             const ws = XLSX.utils.aoa_to_sheet(data);
-            
+
             // Adjust column widths automatically
             const colWidths = headers.map((h, i) => {
                 let maxLen = h.length;
@@ -14519,11 +14602,11 @@ Expense Tracker Pro: 2026 JavaScript Code
                 return { wch: maxLen + 3 };
             });
             ws['!cols'] = colWidths;
-            
+
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "All Expenses");
             XLSX.writeFile(wb, `All_Expenses_${new Date().getFullYear()}.xlsx`);
-            
+
             showAlert("Successfully exported all expenses to Excel!", "success");
         } catch (e) {
             console.error("Export all failed:", e);
@@ -14701,9 +14784,9 @@ Expense Tracker Pro: 2026 JavaScript Code
             const amt = parseFloat(String(item.amount).replace(/[^\d.-]/g, '')) || 0;
             itemSums[cat] = (itemSums[cat] || 0) + amt;
         });
-        
-        const sortedItems = Object.keys(itemSums).sort((a, b) => a.localeCompare(b, undefined, {sensitivity: 'base'}));
-        
+
+        const sortedItems = Object.keys(itemSums).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+
         let summaryTableRows = '';
         sortedItems.forEach(cat => {
             const amt = itemSums[cat];
@@ -14991,143 +15074,143 @@ Expense Tracker Pro: 2026 JavaScript Code
     /**
      * Send Email Modal Management (Supports Any Recipient Email ID)
      */
-     let sendEmailCurrentTargetMonth = null;
-     let sendEmailTriggerBtn = null;
+    let sendEmailCurrentTargetMonth = null;
+    let sendEmailTriggerBtn = null;
 
-     function openSendEmailModal(monthName, btnElement) {
-         sendEmailCurrentTargetMonth = monthName || CURRENT_MONTH;
-         sendEmailTriggerBtn = btnElement || null;
+    function openSendEmailModal(monthName, btnElement) {
+        sendEmailCurrentTargetMonth = monthName || CURRENT_MONTH;
+        sendEmailTriggerBtn = btnElement || null;
 
-         const badgeEl = document.getElementById('sendEmailModalMonthBadge');
-         if (badgeEl) {
-             badgeEl.textContent = `${sendEmailCurrentTargetMonth} ${CURRENT_YEAR}`;
-         }
+        const badgeEl = document.getElementById('sendEmailModalMonthBadge');
+        if (badgeEl) {
+            badgeEl.textContent = `${sendEmailCurrentTargetMonth} ${CURRENT_YEAR}`;
+        }
 
-         const inputEl = document.getElementById('sendEmailRecipientInput');
-         if (inputEl) {
-             const savedEmail = localStorage.getItem('expense_last_recipient_email');
-             inputEl.value = savedEmail || 'anil.chahar170@gmail.com';
-         }
+        const inputEl = document.getElementById('sendEmailRecipientInput');
+        if (inputEl) {
+            const savedEmail = localStorage.getItem('expense_last_recipient_email');
+            inputEl.value = savedEmail || 'anil.chahar170@gmail.com';
+        }
 
-         const modalEl = document.getElementById('sendEmailModal');
-         if (modalEl) {
-             const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-             modal.show();
-             setTimeout(() => {
-                 if (inputEl) inputEl.focus();
-             }, 350);
-         }
-     }
-     window.openSendEmailModal = openSendEmailModal;
+        const modalEl = document.getElementById('sendEmailModal');
+        if (modalEl) {
+            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+            modal.show();
+            setTimeout(() => {
+                if (inputEl) inputEl.focus();
+            }, 350);
+        }
+    }
+    window.openSendEmailModal = openSendEmailModal;
 
-     function selectRecipientChip(email) {
-         const inputEl = document.getElementById('sendEmailRecipientInput');
-         if (inputEl) {
-             inputEl.value = email;
-             inputEl.focus();
-         }
-     }
-     window.selectRecipientChip = selectRecipientChip;
+    function selectRecipientChip(email) {
+        const inputEl = document.getElementById('sendEmailRecipientInput');
+        if (inputEl) {
+            inputEl.value = email;
+            inputEl.focus();
+        }
+    }
+    window.selectRecipientChip = selectRecipientChip;
 
-     function clearRecipientInput() {
-         const inputEl = document.getElementById('sendEmailRecipientInput');
-         if (inputEl) {
-             inputEl.value = '';
-             inputEl.focus();
-         }
-     }
-     window.clearRecipientInput = clearRecipientInput;
+    function clearRecipientInput() {
+        const inputEl = document.getElementById('sendEmailRecipientInput');
+        if (inputEl) {
+            inputEl.value = '';
+            inputEl.focus();
+        }
+    }
+    window.clearRecipientInput = clearRecipientInput;
 
-     function confirmSendEmailModal() {
-         const inputEl = document.getElementById('sendEmailRecipientInput');
-         const email = (inputEl ? inputEl.value : '').trim();
+    function confirmSendEmailModal() {
+        const inputEl = document.getElementById('sendEmailRecipientInput');
+        const email = (inputEl ? inputEl.value : '').trim();
 
-         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-         if (!email || !emailRegex.test(email)) {
-             showModernAlert("Invalid Email", "Please enter a valid email address.", "danger", 3500);
-             if (inputEl) inputEl.focus();
-             return;
-         }
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email || !emailRegex.test(email)) {
+            showModernAlert("Invalid Email", "Please enter a valid email address.", "danger", 3500);
+            if (inputEl) inputEl.focus();
+            return;
+        }
 
-         // Save last used recipient for fast autofill next time
-         localStorage.setItem('expense_last_recipient_email', email);
+        // Save last used recipient for fast autofill next time
+        localStorage.setItem('expense_last_recipient_email', email);
 
-         // Hide send email modal
-         const modalEl = document.getElementById('sendEmailModal');
-         if (modalEl) {
-             const modal = bootstrap.Modal.getInstance(modalEl);
-             if (modal) modal.hide();
-         }
+        // Hide send email modal
+        const modalEl = document.getElementById('sendEmailModal');
+        if (modalEl) {
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            if (modal) modal.hide();
+        }
 
-         // Execute sending to chosen recipient email
-         const targetMonth = sendEmailCurrentTargetMonth || CURRENT_MONTH;
-         emailMonthReport(targetMonth, sendEmailTriggerBtn, email);
-     }
-     window.confirmSendEmailModal = confirmSendEmailModal;
+        // Execute sending to chosen recipient email
+        const targetMonth = sendEmailCurrentTargetMonth || CURRENT_MONTH;
+        emailMonthReport(targetMonth, sendEmailTriggerBtn, email);
+    }
+    window.confirmSendEmailModal = confirmSendEmailModal;
 
-     function sendPreviewPDFEmail() {
-         const month = window.currentPreviewMonth || CURRENT_MONTH;
-         const btn = document.getElementById('pdfPreviewEmailBtn');
-         openSendEmailModal(month, btn);
-     }
-     window.sendPreviewPDFEmail = sendPreviewPDFEmail;
+    function sendPreviewPDFEmail() {
+        const month = window.currentPreviewMonth || CURRENT_MONTH;
+        const btn = document.getElementById('pdfPreviewEmailBtn');
+        openSendEmailModal(month, btn);
+    }
+    window.sendPreviewPDFEmail = sendPreviewPDFEmail;
 
-     /**
-      * Email Report Function
-      */
-     function emailMonthReport(monthName, btnElement, recipientEmail) {
-         const month = monthName || CURRENT_MONTH;
-         const year = CURRENT_YEAR;
-         const reportData = getReportHTMLContent(month, year);
-         const stats = (reportData && reportData.stats) ? reportData.stats : {
-             totalExpenses: '₹0',
-             totalCategories: 0,
-             totalDays: 0,
-             userName: (currentUser && currentUser.name) ? currentUser.name : 'Expense Pro'
-         };
-         const reportHtml = (reportData && reportData.html) ? reportData.html : '';
+    /**
+     * Email Report Function
+     */
+    function emailMonthReport(monthName, btnElement, recipientEmail) {
+        const month = monthName || CURRENT_MONTH;
+        const year = CURRENT_YEAR;
+        const reportData = getReportHTMLContent(month, year);
+        const stats = (reportData && reportData.stats) ? reportData.stats : {
+            totalExpenses: '₹0',
+            totalCategories: 0,
+            totalDays: 0,
+            userName: (currentUser && currentUser.name) ? currentUser.name : 'Expense Pro'
+        };
+        const reportHtml = (reportData && reportData.html) ? reportData.html : '';
 
-         // If btnElement is not passed, determine it dynamically
-         let btn = btnElement;
-         if (!btn) {
-             const isReportsPageVisible = !document.getElementById('reports-page').classList.contains('d-none');
-             btn = isReportsPageVisible ? document.getElementById('reports-email-report-btn') : document.getElementById('email-report-btn');
-         }
+        // If btnElement is not passed, determine it dynamically
+        let btn = btnElement;
+        if (!btn) {
+            const isReportsPageVisible = !document.getElementById('reports-page').classList.contains('d-none');
+            btn = isReportsPageVisible ? document.getElementById('reports-email-report-btn') : document.getElementById('email-report-btn');
+        }
 
-         let originalHtml = '';
-         if (btn) {
-             originalHtml = btn.innerHTML;
-             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-             btn.disabled = true;
-         }
+        let originalHtml = '';
+        if (btn) {
+            originalHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            btn.disabled = true;
+        }
 
-         const fileName = `Expense_Report_${month}_${year}`;
-         const targetEmail = (recipientEmail || '').trim() || (currentUser && currentUser.email ? currentUser.email : 'anil.chahar170@gmail.com');
+        const fileName = `Expense_Report_${month}_${year}`;
+        const targetEmail = (recipientEmail || '').trim() || (currentUser && currentUser.email ? currentUser.email : 'anil.chahar170@gmail.com');
 
-         // Show alert immediately when the mail is triggered from the button
-         showModernAlert("Sending Mail...", `Generating & sending report for ${month} ${year} to <strong>${targetEmail}</strong>...`, "info", 4000);
+        // Show alert immediately when the mail is triggered from the button
+        showModernAlert("Sending Mail...", `Generating & sending report for ${month} ${year} to <strong>${targetEmail}</strong>...`, "info", 4000);
 
-         const summary = `Month: ${month} ${year}\nTotal Expenses: ${stats.totalExpenses}\nCategories: ${stats.totalCategories}\nActive Days: ${stats.totalDays}\nGenerated by: ${stats.userName}`;
+        const summary = `Month: ${month} ${year}\nTotal Expenses: ${stats.totalExpenses}\nCategories: ${stats.totalCategories}\nActive Days: ${stats.totalDays}\nGenerated by: ${stats.userName}`;
 
-         google.script.run.withSuccessHandler(function (result) {
-             if (btn) {
-                 btn.innerHTML = originalHtml;
-                 btn.disabled = false;
-             }
-             if (result && result.success) {
-                 // Explicitly show "Mail Sent" alert as requested
-                 showModernAlert("Mail Sent", `PDF Report successfully emailed to <strong>${targetEmail}</strong>!`, "success", 5000);
-             } else {
-                 showModernAlert("Error Sending Mail", "Error sending email: " + (result && result.error ? result.error : 'Unknown error'), "danger", 5000);
-             }
-         }).withFailureHandler(function (err) {
-             if (btn) {
-                 btn.innerHTML = originalHtml;
-                 btn.disabled = false;
-             }
-             showModernAlert("Server Error", "Server error sending mail: " + err, "danger", 5000);
-         }).generateAndEmailPDF(reportHtml, fileName, targetEmail, summary);
-     }
+        google.script.run.withSuccessHandler(function (result) {
+            if (btn) {
+                btn.innerHTML = originalHtml;
+                btn.disabled = false;
+            }
+            if (result && result.success) {
+                // Explicitly show "Mail Sent" alert as requested
+                showModernAlert("Mail Sent", `PDF Report successfully emailed to <strong>${targetEmail}</strong>!`, "success", 5000);
+            } else {
+                showModernAlert("Error Sending Mail", "Error sending email: " + (result && result.error ? result.error : 'Unknown error'), "danger", 5000);
+            }
+        }).withFailureHandler(function (err) {
+            if (btn) {
+                btn.innerHTML = originalHtml;
+                btn.disabled = false;
+            }
+            showModernAlert("Server Error", "Server error sending mail: " + err, "danger", 5000);
+        }).generateAndEmailPDF(reportHtml, fileName, targetEmail, summary);
+    }
 
     function handleReportsMonthSelect() {
         // Automatically sending email on month dropdown selection disabled as requested.
@@ -17816,16 +17899,16 @@ color: #ffc107 !important;
 
         // 1. Gather monthly data from global `expenseData`
         const data = expenseData || [];
-        
+
         let totalSpent = 0;
         const categorySums = {};
         const daysSet = new Set();
-        
+
         data.forEach(row => {
             const category = String(row[4] || 'Uncategorized').trim() || 'Uncategorized';
             const amount = parseFloat(row[5]) || 0;
             const date = String(row[2] || '').trim();
-            
+
             totalSpent += amount;
             if (category) {
                 categorySums[category] = (categorySums[category] || 0) + amount;
@@ -17834,41 +17917,41 @@ color: #ffc107 !important;
                 daysSet.add(date);
             }
         });
-        
+
         const uniqueCategoriesCount = Object.keys(categorySums).length;
         const daysLogged = daysSet.size;
         const dailyAverage = daysLogged > 0 ? (totalSpent / daysLogged) : 0;
-        
+
         // 2. Populate KPI cards
         const totalSpentEl = document.getElementById('summary-total-spent');
         const totalCategoriesEl = document.getElementById('summary-total-categories');
         const daysLoggedEl = document.getElementById('summary-days-logged');
         const dailyAvgEl = document.getElementById('summary-daily-average');
-        
+
         if (totalSpentEl) totalSpentEl.textContent = formatCurrency(totalSpent);
         if (totalCategoriesEl) totalCategoriesEl.textContent = uniqueCategoriesCount;
         if (daysLoggedEl) daysLoggedEl.textContent = daysLogged;
         if (dailyAvgEl) dailyAvgEl.textContent = formatCurrency(dailyAverage);
-        
+
         // 3. Render categories list with progress bars
         const categoryListContainer = document.getElementById('summary-category-list');
         if (categoryListContainer) {
             categoryListContainer.innerHTML = '';
-            
+
             if (uniqueCategoriesCount === 0) {
                 categoryListContainer.innerHTML = '<div class="text-muted text-center py-4 small">No categories found.</div>';
             } else {
                 // Sort categories descending
                 const sortedCats = Object.keys(categorySums).sort((a, b) => categorySums[b] - categorySums[a]);
-                
+
                 // Color palette matching chart
                 const colors = ['#3b82f6', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981', '#06b6d4', '#64748b'];
-                
+
                 sortedCats.forEach((cat, index) => {
                     const amt = categorySums[cat];
                     const pct = totalSpent > 0 ? ((amt / totalSpent) * 100).toFixed(1) : 0;
                     const color = colors[index % colors.length];
-                    
+
                     const catRow = document.createElement('div');
                     catRow.className = 'summary-category-item';
                     catRow.innerHTML = `
@@ -17886,18 +17969,18 @@ color: #ffc107 !important;
                 });
             }
         }
-        
+
         // 4. Render Top 5 Transactions
         const topExpensesList = document.getElementById('summary-top-expenses-list');
         if (topExpensesList) {
             topExpensesList.innerHTML = '';
-            
+
             // Sort data copies by amount descending
             const top5 = [...data]
                 .filter(row => parseFloat(row[5]) > 0)
                 .sort((a, b) => (parseFloat(b[5]) || 0) - (parseFloat(a[5]) || 0))
                 .slice(0, 5);
-                
+
             if (top5.length === 0) {
                 topExpensesList.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-4 small">No expenses logged yet.</td></tr>';
             } else {
@@ -17905,7 +17988,7 @@ color: #ffc107 !important;
                     const date = row[2] || '';
                     const item = row[4] || '';
                     const amount = parseFloat(row[5]) || 0;
-                    
+
                     const tr = document.createElement('tr');
                     tr.style.borderBottom = '1px solid rgba(0,0,0,0.03)';
                     tr.innerHTML = `
@@ -17918,42 +18001,42 @@ color: #ffc107 !important;
                 });
             }
         }
-        
+
         // 5. Draw Doughnut Chart using Chart.js
         if (window.monthSummaryChartInstance) {
             window.monthSummaryChartInstance.destroy();
         }
-        
+
         try {
             const canvas = document.getElementById('monthSummaryDoughnutChart');
             if (canvas) {
                 const ctx = canvas.getContext('2d');
-                
+
                 // Get top categories and combine the rest as "Others"
                 const sortedCats = Object.keys(categorySums).sort((a, b) => categorySums[b] - categorySums[a]);
                 const top5Cats = sortedCats.slice(0, 5);
                 const top5Sums = top5Cats.map(cat => categorySums[cat]);
-                
+
                 let otherSum = 0;
                 sortedCats.slice(5).forEach(cat => {
                     otherSum += categorySums[cat];
                 });
-                
+
                 const labels = [...top5Cats];
                 const chartData = [...top5Sums];
                 if (otherSum > 0) {
                     labels.push('Others');
                     chartData.push(otherSum);
                 }
-                
+
                 if (labels.length === 0) {
                     labels.push('No Expenses');
                     chartData.push(1);
                 }
-                
+
                 const colors = ['#3b82f6', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981', '#06b6d4', '#64748b'];
                 const isDark = document.body.getAttribute('data-theme') === 'dark';
-                
+
                 window.monthSummaryChartInstance = new Chart(ctx, {
                     type: 'doughnut',
                     data: {
@@ -17986,7 +18069,7 @@ color: #ffc107 !important;
                             tooltip: {
                                 enabled: labels[0] !== 'No Expenses',
                                 callbacks: {
-                                    label: function(context) {
+                                    label: function (context) {
                                         const label = context.label || '';
                                         const val = context.parsed || 0;
                                         const pct = totalSpent > 0 ? ((val / totalSpent) * 100).toFixed(1) : 0;
@@ -18002,7 +18085,7 @@ color: #ffc107 !important;
         } catch (e) {
             console.error("Failed to render month summary chart:", e);
         }
-        
+
         // 6. Open the Modal
         const modalEl = document.getElementById('monthSummaryModal');
         if (modalEl) {
@@ -18016,33 +18099,33 @@ color: #ffc107 !important;
         if (titleEl) {
             titleEl.textContent = `${month || CURRENT_MONTH} Item-wise Summary`;
         }
-        
+
         const data = expenseData || [];
         const itemSums = {};
         let grandTotal = 0;
-        
+
         data.forEach(row => {
             const item = String(row[4] || 'Uncategorized').trim() || 'Uncategorized';
             const amount = parseFloat(row[5]) || 0;
-            
+
             itemSums[item] = (itemSums[item] || 0) + amount;
             grandTotal += amount;
         });
-        
+
         // Sort items alphabetically (A-Z)
-        const sortedItems = Object.keys(itemSums).sort((a, b) => a.localeCompare(b, undefined, {sensitivity: 'base'}));
-        
+        const sortedItems = Object.keys(itemSums).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+
         const listContainer = document.getElementById('item-summary-list');
         if (listContainer) {
             listContainer.innerHTML = '';
-            
+
             if (sortedItems.length === 0) {
                 listContainer.innerHTML = '<div class="text-center py-4 text-muted small">No records found.</div>';
             } else {
                 sortedItems.forEach(item => {
                     const amt = itemSums[item];
                     const pct = grandTotal > 0 ? ((amt / grandTotal) * 100).toFixed(1) : 0;
-                    
+
                     const rowDiv = document.createElement('div');
                     rowDiv.className = 'item-pivot-row d-flex align-items-center justify-content-between rounded-2';
                     rowDiv.style.background = 'var(--light-color)';
@@ -18065,12 +18148,12 @@ color: #ffc107 !important;
                 });
             }
         }
-        
+
         const totalEl = document.getElementById('item-summary-grand-total');
         if (totalEl) {
             totalEl.textContent = formatCurrency(grandTotal);
         }
-        
+
         const modalEl = document.getElementById('itemSummaryModal');
         if (modalEl) {
             const modal = bootstrap.Modal.getOrCreateInstance(modalEl);

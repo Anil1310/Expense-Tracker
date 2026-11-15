@@ -2619,8 +2619,9 @@ function getSummaryData(year) {
         const expenses = allDataResult.allExpenses || [];
         if (expenses.length === 0) return getEmptySummary();
 
-        // Use passed year or default to current year
-        const targetYear = (year && year !== 'all') ? year.toString() : new Date().getFullYear().toString();
+        // Support 'all' or empty for All Years
+        const isAllYears = (!year || year === 'all');
+        const targetYear = isAllYears ? '' : year.toString();
 
         let totalAmount = 0;
         const monthlyTotals = {};
@@ -2635,13 +2636,13 @@ function getSummaryData(year) {
 
             const creditStr = String(expense[4] || '').toLowerCase();
             const credit = (creditStr.includes('✓') || creditStr.includes('credit')) ? 'Credit' : 'Cash';
-            const rowYear = expense[5];
+            const rowYear = String(expense[5] || '');
 
-            if (rowYear === targetYear) {
+            if (isAllYears || rowYear === targetYear) {
                 totalAmount += amount;
 
                 // Monthly Totals
-                monthlyTotals[month] = (monthlyTotals[month] || 0) + amount;
+                if (month) monthlyTotals[month] = (monthlyTotals[month] || 0) + amount;
 
                 // Category Totals
                 categoryTotals[category] = (categoryTotals[category] || 0) + amount;
@@ -2728,7 +2729,13 @@ function getGraphsData(type, year, user) {
     try {
         const allDataResult = getAllData();
         if (allDataResult.error) return { error: allDataResult.error };
-        const filteredRows = (allDataResult.allExpenses || []).filter(expense => expense[5] === String(year));
+        const isAllYears = (!year || year === 'all');
+        const targetYear = isAllYears ? '' : String(year);
+        const filteredRows = (allDataResult.allExpenses || []).filter(expense => {
+            const matchesYear = isAllYears ? true : String(expense[5] || '') === targetYear;
+            const matchesUser = (!user || user === 'all') ? true : String(expense[6] || '').toLowerCase() === user.toLowerCase();
+            return matchesYear && matchesUser;
+        });
 
         // 1. Main Chart (Monthly Trend)
         const monthlyData = new Array(12).fill(0);
