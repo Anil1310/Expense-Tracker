@@ -1513,18 +1513,25 @@ Expense Tracker Pro: 2026 JavaScript Code
 
         if (pageTitle) pageTitle.textContent = 'Expenses Tracker Pro';
         const titleText = document.getElementById('table-title-text');
-        if (titleText) titleText.textContent = `${targetMonth} Expenses`;
-        else if (tableTitle) tableTitle.textContent = `${targetMonth} Expenses`;
+        const isAll = (targetMonth.toLowerCase() === 'all');
+        const displayMonthTitle = isAll 
+            ? `${CURRENT_YEAR || 2026} All Expenses (12 Months)` 
+            : `${targetMonth} 2026 Expenses`;
+
+        if (titleText) titleText.textContent = displayMonthTitle;
+        else if (tableTitle) tableTitle.textContent = displayMonthTitle;
 
         document.querySelectorAll('.month-btn').forEach(btn => {
             btn.classList.remove('active');
-            if (btn.textContent === targetMonth) btn.classList.add('active');
+            if (btn.textContent.trim().toLowerCase() === targetMonth.toLowerCase()) {
+                btn.classList.add('active');
+            }
         });
 
         const loadingSpinner = document.getElementById('loading-spinner');
         const tableBody = document.getElementById('expense-table-body');
 
-        const cacheKey = `monthly_${targetMonth}`;
+        const cacheKey = `monthly_${targetMonth}_${CURRENT_YEAR || 2026}`;
 
         // 1. CHECK SERVER-INJECTED DATA (Fastest — only on initial load, skip on forceRefresh)
         if (!forceRefresh && window.SERVER_INITIAL_DATA && window.SERVER_INITIAL_DATA.month === targetMonth && window.SERVER_INITIAL_DATA.monthlyData) {
@@ -1544,15 +1551,15 @@ Expense Tracker Pro: 2026 JavaScript Code
                 return;
             }
 
-            // 2b. FAST DERIVE FROM in-memory all_data IF AVAILABLE (Instant 0ms render)
+            // 2b. FAST DERIVE FROM in-memory all_data IF AVAILABLE (Instant 0ms render for all 12 months)
             const allData = window.expenseCache ? window.expenseCache.get('all_data') : null;
             const allList = (allData && allData.allExpenses) || (typeof allExpenseData !== 'undefined' ? allExpenseData : null);
             if (allList && allList.length > 0 && typeof extractMonthlyDataFromAllData === 'function') {
-                const derived = extractMonthlyDataFromAllData(allList, targetMonth);
-                if (derived && derived.tableData && derived.tableData.length > 0) {
+                const derived = extractMonthlyDataFromAllData(allList, targetMonth, CURRENT_YEAR || 2026);
+                if (derived) {
                     handleMonthData(derived);
                     // Silently refresh in background without interrupting user or flashing skeletons
-                    if (typeof google !== 'undefined' && google.script && google.script.run) {
+                    if (!isAll && typeof google !== 'undefined' && google.script && google.script.run) {
                         google.script.run
                             .withSuccessHandler((fresh) => {
                                 if (fresh && !fresh.error) {
@@ -1575,13 +1582,27 @@ Expense Tracker Pro: 2026 JavaScript Code
 
         // 4. NETWORK FETCH
         if (typeof google !== 'undefined' && google.script && google.script.run) {
-            google.script.run
-                .withSuccessHandler((data) => {
-                    if (window.expenseCache) window.expenseCache.set(cacheKey, data);
-                    handleMonthData(data);
-                })
-                .withFailureHandler(handleError)
-                .getMonthlyData(targetMonth);
+            if (isAll) {
+                google.script.run
+                    .withSuccessHandler((allData) => {
+                        if (window.expenseCache) window.expenseCache.set('all_data', allData);
+                        const derived = extractMonthlyDataFromAllData(allData?.allExpenses || [], 'All', CURRENT_YEAR || 2026);
+                        if (derived) {
+                            if (window.expenseCache) window.expenseCache.set(cacheKey, derived);
+                            handleMonthData(derived);
+                        }
+                    })
+                    .withFailureHandler(handleError)
+                    .getAllData();
+            } else {
+                google.script.run
+                    .withSuccessHandler((data) => {
+                        if (window.expenseCache) window.expenseCache.set(cacheKey, data);
+                        handleMonthData(data);
+                    })
+                    .withFailureHandler(handleError)
+                    .getMonthlyData(targetMonth);
+            }
         }
     }
 
@@ -3584,11 +3605,21 @@ Expense Tracker Pro: 2026 JavaScript Code
     }
 
     // ── Instant Client-Side Computations from In-Memory all_data (0ms Page Loading) ──
-    function extractMonthlyDataFromAllData(allExpenses, targetMonth) {
+    function extractMonthlyDataFromAllData(allExpenses, targetMonth, targetYear) {
         if (!allExpenses || !Array.isArray(allExpenses)) return null;
         const normTarget = String(targetMonth || "").toLowerCase().trim();
-        const monthRows = allExpenses.filter(r => String(r[1] || "").toLowerCase().trim() === normTarget);
-        if (monthRows.length === 0) return null;
+        const yearStr = String(targetYear || (typeof CURRENT_YEAR !== 'undefined' ? CURRENT_YEAR : new Date().getFullYear())).trim();
+        const isAll = normTarget === 'all' || normTarget === '';
+
+        // Filter strictly by current year (2026) and selected month (or all 12 months)
+        const monthRows = allExpenses.filter(r => {
+            const rowYear = String(r[5] || '').trim();
+            const yearMatches = !rowYear || rowYear === yearStr;
+            if (!yearMatches) return false;
+
+            if (isAll) return true;
+            return String(r[1] || "").toLowerCase().trim() === normTarget;
+        });
 
         let totalExpenses = 0;
         const categories = new Set();
