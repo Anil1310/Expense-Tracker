@@ -11170,8 +11170,8 @@ Expense Tracker Pro: 2026 JavaScript Code
     class ExpenseCache {
         constructor() {
             this.cacheKey = 'expense_app_cache';
-            this.cacheDuration = 2 * 60 * 1000; // 2 minutes for tight multi-device synchronization between APK & laptop
-            this.shortCacheDuration = 30 * 1000; // 30 seconds for frequently changing data
+            this.cacheDuration = 60 * 1000; // 1 minute max for cached data
+            this.shortCacheDuration = 5 * 1000; // 5 seconds for frequently updated monthly/all_data
             this.loadFromStorage();
         }
 
@@ -11220,7 +11220,14 @@ Expense Tracker Pro: 2026 JavaScript Code
         }
 
         invalidate(key) {
-            this.cache.delete(key);
+            if (!key) return;
+            const keysToDelete = [];
+            this.cache.forEach((_, k) => {
+                if (k === key || k.startsWith(key) || (key.startsWith('monthly_') && k.startsWith(key.split('_')[0] + '_' + key.split('_')[1]))) {
+                    keysToDelete.push(k);
+                }
+            });
+            keysToDelete.forEach(k => this.cache.delete(k));
             this.saveToStorage();
         }
 
@@ -12517,9 +12524,10 @@ Expense Tracker Pro: 2026 JavaScript Code
                 if (!isAll && typeof google !== 'undefined' && google.script && google.script.run) {
                     google.script.run
                         .withSuccessHandler((fresh) => {
-                            if (fresh && !fresh.error && fresh.tableData) {
-                                if (window.expenseCache) window.expenseCache.set(cacheKey, fresh);
-                                handleMonthData(fresh);
+                            const res = fresh && fresh.result ? fresh.result : fresh;
+                            if (res && !res.error && res.tableData) {
+                                if (window.expenseCache) window.expenseCache.set(cacheKey, res);
+                                handleMonthData(res);
                             }
                         })
                         .getMonthlyData(targetMonth);
@@ -12538,9 +12546,10 @@ Expense Tracker Pro: 2026 JavaScript Code
                     if (!isAll && typeof google !== 'undefined' && google.script && google.script.run) {
                         google.script.run
                             .withSuccessHandler((fresh) => {
-                                if (fresh && !fresh.error) {
-                                    if (window.expenseCache) window.expenseCache.set(cacheKey, fresh);
-                                    handleMonthData(fresh);
+                                const res = fresh && fresh.result ? fresh.result : fresh;
+                                if (res && !res.error && res.tableData) {
+                                    if (window.expenseCache) window.expenseCache.set(cacheKey, res);
+                                    handleMonthData(res);
                                 }
                             })
                             .getMonthlyData(targetMonth);
@@ -12561,8 +12570,9 @@ Expense Tracker Pro: 2026 JavaScript Code
             if (isAll) {
                 google.script.run
                     .withSuccessHandler((allData) => {
-                        if (window.expenseCache) window.expenseCache.set('all_data', allData);
-                        const derived = extractMonthlyDataFromAllData(allData?.allExpenses || [], 'All', CURRENT_YEAR || 2026);
+                        const res = allData && allData.result ? allData.result : allData;
+                        if (window.expenseCache) window.expenseCache.set('all_data', res);
+                        const derived = extractMonthlyDataFromAllData(res?.allExpenses || [], 'All', CURRENT_YEAR || 2026);
                         if (derived) {
                             if (window.expenseCache) window.expenseCache.set(cacheKey, derived);
                             handleMonthData(derived);
@@ -12573,8 +12583,9 @@ Expense Tracker Pro: 2026 JavaScript Code
             } else {
                 google.script.run
                     .withSuccessHandler((data) => {
-                        if (window.expenseCache) window.expenseCache.set(cacheKey, data);
-                        handleMonthData(data);
+                        const res = data && data.result ? data.result : data;
+                        if (window.expenseCache) window.expenseCache.set(cacheKey, res);
+                        handleMonthData(res);
                     })
                     .withFailureHandler(handleError)
                     .getMonthlyData(targetMonth);
@@ -12585,22 +12596,25 @@ Expense Tracker Pro: 2026 JavaScript Code
     function handleMonthData(response) {
         const loadingSpinner = document.getElementById('loading-spinner');
         if (loadingSpinner) loadingSpinner.classList.add('d-none');
+        if (!response) return;
 
-        if (response.error) {
-            showAlert("Error: " + response.error, "danger");
-            console.error("Error in monthly data:", response.error);
+        const res = (response && response.result) ? response.result : response;
+
+        if (res.error) {
+            showAlert("Error: " + res.error, "danger");
+            console.error("Error in monthly data:", res.error);
             return;
         }
 
-        expenseData = response.tableData || [];
+        expenseData = res.tableData || [];
 
         const totalExpenses = document.getElementById('total-expenses');
         const totalCategories = document.getElementById('total-categories');
         const totalDays = document.getElementById('total-days');
 
-        animateValue(totalExpenses, response.totalExpenses || 0, 'currency');
-        animateValue(totalCategories, response.uniqueCategories || 0, 'integer');
-        animateValue(totalDays, response.daysWithExpenses || 0, 'integer');
+        animateValue(totalExpenses, res.totalExpenses || 0, 'currency');
+        animateValue(totalCategories, res.uniqueCategories || 0, 'integer');
+        animateValue(totalDays, res.daysWithExpenses || 0, 'integer');
 
         renderDashboardTable(expenseData);
 
@@ -15330,23 +15344,28 @@ Expense Tracker Pro: 2026 JavaScript Code
             const runner = google.script.run
                 .withSuccessHandler((response) => {
                     console.log("Background save response:", response);
-                    if (response && response.success) {
+                    const res = response && response.result ? response.result : response;
+                    if (res && res.success) {
                         // Replace temporary ID with server unique ID seamlessly and re-render
                         if (!isEdit && expenseData) {
                             const row = expenseData.find(r => r && r[1] === tempUniqueId);
                             if (row) {
-                                if (response.uniqueId) row[1] = response.uniqueId;
-                                if (response.sn) row.sn = response.sn;
+                                if (res.uniqueId) row[1] = res.uniqueId;
+                                if (res.sn) row.sn = res.sn;
                                 delete row.isOptimistic;
                             }
                             renderDashboardTable(expenseData);
                         }
                         if (window.expenseCache) {
                             window.expenseCache.invalidate(`monthly_${monthValue}`);
+                            window.expenseCache.invalidate(`monthly_${monthValue}_${CURRENT_YEAR || 2026}`);
                             window.expenseCache.invalidate('all_data');
+                            window.expenseCache.invalidate('consolidated_data');
                         }
+                        // Instantly re-fetch direct from Google Sheet so the UI is 100% synced
+                        loadMonth(monthValue, false, true);
                     } else {
-                        showModernToast("Sync Error", "Server: " + (response ? response.error : "Unknown error"), "error", 4000);
+                        showModernToast("Sync Error", "Server: " + (res ? res.error : "Unknown error"), "error", 4000);
                         if (!isEdit && expenseData) {
                             const rmIdx = expenseData.findIndex(r => r && r[1] === tempUniqueId);
                             if (rmIdx > -1) {
@@ -16253,6 +16272,8 @@ Expense Tracker Pro: 2026 JavaScript Code
     function refreshCurrentMonth() {
         if (window.expenseCache) {
             window.expenseCache.invalidate(`monthly_${CURRENT_MONTH}`);
+            window.expenseCache.invalidate(`monthly_${CURRENT_MONTH}_${CURRENT_YEAR || 2026}`);
+            window.expenseCache.invalidate('all_data');
         }
         showAlert("Refreshing Current Month Data", "info");
         loadMonth(CURRENT_MONTH, false, true); // Force refresh bypassing initial data
