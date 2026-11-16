@@ -175,7 +175,24 @@ function doPost(e) {
             runCompleteProcess: (...args) => runCompleteProcess(...args),
             saveProfilePhoto: (...args) => saveProfilePhoto(...args),
             cleanAllColumnEIconsAndStopTriggers: (...args) => cleanAllColumnEIconsAndStopTriggers(...args),
-            updateAllListCategories: (...args) => updateAllListCategories(...args)
+            updateAllListCategories: (...args) => updateAllListCategories(...args),
+            getSheetGids: () => {
+                const ss = SpreadsheetApp.openById(MAIN_ID);
+                return ss.getSheets().map(s => ({ name: s.getName(), id: s.getSheetId() }));
+            },
+            getNovAndDataStatus: () => {
+                const ss = SpreadsheetApp.openById(MAIN_ID);
+                const novSheet = ss.getSheetByName("Nov");
+                const dataSheet = ss.getSheetByName("Data");
+                const novLastRow = novSheet ? novSheet.getLastRow() : 0;
+                const dataLastRow = dataSheet ? dataSheet.getLastRow() : 0;
+                const novLastValues = (novSheet && novLastRow > 1) ? novSheet.getRange(novLastRow, 1, 1, 8).getValues()[0] : null;
+                const dataLastValues = (dataSheet && dataLastRow > 1) ? dataSheet.getRange(dataLastRow, 1, 1, 8).getValues()[0] : null;
+                return {
+                    nov: { totalRows: novLastRow - 1, lastRow: novLastValues },
+                    data: { totalRows: dataLastRow - 1, lastRow: dataLastValues }
+                };
+            }
         };
 
         if (!request || typeof request.method !== "string" ||
