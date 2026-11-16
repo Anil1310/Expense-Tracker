@@ -11155,9 +11155,9 @@ Expense Tracker Pro: 2026 JavaScript Code
     let mobileReportsLoadedCount = 0;
     let mobileReportsObserver = null;
 
-    // Sorting state
-    let dashboardSortCol = null;
-    let dashboardSortDir = 'asc';
+    // Sorting state (Default: Newest records first so newly added expenses stay prominently at the top)
+    let dashboardSortCol = 'sn';
+    let dashboardSortDir = 'desc';
     let reportsSortCol = null;
     let reportsSortDir = 'asc';
 
@@ -11366,9 +11366,10 @@ Expense Tracker Pro: 2026 JavaScript Code
         const cacheKey = `monthly_${currentM}_${CURRENT_YEAR || 2026}`;
         google.script.run
             .withSuccessHandler(function (fresh) {
-                if (fresh && !fresh.error && fresh.tableData) {
-                    if (window.expenseCache) window.expenseCache.set(cacheKey, fresh);
-                    handleMonthData(fresh);
+                const res = fresh && fresh.result ? fresh.result : fresh;
+                if (res && !res.error && res.tableData) {
+                    if (window.expenseCache) window.expenseCache.set(cacheKey, res);
+                    handleMonthData(res);
                 }
             })
             .getMonthlyData(currentM);
@@ -12606,7 +12607,21 @@ Expense Tracker Pro: 2026 JavaScript Code
             return;
         }
 
-        expenseData = res.tableData || [];
+        // Incoming fresh table data
+        let incomingRows = res.tableData ? [...res.tableData] : [];
+
+        // Safety Shield: preserve any optimistic rows still syncing so they NEVER disappear
+        if (expenseData && expenseData.length > 0) {
+            const pendingOptimistic = expenseData.filter(r => r && r.isOptimistic);
+            pendingOptimistic.forEach(opt => {
+                const alreadyIncluded = incomingRows.some(sr => sr && (sr[1] === opt[1] || (sr[4] === opt[4] && parseFloat(sr[5]) === parseFloat(opt[5]) && sr[2] === opt[2])));
+                if (!alreadyIncluded) {
+                    incomingRows.push(opt);
+                }
+            });
+        }
+
+        expenseData = incomingRows;
 
         const totalExpenses = document.getElementById('total-expenses');
         const totalCategories = document.getElementById('total-categories');
@@ -12750,11 +12765,9 @@ Expense Tracker Pro: 2026 JavaScript Code
                         All ${latestData.length} records loaded
                     </td>`;
                 tableBody.appendChild(footer);
-                if (paginationContainer) paginationContainer.innerHTML = '';
-                if (pageInfo) pageInfo.textContent = '';
-            } else {
-                renderPagination(totalPages, currentDashboardPage, 'dashboard-pagination', 'dashboard-page-info', 'goToDashboardPage');
             }
+            if (paginationContainer) paginationContainer.innerHTML = '';
+            if (pageInfo) pageInfo.textContent = '';
             renderNotificationsUI();
         }
     }
@@ -15275,7 +15288,7 @@ Expense Tracker Pro: 2026 JavaScript Code
             : dateValue;
 
         const cleanItemWord = (itemListValue.split(' ')[0] || 'Item').replace(/[^a-zA-Z0-9]/g, '');
-        const newSn = (expenseData && expenseData.length > 0) ? (expenseData.length + 1) : 1;
+        const newSn = (expenseData && expenseData.length > 0) ? (Math.max(0, ...expenseData.map(r => parseInt(r[0]) || 0)) + 1) : 1;
         const tempUniqueId = isEdit ? uniqueIdValue : `${newSn}-${cleanItemWord}`;
 
         if (!isEdit) {
@@ -15372,7 +15385,11 @@ Expense Tracker Pro: 2026 JavaScript Code
                     if (res && res.success) {
                         // Replace temporary ID with server unique ID seamlessly and keep record in table permanently
                         if (!isEdit && expenseData) {
-                            const row = expenseData.find(r => r && (r[1] === tempUniqueId || r[1] === res.uniqueId));
+                            const row = expenseData.find(r => r && (
+                                r[1] === tempUniqueId ||
+                                r[1] === res.uniqueId ||
+                                (r.isOptimistic && r[4] === itemListValue && parseFloat(r[5]) === parseFloat(amountValue))
+                            ));
                             if (row) {
                                 if (res.uniqueId) row[1] = res.uniqueId;
                                 if (res.sn) {
@@ -15390,7 +15407,11 @@ Expense Tracker Pro: 2026 JavaScript Code
                             const cacheKey = `monthly_${monthValue}_${CURRENT_YEAR || 2026}`;
                             const cached = window.expenseCache.get(cacheKey) || window.expenseCache.get(`monthly_${monthValue}`);
                             if (cached && cached.tableData) {
-                                const rIdx = cached.tableData.findIndex(r => r && (r[1] === tempUniqueId || r[1] === res.uniqueId));
+                                const rIdx = cached.tableData.findIndex(r => r && (
+                                    r[1] === tempUniqueId ||
+                                    r[1] === res.uniqueId ||
+                                    (r.isOptimistic && r[4] === itemListValue && parseFloat(r[5]) === parseFloat(amountValue))
+                                ));
                                 if (rIdx > -1) {
                                     if (res.uniqueId) cached.tableData[rIdx][1] = res.uniqueId;
                                     if (res.sn) {
