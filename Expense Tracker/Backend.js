@@ -41,9 +41,9 @@ function stripEmojiFromUniqueId(uid) {
 /**
  * Logs detailed actions to the Audit__Log sheet for security and tracking.
  */
-function logAction(action, details, uniqueId, user) {
+function logAction(action, details, uniqueId, user, optSs) {
     try {
-        const ss = SpreadsheetApp.openById(MAIN_ID);
+        const ss = optSs || SpreadsheetApp.openById(MAIN_ID);
         let auditSheet = ss.getSheetByName("Login");
 
         if (!auditSheet) {
@@ -57,24 +57,8 @@ function logAction(action, details, uniqueId, user) {
             auditSheet.setColumnWidth(6, 50);
             auditSheet.setColumnWidth(7, 150);
             auditSheet.getRange("A1:G1").setFontWeight("bold").setBackground("#e0e0e0");
-        } else {
-            // Check if headers for F and G are missing (in case sheet existed with fewer columns)
-            if (auditSheet.getLastColumn() < 7 || auditSheet.getRange("G1").getValue() === "") {
-                const headerRange = auditSheet.getRange("F1:G1");
-                const values = headerRange.getValues();
-                if (values[0][0] === "" || values[0][1] === "") {
-                    auditSheet.getRange("F1").setValue("Ref");
-                    auditSheet.getRange("G1").setValue("Name");
-                    auditSheet.getRange("F1:G1").setFontWeight("bold").setBackground("#e0e0e0");
-                    auditSheet.setColumnWidth(6, 50);
-                    auditSheet.setColumnWidth(7, 150);
-                }
-            }
         }
 
-        // Logic to determine name to log
-        // If 'user' is provided (usually from frontend), it is likely the Name.
-        // If not, try to use currentUser.name, else username.
         const nameToLog = user || (currentUser ? currentUser.name : (currentUser ? currentUser.username : "System/Web"));
 
         auditSheet.appendRow([
@@ -88,7 +72,7 @@ function logAction(action, details, uniqueId, user) {
         ]);
 
     } catch (e) {
-        console.error("Audit Log Error: " + e.message); // Never fail the main action because of logging
+        console.warn("logAction warning: " + e.message);
     }
 }
 
@@ -709,7 +693,6 @@ function addEntry(entryData) {
 
         const monthName = MONTHS[date.getMonth()];
         const year = date.getFullYear();
-        const dayStr = date.getDate().toString().padStart(2, '0');
         const formattedDate = `${monthName} ${date.getDate()}, ${year}`;
 
         const ss = SpreadsheetApp.openById(MAIN_ID);
@@ -728,32 +711,41 @@ function addEntry(entryData) {
             monthName,
             entryData.itemList,
             amount,  // This is now a number
-            entryData.credit, // Now Credit & Remark
+            entryData.credit || '', // Credit & Remark
             entryData.user   // Admin name
         ];
 
+        // 1. Append to current month sheet
         sheet.appendRow(newRow);
 
-        // Update the consolidated "Data" sheet as well
+        // 2. Always append to consolidated "Data" sheet tab whenever a new record is added
         const consolidatedSheet = ensureSheetExists(ss, "Data", ["S.N", "Unique ID", "Date", "Month", "Item List", "Amount", "Credit & Remark", "Admin"]);
         const consolidatedLastRow = consolidatedSheet.getLastRow();
+        const dataSn = consolidatedLastRow > 0 ? consolidatedLastRow : 1;
         consolidatedSheet.appendRow([
-            consolidatedLastRow,
+            dataSn,
             newUniqueId,
             formattedDate,
             monthName,
             entryData.itemList,
-            amount,  // This is now a number
-            entryData.credit,
+            amount,  // Number
+            entryData.credit || '',
             entryData.user
         ]);
 
-        // Log the creation
+        // Commit both writes immediately
+        SpreadsheetApp.flush();
+
+        // 3. Fast audit log passing already open ss
         const userForLog = entryData.user || (currentUser ? currentUser.username : "System/Web");
-        logAction("CREATE", `Added entry: ${entryData.itemList} (${amount})`, newUniqueId, userForLog);
+        logAction("CREATE", `Added entry: ${entryData.itemList} (${amount})`, newUniqueId, userForLog, ss);
 
         return {
-            success: true
+            success: true,
+            uniqueId: newUniqueId,
+            sn: sn,
+            date: formattedDate,
+            month: monthName
         };
     } catch (e) {
         return {
@@ -864,7 +856,7 @@ function updateEntry(entryData) {
                 }
             }
 
-            logAction("MOVE", `Moved from ${entryData.month} to ${monthName}`, entryData.uniqueId, entryData.user);
+            logAction("MOVE", `Moved from ${entryData.month} to ${monthName}`, entryData.uniqueId, entryData.user, ss);
 
         } else {
             // --- CASE 2: Month Same (Update in place) ---
@@ -892,7 +884,7 @@ function updateEntry(entryData) {
 
                 // Number formatting is pre-applied via ensureSheetExists
 
-                logAction("UPDATE", `Updated entry details`, entryData.uniqueId, entryData.user);
+                logAction("UPDATE", `Updated entry details`, entryData.uniqueId, entryData.user, ss);
 
             } else {
                 return { error: "Entry not found in source sheet." };
