@@ -15370,45 +15370,54 @@ Expense Tracker Pro: 2026 JavaScript Code
                     console.log("Background save response:", response);
                     const res = response && response.result ? response.result : response;
                     if (res && res.success) {
-                        // Replace temporary ID with server unique ID seamlessly and re-render
+                        // Replace temporary ID with server unique ID seamlessly and keep record in table permanently
                         if (!isEdit && expenseData) {
-                            const row = expenseData.find(r => r && r[1] === tempUniqueId);
+                            const row = expenseData.find(r => r && (r[1] === tempUniqueId || r[1] === res.uniqueId));
                             if (row) {
                                 if (res.uniqueId) row[1] = res.uniqueId;
-                                if (res.sn) row.sn = res.sn;
+                                if (res.sn) {
+                                    row[0] = res.sn;
+                                    row.sn = res.sn;
+                                }
                                 delete row.isOptimistic;
+                                delete row.syncFailed;
                             }
                             renderDashboardTable(expenseData);
                         }
+
+                        // Update local cache in-place with confirmed server record
                         if (window.expenseCache) {
-                            window.expenseCache.invalidate(`monthly_${monthValue}`);
-                            window.expenseCache.invalidate(`monthly_${monthValue}_${CURRENT_YEAR || 2026}`);
+                            const cacheKey = `monthly_${monthValue}_${CURRENT_YEAR || 2026}`;
+                            const cached = window.expenseCache.get(cacheKey) || window.expenseCache.get(`monthly_${monthValue}`);
+                            if (cached && cached.tableData) {
+                                const rIdx = cached.tableData.findIndex(r => r && (r[1] === tempUniqueId || r[1] === res.uniqueId));
+                                if (rIdx > -1) {
+                                    if (res.uniqueId) cached.tableData[rIdx][1] = res.uniqueId;
+                                    if (res.sn) {
+                                        cached.tableData[rIdx][0] = res.sn;
+                                        cached.tableData[rIdx].sn = res.sn;
+                                    }
+                                    delete cached.tableData[rIdx].isOptimistic;
+                                } else {
+                                    const confirmedRow = [res.sn, res.uniqueId, formattedDisplayDate, monthValue, itemListValue, amountValue, creditValue || '', entryUser];
+                                    confirmedRow.sn = res.sn;
+                                    cached.tableData.unshift(confirmedRow);
+                                }
+                                window.expenseCache.set(cacheKey, cached);
+                                window.expenseCache.set(`monthly_${monthValue}`, cached);
+                            }
                             window.expenseCache.invalidate('all_data');
                             window.expenseCache.invalidate('consolidated_data');
                         }
-                        // Instantly re-fetch direct from Google Sheet so the UI is 100% synced
-                        loadMonth(monthValue, false, true);
+
+                        showModernToast("Record Confirmed", `Saved safely to ${monthValue} & Data tab (ID: ${res.uniqueId || tempUniqueId})`, "success", 2500);
                     } else {
                         showModernToast("Sync Error", "Server: " + (res ? res.error : "Unknown error"), "error", 4000);
-                        if (!isEdit && expenseData) {
-                            const rmIdx = expenseData.findIndex(r => r && r[1] === tempUniqueId);
-                            if (rmIdx > -1) {
-                                expenseData.splice(rmIdx, 1);
-                                renderDashboardTable(expenseData);
-                            }
-                        }
                     }
                 })
                 .withFailureHandler((err) => {
                     console.error("Background save failure:", err);
                     showModernToast("Sync Issue", "Could not reach Google Sheets. Please check your network.", "error", 4000);
-                    if (!isEdit && expenseData) {
-                        const rmIdx = expenseData.findIndex(r => r && r[1] === tempUniqueId);
-                        if (rmIdx > -1) {
-                            expenseData.splice(rmIdx, 1);
-                            renderDashboardTable(expenseData);
-                        }
-                    }
                 });
 
             if (isEdit) {
