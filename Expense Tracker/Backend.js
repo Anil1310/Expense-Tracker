@@ -672,8 +672,32 @@ function ensureTrashSheet(ss) {
 * @param {Object} entryData - The data for the new row.
 * @returns {Object} A success or error message.
 */
+/**
+ * Stops and removes any recurring time-driven triggers (such as combine data triggers)
+ * so that no background trigger runs every 1 minute.
+ */
+function removeAllMinuteTriggers() {
+    try {
+        const triggers = ScriptApp.getProjectTriggers();
+        triggers.forEach(function(t) {
+            if (t.getEventType() === ScriptApp.EventType.CLOCK) {
+                try {
+                    ScriptApp.deleteTrigger(t);
+                } catch (e) {
+                    Logger.log("Error removing trigger: " + e.message);
+                }
+            }
+        });
+    } catch (err) {
+        Logger.log("Notice: could not inspect triggers: " + err.message);
+    }
+}
+
 function addEntry(entryData) {
     try {
+        // Ensure no recurring triggers run every 1 minute to combine month sheets
+        removeAllMinuteTriggers();
+
         // Check if it's an update operation
         if (entryData.uniqueId) {
             return updateEntry(entryData);
@@ -691,11 +715,13 @@ function addEntry(entryData) {
             date = new Date(entryData.date);
         }
 
-        const monthName = MONTHS[date.getMonth()];
+        const monthName = entryData.month || MONTHS[date.getMonth()];
         const year = date.getFullYear();
         const formattedDate = `${monthName} ${date.getDate()}, ${year}`;
 
         const ss = SpreadsheetApp.openById(MAIN_ID);
+
+        // 1. FIRST: Save into the current month sheet (e.g. "Nov")
         const sheet = ensureSheetExists(ss, monthName, ["S.N", "Unique ID", "Date", "Month", "Item List", "Amount", "Credit & Remark", "Admin"]);
         const lastRow = sheet.getLastRow();
         const sn = lastRow;
@@ -710,15 +736,15 @@ function addEntry(entryData) {
             formattedDate,
             monthName,
             entryData.itemList,
-            amount,  // This is now a number
+            amount,  // Number
             entryData.credit || '', // Credit & Remark
             entryData.user   // Admin name
         ];
 
-        // 1. Append to current month sheet
+        // Append to current month sheet FIRST
         sheet.appendRow(newRow);
 
-        // 2. Always append to consolidated "Data" sheet tab whenever a new record is added
+        // 2. SECOND: Append to consolidated "Data" sheet tab directly from the current month
         const consolidatedSheet = ensureSheetExists(ss, "Data", ["S.N", "Unique ID", "Date", "Month", "Item List", "Amount", "Credit & Remark", "Admin"]);
         const consolidatedLastRow = consolidatedSheet.getLastRow();
         const dataSn = consolidatedLastRow > 0 ? consolidatedLastRow : 1;
@@ -733,7 +759,7 @@ function addEntry(entryData) {
             entryData.user
         ]);
 
-        // Commit both writes immediately
+        // Commit both writes immediately to Google Sheets
         SpreadsheetApp.flush();
 
         // 3. Fast audit log passing already open ss

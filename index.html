@@ -15236,11 +15236,12 @@ Expense Tracker Pro: 2026 JavaScript Code
             ? `${monthNamesShort[parsedDate.getMonth()]} ${parsedDate.getDate()}, ${parsedDate.getFullYear()}`
             : dateValue;
 
-        const tempUniqueId = isEdit ? uniqueIdValue : ('ID-' + Math.floor(1000 + Math.random() * 9000));
+        const cleanItemWord = (itemListValue.split(' ')[0] || 'Item').replace(/[^a-zA-Z0-9]/g, '');
+        const newSn = (expenseData && expenseData.length > 0) ? (expenseData.length + 1) : 1;
+        const tempUniqueId = isEdit ? uniqueIdValue : `${newSn}-${cleanItemWord}`;
 
         if (!isEdit) {
             if (!expenseData) expenseData = [];
-            const newSn = expenseData.length + 1;
             const optimisticRow = [
                 newSn,
                 tempUniqueId,
@@ -15330,14 +15331,15 @@ Expense Tracker Pro: 2026 JavaScript Code
                 .withSuccessHandler((response) => {
                     console.log("Background save response:", response);
                     if (response && response.success) {
-                        // Replace temporary ID with server unique ID seamlessly
-                        if (!isEdit && response.uniqueId && expenseData) {
+                        // Replace temporary ID with server unique ID seamlessly and re-render
+                        if (!isEdit && expenseData) {
                             const row = expenseData.find(r => r && r[1] === tempUniqueId);
                             if (row) {
-                                row[1] = response.uniqueId;
+                                if (response.uniqueId) row[1] = response.uniqueId;
                                 if (response.sn) row.sn = response.sn;
                                 delete row.isOptimistic;
                             }
+                            renderDashboardTable(expenseData);
                         }
                         if (window.expenseCache) {
                             window.expenseCache.invalidate(`monthly_${monthValue}`);
