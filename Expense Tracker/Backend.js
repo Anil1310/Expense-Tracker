@@ -710,11 +710,48 @@ function removeAllMinuteTriggers() {
     }
 }
 
+function parseSafeDateAndMonth(rawDate, rawMonth) {
+    let date = null;
+    if (rawDate instanceof Date && !isNaN(rawDate.getTime())) {
+        date = rawDate;
+    } else if (typeof rawDate === 'string') {
+        const str = rawDate.trim();
+        if (str.match(/^\d{4}-\d{1,2}-\d{1,2}$/)) {
+            const parts = str.split('-');
+            date = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+        } else if (str.match(/^\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4}$/)) {
+            const parts = str.split(/[\/\-]/);
+            date = new Date(parseInt(parts[2], 10), parseInt(parts[1], 10) - 1, parseInt(parts[0], 10));
+        } else {
+            const parsed = new Date(str);
+            if (!isNaN(parsed.getTime())) date = parsed;
+        }
+    }
+
+    let monthName = (rawMonth && MONTHS.includes(rawMonth) && rawMonth !== 'All') ? rawMonth : null;
+    if (date && !isNaN(date.getTime())) {
+        const derivedMonth = MONTHS[date.getMonth()];
+        if (derivedMonth) monthName = derivedMonth;
+    }
+    if (!monthName || monthName === 'All' || !MONTHS.includes(monthName)) {
+        monthName = "Nov";
+    }
+
+    const year = (date && !isNaN(date.getTime())) ? date.getFullYear() : 2026;
+    const day = (date && !isNaN(date.getTime())) ? date.getDate() : 16;
+    const formattedDate = `${monthName} ${day}, ${year}`;
+
+    return {
+        date: date || new Date(year, MONTHS.indexOf(monthName), day),
+        monthName: monthName,
+        year: year,
+        day: day,
+        formattedDate: formattedDate
+    };
+}
+
 function addEntry(entryData) {
     try {
-        // Ensure no recurring triggers run every 1 minute to combine month sheets
-        removeAllMinuteTriggers();
-
         // Check if it's an update operation
         if (entryData.uniqueId) {
             return updateEntry(entryData);
@@ -723,22 +760,14 @@ function addEntry(entryData) {
         // Sanitize item list to ensure no emoji/icons are ever saved
         entryData.itemList = stripEmojiIcon(entryData.itemList);
 
-        // Parse the date safely to prevent timezone shifts
-        let date;
-        if (typeof entryData.date === 'string' && entryData.date.match(/^\d{4}-\d{2}-\d{2}$/)) {
-            const parts = entryData.date.split('-');
-            date = new Date(parts[0], parts[1] - 1, parts[2]);
-        } else {
-            date = new Date(entryData.date);
-        }
-
-        const monthName = entryData.month || MONTHS[date.getMonth()];
-        const year = date.getFullYear();
-        const formattedDate = `${monthName} ${date.getDate()}, ${year}`;
+        // Parse date and month safely
+        const parsed = parseSafeDateAndMonth(entryData.date, entryData.month);
+        const monthName = parsed.monthName;
+        const formattedDate = parsed.formattedDate;
 
         const ss = SpreadsheetApp.openById(MAIN_ID);
 
-        // 1. FIRST: Save into the current month sheet (e.g. "Nov")
+        // 1. FIRST: Save into the target month sheet (e.g. "Nov")
         const sheet = ensureSheetExists(ss, monthName, ["S.N", "Unique ID", "Date", "Month", "Item List", "Amount", "Credit & Remark", "Admin"]);
         const lastRow = sheet.getLastRow();
         const sn = lastRow;
@@ -838,19 +867,10 @@ function updateEntry(entryData) {
         if (entryData.itemList) entryData.itemList = stripEmojiIcon(entryData.itemList);
         if (entryData.uniqueId) entryData.uniqueId = stripEmojiFromUniqueId(entryData.uniqueId);
 
-        // Parse the date safely to prevent timezone shifts
-        let date;
-        if (typeof entryData.date === 'string' && entryData.date.match(/^\d{4}-\d{2}-\d{2}$/)) {
-            const parts = entryData.date.split('-');
-            date = new Date(parts[0], parts[1] - 1, parts[2]);
-        } else {
-            date = new Date(entryData.date);
-        }
-
-        const monthName = MONTHS[date.getMonth()];
-        const year = date.getFullYear();
-        const dayStr = date.getDate().toString().padStart(2, '0');
-        const formattedDate = `${monthName} ${date.getDate()}, ${year}`;
+        // Parse date and month safely
+        const parsed = parseSafeDateAndMonth(entryData.date, entryData.month);
+        const monthName = parsed.monthName;
+        const formattedDate = parsed.formattedDate;
 
         // Convert amount to number
         const amount = parseFloat(entryData.amount) || 0;

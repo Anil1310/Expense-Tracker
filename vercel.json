@@ -1,6 +1,11 @@
 {
   "buildCommand": "node scripts/build.mjs",
   "outputDirectory": "dist",
+  "functions": {
+    "api/apps-script.js": {
+      "maxDuration": 60
+    }
+  },
   "rewrites": [
     {
       "source": "/api/apps-script",

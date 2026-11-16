@@ -4244,7 +4244,6 @@ Expense Tracker Pro: 2026 JavaScript Code
         }
 
         const uniqueIdValue = uniqueId.value;
-        const monthValue = month.value || CURRENT_MONTH;
         const itemListValue = getItemDisplayName(itemList.value).trim();
         const amountValue = parseFloat(amount.value);
         const dateValue = date.value;
@@ -4265,6 +4264,31 @@ Expense Tracker Pro: 2026 JavaScript Code
             showModernToast("Date Required", "Please choose a valid date.", "warning");
             date.focus();
             return;
+        }
+
+        // Determine canonical month from dateValue
+        let monthValue = 'Nov';
+        if (dateValue) {
+            let mIdx = -1;
+            if (dateValue.includes('-')) {
+                const parts = dateValue.split('-');
+                if (parts[0].length === 4) mIdx = parseInt(parts[1], 10) - 1; // YYYY-MM-DD
+                else if (parts[2].length === 4) mIdx = parseInt(parts[1], 10) - 1; // DD-MM-YYYY
+            } else if (dateValue.includes('/')) {
+                const parts = dateValue.split('/');
+                if (parts[2].length === 4) mIdx = parseInt(parts[1], 10) - 1; // DD/MM/YYYY
+            }
+            if (mIdx >= 0 && mIdx < 12) {
+                monthValue = MONTHS[mIdx];
+            } else if (month.value && MONTHS.includes(month.value) && month.value !== 'All') {
+                monthValue = month.value;
+            } else if (CURRENT_MONTH && MONTHS.includes(CURRENT_MONTH) && CURRENT_MONTH !== 'All') {
+                monthValue = CURRENT_MONTH;
+            }
+        } else if (month.value && MONTHS.includes(month.value) && month.value !== 'All') {
+            monthValue = month.value;
+        } else if (CURRENT_MONTH && MONTHS.includes(CURRENT_MONTH) && CURRENT_MONTH !== 'All') {
+            monthValue = CURRENT_MONTH;
         }
 
         let entryUser = currentUser ? currentUser.name : 'Unknown';
@@ -5418,11 +5442,13 @@ Expense Tracker Pro: 2026 JavaScript Code
         const entryForm = document.getElementById('entryForm');
         if (entryForm) entryForm.reset();
 
-        // Auto-select today's date
-        const today = new Date();
-        const year = today.getFullYear();
-        const month = String(today.getMonth() + 1).padStart(2, '0');
-        const day = String(today.getDate()).padStart(2, '0');
+        // Auto-select date matching active month in 2026
+        const year = 2026;
+        let activeM = (CURRENT_MONTH && MONTHS.includes(CURRENT_MONTH) && CURRENT_MONTH !== 'All') ? CURRENT_MONTH : 'Nov';
+        let monthIdx = MONTHS.indexOf(activeM);
+        if (monthIdx === -1) monthIdx = 10;
+        const month = String(monthIdx + 1).padStart(2, '0');
+        const day = '16';
         const formattedDate = `${year}-${month}-${day}`;
 
         const dateInput = document.getElementById('date');
@@ -5432,7 +5458,7 @@ Expense Tracker Pro: 2026 JavaScript Code
         const editUniqueId = document.getElementById('editUniqueId');
         const editMonth = document.getElementById('editMonth');
         if (editUniqueId) editUniqueId.value = '';
-        if (editMonth) editMonth.value = CURRENT_MONTH;
+        if (editMonth) editMonth.value = activeM;
 
         // Reset title
         const modalTitle = document.getElementById('modalTitle');
@@ -6100,6 +6126,11 @@ color: #ffc107 !important;
                 if (editMonth) editMonth.value = "";
                 if (modalTitle) modalTitle.innerHTML = '<i class="fas fa-receipt me-2"></i>Add New Record';
                 if (itemListDropdown) itemListDropdown.value = "";
+                const saveBtn = document.getElementById('saveRecordBtn');
+                if (saveBtn) {
+                    saveBtn.innerHTML = '<i class="fas fa-check me-1"></i>Save Record';
+                    saveBtn.disabled = false;
+                }
 
                 const today = new Date();
                 const year = today.getFullYear();
