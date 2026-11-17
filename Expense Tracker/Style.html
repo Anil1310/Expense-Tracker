@@ -2518,6 +2518,14 @@ Expense Tracker Pro: 2026 CSS Style Code
             background: #ffffff !important;
         }
 
+        [data-theme="dark"] .table tr {
+            background: #1e293b !important;
+        }
+
+        [data-theme="dark"] .table tr:nth-child(even) {
+            background: #162032 !important;
+        }
+
         .table thead th,
         .table tbody td {
             display: table-cell !important;
@@ -2530,6 +2538,12 @@ Expense Tracker Pro: 2026 CSS Style Code
             border: 1px solid #dee2e6 !important;
             vertical-align: middle !important;
             height: auto !important;
+        }
+
+        [data-theme="dark"] .table thead th,
+        [data-theme="dark"] .table tbody td {
+            color: #f1f5f9 !important;
+            border-color: rgba(255, 255, 255, 0.08) !important;
         }
 
         .table thead th {
@@ -6997,6 +7011,74 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
         border-color: rgba(59, 130, 246, 0.4) !important;
     }
 
+    /* Category-wise Table (Category Insights & Top Categories) Dark Theme Support */
+    [data-theme="dark"] #categories-page .table,
+    [data-theme="dark"] .categories-premium-card .table,
+    [data-theme="dark"] #category-ranking-body,
+    [data-theme="dark"] #category-details-body {
+        background: transparent !important;
+        color: #ffffff !important;
+    }
+
+    [data-theme="dark"] #categories-page .table tr,
+    [data-theme="dark"] .categories-premium-card .table tr,
+    [data-theme="dark"] #category-ranking-body tr,
+    [data-theme="dark"] #category-details-body tr {
+        background: rgba(30, 41, 59, 0.6) !important;
+        color: #ffffff !important;
+        border-color: rgba(255, 255, 255, 0.08) !important;
+    }
+
+    [data-theme="dark"] #categories-page .table tr:nth-child(even),
+    [data-theme="dark"] .categories-premium-card .table tr:nth-child(even),
+    [data-theme="dark"] #category-ranking-body tr:nth-child(even),
+    [data-theme="dark"] #category-details-body tr:nth-child(even) {
+        background: rgba(15, 23, 42, 0.7) !important;
+    }
+
+    [data-theme="dark"] #categories-page .table th,
+    [data-theme="dark"] #categories-page .table td,
+    [data-theme="dark"] .categories-premium-card .table th,
+    [data-theme="dark"] .categories-premium-card .table td,
+    [data-theme="dark"] #category-ranking-body td,
+    [data-theme="dark"] #category-details-body td {
+        background: transparent !important;
+        color: #f1f5f9 !important;
+        border-color: rgba(255, 255, 255, 0.08) !important;
+    }
+
+    [data-theme="dark"] #categories-page .category-row:hover {
+        background: rgba(59, 130, 246, 0.25) !important;
+    }
+
+    [data-theme="dark"] #categories-page .category-row.selected-active {
+        background: linear-gradient(90deg, rgba(59, 130, 246, 0.35), rgba(139, 92, 246, 0.35)) !important;
+        border-left: 6px solid #3b82f6 !important;
+    }
+
+    /* Top Categories Table in Data/Insights page Dark Theme */
+    [data-theme="dark"] #top-categories-table,
+    [data-theme="dark"] #top-categories-table thead,
+    [data-theme="dark"] #top-categories-table tbody {
+        background: transparent !important;
+    }
+
+    [data-theme="dark"] #top-categories-table tr {
+        background: #1e293b !important;
+        color: #f1f5f9 !important;
+    }
+
+    [data-theme="dark"] #top-categories-table tr:nth-child(even) {
+        background: #162032 !important;
+    }
+
+    [data-theme="dark"] #top-categories-table th,
+    [data-theme="dark"] #top-categories-table td {
+        background: transparent !important;
+        color: #f1f5f9 !important;
+        border-color: rgba(255, 255, 255, 0.08) !important;
+    }
+
     .progress-premium {
         height: 14px;
         background-color: rgba(255, 255, 255, 0.08);
@@ -8678,31 +8760,42 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             border-right: none !important;
         }
 
-        /* Center alignments for S.N, Date, Month, Amount */
+        /* Column Alignments on Report Page: S.N (center), Unique ID (left), Date (center), Item List (left), Amount (center) */
         #reports-page .table th:nth-child(1),
         #reports-page .table td:nth-child(1),
         #reports-page .table th:nth-child(3),
         #reports-page .table td:nth-child(3),
-        #reports-page .table th:nth-child(4),
-        #reports-page .table td:nth-child(4),
-        #reports-page .table th:nth-child(6),
-        #reports-page .table td:nth-child(6) {
+        #reports-page .table th:nth-child(5),
+        #reports-page .table td:nth-child(5) {
             text-align: center !important;
         }
 
-        /* White amount styling on Report Page */
-        #reports-page .table td:nth-child(6),
-        #reports-page .table td:nth-child(6) *,
+        #reports-page .table th:nth-child(2),
+        #reports-page .table td:nth-child(2),
+        #reports-page .table td[data-label="Unique ID"],
+        #reports-page .table th:nth-child(4),
+        #reports-page .table td:nth-child(4),
+        #reports-page .table td[data-label="Item List"],
+        #reports-page .table th[data-sort-col="item"] {
+            text-align: left !important;
+        }
+
+        /* Amount styling on Report Page: Black color in light theme, white in dark theme */
+        #reports-page .table td:nth-child(5),
+        #reports-page .table td:nth-child(5) *,
         #reports-page .table td[data-label="Amount"],
         #reports-page .table td[data-label="Amount"] *,
         #reports-page .report-amount-text {
-            color: #ffffff !important;
-            -webkit-text-fill-color: #ffffff !important;
+            color: #000000 !important;
+            -webkit-text-fill-color: #000000 !important;
             font-weight: 800 !important;
         }
 
-        [data-theme="dark"] #reports-page .table td:nth-child(6),
-        [data-theme="dark"] #reports-page .table td:nth-child(6) * {
+        [data-theme="dark"] #reports-page .table td:nth-child(5),
+        [data-theme="dark"] #reports-page .table td:nth-child(5) *,
+        [data-theme="dark"] #reports-page .table td[data-label="Amount"],
+        [data-theme="dark"] #reports-page .table td[data-label="Amount"] *,
+        [data-theme="dark"] #reports-page .report-amount-text {
             color: #ffffff !important;
             -webkit-text-fill-color: #ffffff !important;
         }
