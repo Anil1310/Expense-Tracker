@@ -14057,13 +14057,11 @@ Expense Tracker Pro: 2026 JavaScript Code
         allExpenseData = response.allExpenses || [];
         const totalRows = allExpenseData.length;
         enhancedAllData = allExpenseData.map((row, index) => {
-            const uidMatch = String(row[7] || '').match(/^(\d+)-/);
-            const extractedSn = uidMatch ? parseInt(uidMatch[1]) : null;
-            const rowSn = (row[8] !== undefined && row[8] !== null && row[8] !== "" && !isNaN(parseInt(row[8])))
+            const masterSn = (row[8] !== undefined && row[8] !== null && row[8] !== "" && !isNaN(parseInt(row[8])))
                 ? parseInt(row[8])
-                : (extractedSn !== null ? extractedSn : (totalRows - index));
+                : (totalRows - index);
             return {
-                sn: rowSn,
+                sn: masterSn,
                 id: row[7] || "",
                 date: row[0],
                 month: row[1] || "",

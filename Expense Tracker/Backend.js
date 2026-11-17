@@ -212,6 +212,48 @@ function doPost(e) {
                 }
                 SpreadsheetApp.flush();
                 return { success: true, updated: updated };
+            },
+            syncMasterTabSerialNumbers: () => {
+                try {
+                    const ss = SpreadsheetApp.openById(CONSOLIDATED_ID);
+                    const master = ss.getSheetByName("Master");
+                    if (!master) return { error: "Master not found" };
+                    const lastRow = master.getLastRow();
+                    if (lastRow <= 1) return { error: "No data in Master" };
+                    const data = master.getRange(2, 2, lastRow - 1, 1).getValues(); // Check Unique ID column to find actual data rows
+                    let actualRows = 0;
+                    for (let i = 0; i < data.length; i++) {
+                        if (data[i][0] && String(data[i][0]).trim() !== "") {
+                            actualRows = i + 1;
+                        }
+                    }
+                    if (actualRows === 0) return { error: "No data rows found" };
+                    const values = [];
+                    for (let i = 1; i <= actualRows; i++) {
+                        values.push([i]);
+                    }
+                    master.getRange(2, 1, actualRows, 1).setValues(values);
+                    SpreadsheetApp.flush();
+                    return { success: true, updated: actualRows };
+                } catch (e) {
+                    return { error: e.message };
+                }
+            },
+            inspectMasterTab: () => {
+                try {
+                    const ss = SpreadsheetApp.openById(CONSOLIDATED_ID);
+                    const master = ss.getSheetByName("Master");
+                    if (!master) return { error: "Master not found" };
+                    const data = master.getDataRange().getDisplayValues();
+                    const sampleIndices = [1, 50, 100, 500, 1000, 2000, 3000, 4000, 4280, 4285];
+                    const samples = sampleIndices.map(idx => ({ index: idx, row: data[idx] }));
+                    return {
+                        totalRows: data.length,
+                        samples: samples
+                    };
+                } catch (e) {
+                    return { error: e.message };
+                }
             }
         };
 
@@ -402,14 +444,10 @@ function getAllData() {
             }
         });
 
+        const totalRows = allExpenses.length;
         return {
             allExpenses: allExpenses.map((expense, idx) => {
-                const totalRows = allExpenses.length;
-                const matchUid = String(expense[7] || '').match(/^(\d+)-/);
-                const extractedSn = matchUid ? parseInt(matchUid[1]) : null;
-                const parsedSn = (expense[8] !== undefined && expense[8] !== null && expense[8] !== "" && !isNaN(parseInt(expense[8])))
-                    ? parseInt(expense[8])
-                    : (extractedSn !== null ? extractedSn : (totalRows - idx));
+                const masterSn = totalRows - idx;
                 return [
                     expense[0], // DATE
                     expense[1], // MONTH
@@ -419,7 +457,7 @@ function getAllData() {
                     expense[5], // YEAR
                     expense[6], // ADMIN
                     expense[7], // UID
-                    parsedSn    // S.N
+                    masterSn    // S.N (Global Master serial number: 4284 down to 1)
                 ];
             }),
             uniqueCategories: Array.from(allCategories).sort()
