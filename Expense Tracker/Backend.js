@@ -546,7 +546,7 @@ function parseDateString(dateStr, year) {
 */
 function generateUniqueId(sn, itemList) {
     const clean = stripEmojiIcon(itemList);
-    const cleanItem = (clean || itemList).split(' ')[0].replace(/[^a-zA-Z0-9]/g, '');
+    const cleanItem = (clean || itemList).trim();
     return `${sn}-${cleanItem}`;
 }
 
@@ -803,12 +803,10 @@ function addEntry(entryData) {
         // Append to current month sheet FIRST
         sheet.appendRow(newRow);
 
-        // 2. SECOND: Append to consolidated "Data" sheet tab directly from the current month
+        // 2. SECOND: Append to consolidated "Data" sheet tab directly from the current month with identical S.N
         const consolidatedSheet = ensureSheetExists(ss, "Data", ["S.N", "Unique ID", "Date", "Month", "Item List", "Amount", "Credit & Remark", "Admin"]);
-        const consolidatedLastRow = consolidatedSheet.getLastRow();
-        const dataSn = consolidatedLastRow > 0 ? consolidatedLastRow : 1;
         consolidatedSheet.appendRow([
-            dataSn,
+            sn,
             newUniqueId,
             formattedDate,
             monthName,
