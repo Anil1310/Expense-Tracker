@@ -7951,6 +7951,33 @@ color: #ffc107 !important;
     }
 
     // --- Profile Photo Logic ---
+    function openProfilePhotoChooser() {
+        const modalEl = document.getElementById('choosePhotoModal');
+        if (modalEl && typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+            const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+            modal.show();
+        } else {
+            const upload = document.getElementById('avatarUpload');
+            if (upload) upload.click();
+        }
+    }
+
+    function triggerPhotoSelection(source) {
+        const modalEl = document.getElementById('choosePhotoModal');
+        if (modalEl && typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            if (modal) modal.hide();
+        }
+        const upload = document.getElementById('avatarUpload');
+        if (!upload) return;
+        if (source === 'camera') {
+            upload.setAttribute('capture', 'environment');
+        } else {
+            upload.removeAttribute('capture');
+        }
+        upload.click();
+    }
+
     function handleAvatarSelection(event) {
         const file = event.target.files[0];
         if (!file) return;

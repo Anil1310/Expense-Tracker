@@ -500,7 +500,7 @@ public final class MainActivity extends ComponentActivity {
             }
         }
 
-        Intent chooser = Intent.createChooser(contentIntent, "Choose your Photo");
+        Intent chooser = Intent.createChooser(contentIntent, "Choose Your Photo");
         if (acceptsImages && cameraPermissionGranted) {
             Intent cameraIntent = createCameraCaptureIntent();
             if (cameraIntent != null && params.isCaptureEnabled()) {
