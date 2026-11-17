@@ -4276,7 +4276,13 @@ Expense Tracker Pro: 2026 JavaScript Code
         }
     }
 
+    let isSavingRecordInProgress = false;
+
     function saveEntry() {
+        if (isSavingRecordInProgress) {
+            console.warn("Save already in progress, blocking duplicate submission.");
+            return;
+        }
         console.log("Attempting to save entry...");
         const uniqueId = document.getElementById('editUniqueId');
         const month = document.getElementById('editMonth');
@@ -4377,6 +4383,7 @@ Expense Tracker Pro: 2026 JavaScript Code
         }
 
         // ── 🔒 CONFIRMED BACKEND SAVE (Save to Month Sheet & Data Sheet -> Then Display) ──
+        isSavingRecordInProgress = true;
         const saveBtn = document.getElementById('saveRecordBtn');
         const originalBtnHtml = saveBtn ? saveBtn.innerHTML : '<i class="fas fa-check me-1"></i>Save Record';
         if (saveBtn) {
@@ -4388,6 +4395,7 @@ Expense Tracker Pro: 2026 JavaScript Code
             const runner = google.script.run
                 .withSuccessHandler((response) => {
                     console.log("Backend save confirmed response:", response);
+                    isSavingRecordInProgress = false;
                     if (saveBtn) {
                         saveBtn.disabled = false;
                         saveBtn.innerHTML = originalBtnHtml;
@@ -4409,7 +4417,7 @@ Expense Tracker Pro: 2026 JavaScript Code
                             : (res.date || dateValue);
 
                         const confirmedSn = res.sn || ((expenseData && expenseData.length > 0) ? (Math.max(0, ...expenseData.map(r => parseInt(r[0]) || 0)) + 1) : 1);
-                        const confirmedUid = res.uniqueId || `${confirmedSn}-${itemListValue.split(' ')[0]}`;
+                        const confirmedUid = res.uniqueId || `${confirmedSn}-${itemListValue}`;
                         const savedMonth = res.month || monthValue;
                         const savedItem = res.itemList || itemListValue;
                         const savedAmt = (typeof res.amount === 'number') ? res.amount : amountValue;
@@ -4514,6 +4522,7 @@ Expense Tracker Pro: 2026 JavaScript Code
                 })
                 .withFailureHandler((err) => {
                     console.error("Save failure:", err);
+                    isSavingRecordInProgress = false;
                     if (saveBtn) {
                         saveBtn.disabled = false;
                         saveBtn.innerHTML = originalBtnHtml;
@@ -4527,6 +4536,7 @@ Expense Tracker Pro: 2026 JavaScript Code
                 runner.addEntry(entryData);
             }
         } else {
+            isSavingRecordInProgress = false;
             if (saveBtn) {
                 saveBtn.disabled = false;
                 saveBtn.innerHTML = originalBtnHtml;

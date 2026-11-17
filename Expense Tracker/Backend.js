@@ -764,6 +764,13 @@ function parseSafeDateAndMonth(rawDate, rawMonth) {
 }
 
 function addEntry(entryData) {
+    const lock = LockService.getScriptLock();
+    try {
+        lock.waitLock(15000);
+    } catch (lockErr) {
+        return { error: "Server busy processing another entry. Please wait a moment." };
+    }
+
     try {
         // Check if it's an update operation
         if (entryData.uniqueId) {
@@ -783,11 +790,39 @@ function addEntry(entryData) {
         // 1. FIRST: Save into the target month sheet (e.g. "Nov")
         const sheet = ensureSheetExists(ss, monthName, ["S.N", "Unique ID", "Date", "Month", "Item List", "Amount", "Credit & Remark", "Admin"]);
         const lastRow = sheet.getLastRow();
-        const sn = lastRow;
-        const newUniqueId = generateUniqueId(sn, entryData.itemList);
 
         // Convert amount to number
         const amount = parseFloat(entryData.amount) || 0;
+
+        // 🔒 DEDUPLICATION GUARD: Prevent duplicate records from rapid multi-submits
+        if (lastRow > 1) {
+            const lastValues = sheet.getRange(lastRow, 1, 1, 8).getValues()[0];
+            const existingSn = lastValues[0];
+            const existingUid = String(lastValues[1] || '').trim();
+            const existingItem = String(lastValues[4] || '').trim();
+            const existingAmt = parseFloat(lastValues[5]) || 0;
+            const existingUser = String(lastValues[7] || '').trim();
+
+            if (existingItem.toLowerCase() === entryData.itemList.toLowerCase() &&
+                Math.abs(existingAmt - amount) < 0.01 &&
+                existingUser.toLowerCase() === (entryData.user || '').toLowerCase()) {
+                console.warn(`Duplicate submission prevented for: ${existingUid}`);
+                return {
+                    success: true,
+                    uniqueId: existingUid,
+                    sn: existingSn,
+                    date: formattedDate,
+                    month: monthName,
+                    itemList: entryData.itemList,
+                    amount: amount,
+                    credit: lastValues[6] || '',
+                    user: entryData.user || ''
+                };
+            }
+        }
+
+        const sn = lastRow;
+        const newUniqueId = generateUniqueId(sn, entryData.itemList);
 
         const newRow = [
             sn,
@@ -838,6 +873,8 @@ function addEntry(entryData) {
         return {
             error: e.message
         };
+    } finally {
+        try { lock.releaseLock(); } catch (e) {}
     }
 }
 
