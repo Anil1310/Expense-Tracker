@@ -11344,8 +11344,8 @@ Expense Tracker Pro: 2026 JavaScript Code
     // Sorting state (Default: Newest records first so newly added expenses stay prominently at the top)
     let dashboardSortCol = 'sn';
     let dashboardSortDir = 'desc';
-    let reportsSortCol = null;
-    let reportsSortDir = 'asc';
+    let reportsSortCol = 'sn';
+    let reportsSortDir = 'desc';
 
     const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const today = new Date();
@@ -14057,9 +14057,11 @@ Expense Tracker Pro: 2026 JavaScript Code
         allExpenseData = response.allExpenses || [];
         const totalRows = allExpenseData.length;
         enhancedAllData = allExpenseData.map((row, index) => {
+            const uidMatch = String(row[7] || '').match(/^(\d+)-/);
+            const extractedSn = uidMatch ? parseInt(uidMatch[1]) : null;
             const rowSn = (row[8] !== undefined && row[8] !== null && row[8] !== "" && !isNaN(parseInt(row[8])))
                 ? parseInt(row[8])
-                : (totalRows - index);
+                : (extractedSn !== null ? extractedSn : (totalRows - index));
             return {
                 sn: rowSn,
                 id: row[7] || "",
@@ -14235,25 +14237,35 @@ Expense Tracker Pro: 2026 JavaScript Code
             };
         });
 
-        if (reportsSortCol) {
-            dataToRender.sort((a, b) => {
-                let valA, valB;
-                switch (reportsSortCol) {
-                    case 'sn': valA = parseInt(a.sn) || 0; valB = parseInt(b.sn) || 0; break;
-                    case 'id': valA = String(a.id || ''); valB = String(b.id || ''); break;
-                    case 'date': valA = new Date(a.date); valB = new Date(b.date); break;
-                    case 'month': valA = String(a.month || ''); valB = String(b.month || ''); break;
-                    case 'item': valA = String(a.item || ''); valB = String(b.item || ''); break;
-                    case 'amount': valA = parseFloat(a.amount) || 0; valB = parseFloat(b.amount) || 0; break;
-                    case 'credit': valA = String(a.credit || ''); valB = String(b.credit || ''); break;
-                    case 'admin': valA = String(a.admin || ''); valB = String(b.admin || ''); break;
-                    default: return 0;
+        const activeSortCol = reportsSortCol || 'sn';
+        const activeSortDir = reportsSortDir || 'desc';
+
+        dataToRender.sort((a, b) => {
+            let valA, valB;
+            switch (activeSortCol) {
+                case 'sn': valA = parseInt(a.sn) || 0; valB = parseInt(b.sn) || 0; break;
+                case 'id': valA = String(a.id || ''); valB = String(b.id || ''); break;
+                case 'date': {
+                    valA = new Date(a.date).getTime() || 0;
+                    valB = new Date(b.date).getTime() || 0;
+                    if (valA === valB) {
+                        const snA = parseInt(a.sn) || 0;
+                        const snB = parseInt(b.sn) || 0;
+                        return activeSortDir === 'asc' ? (snA - snB) : (snB - snA);
+                    }
+                    break;
                 }
-                if (valA < valB) return reportsSortDir === 'asc' ? -1 : 1;
-                if (valA > valB) return reportsSortDir === 'asc' ? 1 : -1;
-                return 0;
-            });
-        }
+                case 'item': valA = String(a.item || ''); valB = String(b.item || ''); break;
+                case 'amount': valA = parseFloat(a.amount) || 0; valB = parseFloat(b.amount) || 0; break;
+                case 'credit': valA = String(a.credit || ''); valB = String(b.credit || ''); break;
+                case 'admin': valA = String(a.admin || ''); valB = String(b.admin || ''); break;
+                default:
+                    valA = parseInt(a.sn) || 0; valB = parseInt(b.sn) || 0;
+            }
+            if (valA < valB) return activeSortDir === 'asc' ? -1 : 1;
+            if (valA > valB) return activeSortDir === 'asc' ? 1 : -1;
+            return 0;
+        });
 
         const totalItems = dataToRender.length;
         const isMobileR = window.innerWidth <= 992 || (('ontouchstart' in window || navigator.maxTouchPoints > 0) && window.innerWidth <= 1024);

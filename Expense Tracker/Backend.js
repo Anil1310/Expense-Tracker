@@ -378,12 +378,25 @@ function getAllData() {
         loadFromSource(MAIN_ID, "Data");
         MONTHS.forEach(month => loadFromSource(MAIN_ID, month));
 
-        // Sort by date (newest first)
+        // Sort by date (newest first), tie-break by S.N / UID descending
         allExpenses.sort((a, b) => {
             try {
                 const dateA = parseDateString(a[0], parseInt(a[5]));
                 const dateB = parseDateString(b[0], parseInt(b[5]));
-                return dateB - dateA;
+                const diff = dateB - dateA;
+                if (diff !== 0) return diff;
+
+                const matchA = String(a[7] || '').match(/^(\d+)-/);
+                const snA = (a[8] !== undefined && a[8] !== null && a[8] !== '' && !isNaN(parseInt(a[8])))
+                    ? parseInt(a[8])
+                    : (matchA ? parseInt(matchA[1]) : 0);
+
+                const matchB = String(b[7] || '').match(/^(\d+)-/);
+                const snB = (b[8] !== undefined && b[8] !== null && b[8] !== '' && !isNaN(parseInt(b[8])))
+                    ? parseInt(b[8])
+                    : (matchB ? parseInt(matchB[1]) : 0);
+
+                return snB - snA;
             } catch (e) {
                 return 0;
             }
@@ -392,9 +405,11 @@ function getAllData() {
         return {
             allExpenses: allExpenses.map((expense, idx) => {
                 const totalRows = allExpenses.length;
+                const matchUid = String(expense[7] || '').match(/^(\d+)-/);
+                const extractedSn = matchUid ? parseInt(matchUid[1]) : null;
                 const parsedSn = (expense[8] !== undefined && expense[8] !== null && expense[8] !== "" && !isNaN(parseInt(expense[8])))
                     ? parseInt(expense[8])
-                    : (totalRows - idx);
+                    : (extractedSn !== null ? extractedSn : (totalRows - idx));
                 return [
                     expense[0], // DATE
                     expense[1], // MONTH
@@ -404,7 +419,7 @@ function getAllData() {
                     expense[5], // YEAR
                     expense[6], // ADMIN
                     expense[7], // UID
-                    parsedSn    // S.N (e.g. starts from total count like 4083 down to 1)
+                    parsedSn    // S.N
                 ];
             }),
             uniqueCategories: Array.from(allCategories).sort()
