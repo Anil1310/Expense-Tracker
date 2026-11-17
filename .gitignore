@@ -6,3 +6,10 @@ __pycache__/
 .env*
 !.env.example
 .vercel
+
+# Android build outputs & Gradle caches
+android/.gradle/
+android/build/
+android/app/build/
+*.apk
+
