@@ -4381,7 +4381,7 @@ Expense Tracker Pro: 2026 JavaScript Code
         const originalBtnHtml = saveBtn ? saveBtn.innerHTML : '<i class="fas fa-check me-1"></i>Save Record';
         if (saveBtn) {
             saveBtn.disabled = true;
-            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Saving to Google Sheets...';
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Saving Data...';
         }
 
         if (typeof google !== 'undefined' && google.script && google.script.run) {
@@ -4518,7 +4518,7 @@ Expense Tracker Pro: 2026 JavaScript Code
                         saveBtn.disabled = false;
                         saveBtn.innerHTML = originalBtnHtml;
                     }
-                    showModernToast("Save Error", "Could not reach Google Sheets. Please check your network.", "error", 5000);
+                    showModernToast("Save Error", "Could not save data. Please check your network.", "error", 5000);
                 });
 
             if (isEdit) {
