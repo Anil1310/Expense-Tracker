@@ -239,9 +239,13 @@ Expense Tracker Pro: 2026 JavaScript Code
     // Persistent Cache implementation
     class ExpenseCache {
         constructor() {
-            this.cacheKey = 'expense_app_cache';
+            this.cacheKey = 'expense_app_cache_v3';
             this.cacheDuration = 30 * 24 * 60 * 60 * 1000; // 30 days persistent offline storage
             this.shortCacheDuration = 24 * 60 * 60 * 1000; // 24 hours
+            try {
+                localStorage.removeItem('expense_app_cache');
+                localStorage.removeItem('expense_app_cache_v2');
+            } catch (e) {}
             this.loadFromStorage();
         }
 
@@ -2865,10 +2869,10 @@ Expense Tracker Pro: 2026 JavaScript Code
             dateFilter.value = `${yyyy}-${mm}-${dd}`;
         }
 
-        // Instant render from cache (0ms delay)
+        // Instant render from cache (0ms delay), then background sync with Google Sheets
         if (cachedData) {
             handleEnhancedReportsData(cachedData);
-            return;
+            isBackground = true;
         }
 
         if (!isBackground) {
