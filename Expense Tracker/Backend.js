@@ -263,6 +263,7 @@ function getAllData() {
                 };
 
                 const idxUID = findIdx(['unique', 'uid', 'id']);
+                const idxSN = findIdx(['s.n', 's.no', 'sn', 'sr.no', 'sr']);
                 const idxDate = findIdx(['date']);
                 const idxMonth = findIdx(['month']);
                 const idxItem = findIdx(['item', 'list', 'category']);
@@ -277,6 +278,7 @@ function getAllData() {
 
                     if (dateCol && itemCol && amtCol !== "") {
                         const uid = idxUID !== -1 ? (row[idxUID] || '').toString().trim() : '';
+                        const snVal = idxSN !== -1 ? row[idxSN] : null;
                         const rawDate = dateCol;
                         let dateObj;
                         let yearFromDate;
@@ -337,7 +339,8 @@ function getAllData() {
                             remarkData,
                             yearFromDate.toString(),
                             adminData,
-                            uid
+                            uid,
+                            snVal
                         ]);
 
                         if (itemCol && itemCol.toString().trim()) {
@@ -367,16 +370,23 @@ function getAllData() {
         });
 
         return {
-            allExpenses: allExpenses.map(expense => [
-                expense[0], // DATE
-                expense[1], // MONTH
-                expense[2], // ITEM LIST
-                parseFloat(expense[3]), // AMOUNT
-                expense[4], // CREDIT
-                expense[5], // YEAR
-                expense[6], // ADMIN
-                expense[7]  // UID
-            ]),
+            allExpenses: allExpenses.map((expense, idx) => {
+                const totalRows = allExpenses.length;
+                const parsedSn = (expense[8] !== undefined && expense[8] !== null && expense[8] !== "" && !isNaN(parseInt(expense[8])))
+                    ? parseInt(expense[8])
+                    : (totalRows - idx);
+                return [
+                    expense[0], // DATE
+                    expense[1], // MONTH
+                    expense[2], // ITEM LIST
+                    parseFloat(expense[3]), // AMOUNT
+                    expense[4], // CREDIT
+                    expense[5], // YEAR
+                    expense[6], // ADMIN
+                    expense[7], // UID
+                    parsedSn    // S.N (e.g. starts from total count like 4083 down to 1)
+                ];
+            }),
             uniqueCategories: Array.from(allCategories).sort()
         };
     } catch (e) {
@@ -399,11 +409,14 @@ function getConsolidatedData() {
         }
 
         // Transform the data to match the table format with S.N and Unique ID
+        const totalRows = allDataResult.allExpenses.length;
         const formattedData = allDataResult.allExpenses.map((row, index) => {
-            const sn = index + 1;
+            const sn = (row[8] !== undefined && row[8] !== null && row[8] !== "" && !isNaN(parseInt(row[8])))
+                ? parseInt(row[8])
+                : (totalRows - index);
             const itemList = row[2];
             // Generate a simple unique ID based on S.N and first word of item
-            const uniqueId = `${sn}-${itemList.split(' ')[0].replace(/[^a-zA-Z0-9]/g, '')}`;
+            const uniqueId = row[7] || `${sn}-${itemList.split(' ')[0].replace(/[^a-zA-Z0-9]/g, '')}`;
 
             return [
                 sn, // S.N

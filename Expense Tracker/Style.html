@@ -8659,11 +8659,22 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
         }
 
         /* ── Specific Column Widths & Alignments ── */
+        #reports-page .table thead th,
+        #reports-page .table thead th *,
+        #reports-page table thead th,
+        #reports-page table thead th i,
+        #reports-page table thead th span {
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
+        }
+
         #reports-page .table th:nth-child(1),
         #reports-page .table td:nth-child(1) {
             width: 38px !important;
             text-align: center !important;
             font-weight: 700 !important;
+        }
+        #reports-page .table td:nth-child(1) {
             color: #64748b !important;
         }
 
@@ -8688,6 +8699,8 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             text-align: left !important;
             padding-left: 8px !important;
             font-weight: 700 !important;
+        }
+        #reports-page .table td:nth-child(4) {
             color: #0f172a !important;
         }
 
@@ -8700,6 +8713,8 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             width: 85px !important;
             text-align: center !important;
             font-weight: 800 !important;
+        }
+        #reports-page .table td:nth-child(5) {
             color: #2563eb !important;
         }
 

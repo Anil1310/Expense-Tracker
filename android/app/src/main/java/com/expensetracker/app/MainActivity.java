@@ -601,10 +601,10 @@ public final class MainActivity extends ComponentActivity {
 
             @Override
             public void onCapabilitiesChanged(Network network, NetworkCapabilities capabilities) {
-                boolean hasNet = capabilities != null && (
-                        capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) ||
-                        capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
-                        capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI));
+                boolean hasNet = capabilities != null
+                        && (capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) ||
+                                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
+                                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI));
                 if (hasNet) {
                     mainHandler.post(() -> {
                         internetAvailable = true;
@@ -815,7 +815,7 @@ public final class MainActivity extends ComponentActivity {
 
     private View createLoadingScreen() {
         FrameLayout screen = new FrameLayout(this);
-        screen.setBackgroundColor(Color.rgb(16, 24, 39));
+        screen.setBackgroundColor(Color.rgb(15, 24, 41));
 
         LinearLayout content = new LinearLayout(this);
         content.setGravity(Gravity.CENTER);
@@ -826,20 +826,39 @@ public final class MainActivity extends ComponentActivity {
         ImageView logo = new ImageView(this);
         logo.setImageResource(R.drawable.logo);
         logo.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        LinearLayout.LayoutParams logoParams = new LinearLayout.LayoutParams(dp(132), dp(132));
+        LinearLayout.LayoutParams logoParams = new LinearLayout.LayoutParams(dp(140), dp(140));
         content.addView(logo, logoParams);
 
-        loadingProgressBar = new ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);
-        loadingProgressBar.setMax(100);
-        loadingProgressBar.setProgress(0);
-        loadingProgressBar.setProgressTintList(android.content.res.ColorStateList.valueOf(Color.WHITE));
-        loadingProgressBar.setProgressBackgroundTintList(
-                android.content.res.ColorStateList.valueOf(0x66FFFFFF));
-        LinearLayout.LayoutParams progressBarParams = new LinearLayout.LayoutParams(
-                dp(132),
-                dp(8));
-        progressBarParams.topMargin = dp(18);
-        content.addView(loadingProgressBar, progressBarParams);
+        TextView appTitle = new TextView(this);
+        appTitle.setText("ExpensePro");
+        appTitle.setTextColor(Color.WHITE);
+        appTitle.setTextSize(26);
+        appTitle.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
+        appTitle.setGravity(Gravity.CENTER);
+        LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        titleParams.topMargin = dp(20);
+        content.addView(appTitle, titleParams);
+
+        TextView appSubtitle = new TextView(this);
+        appSubtitle.setText("Expense Tracker & Budget");
+        appSubtitle.setTextColor(Color.rgb(156, 163, 175));
+        appSubtitle.setTextSize(14);
+        appSubtitle.setGravity(Gravity.CENTER);
+        LinearLayout.LayoutParams subParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        subParams.topMargin = dp(6);
+        content.addView(appSubtitle, subParams);
+
+        ProgressBar spinner = new ProgressBar(this);
+        spinner.setIndeterminate(true);
+        spinner.setIndeterminateTintList(
+                android.content.res.ColorStateList.valueOf(Color.rgb(139, 92, 246)));
+        LinearLayout.LayoutParams spinnerParams = new LinearLayout.LayoutParams(dp(32), dp(32));
+        spinnerParams.topMargin = dp(36);
+        content.addView(spinner, spinnerParams);
 
         FrameLayout.LayoutParams contentParams = new FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT,
@@ -1091,7 +1110,7 @@ public final class MainActivity extends ComponentActivity {
             webView.evaluateJavascript(
                     "window.dispatchEvent(new CustomEvent('expense-android-voice',{detail:" +
                             message + "}));" +
-                    "window.dispatchEvent(new CustomEvent('android-voice-result',{detail:" +
+                            "window.dispatchEvent(new CustomEvent('android-voice-result',{detail:" +
                             message + "}));",
                     null);
         }

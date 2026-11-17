@@ -337,16 +337,23 @@ Expense Tracker Pro: 2026 JavaScript Code
                             this.set(cacheKey, data);
                             if (typeof allExpenseData !== 'undefined' && (!allExpenseData || allExpenseData.length === 0)) {
                                 allExpenseData = data.allExpenses || [];
-                                enhancedAllData = allExpenseData.map((row) => ({
-                                    id: row[7] || "",
-                                    date: row[0],
-                                    month: row[1] || "",
-                                    year: row[5] || "",
-                                    item: row[2] || "",
-                                    amount: parseFloat(row[3]) || 0,
-                                    credit: row[4] || "",
-                                    admin: row[6] || ""
-                                }));
+                                const totalRows = allExpenseData.length;
+                                enhancedAllData = allExpenseData.map((row, index) => {
+                                    const rowSn = (row[8] !== undefined && row[8] !== null && row[8] !== "" && !isNaN(parseInt(row[8])))
+                                        ? parseInt(row[8])
+                                        : (totalRows - index);
+                                    return {
+                                        sn: rowSn,
+                                        id: row[7] || "",
+                                        date: row[0],
+                                        month: row[1] || "",
+                                        year: row[5] || "",
+                                        item: row[2] || "",
+                                        amount: parseFloat(row[3]) || 0,
+                                        credit: row[4] || "",
+                                        admin: row[6] || ""
+                                    };
+                                });
                             }
                         }
                     })
@@ -2928,16 +2935,23 @@ Expense Tracker Pro: 2026 JavaScript Code
         }
 
         allExpenseData = response.allExpenses || [];
-        enhancedAllData = allExpenseData.map((row) => ({
-            id: row[7] || "",
-            date: row[0],
-            month: row[1] || "",
-            year: row[5] || "",
-            item: row[2] || "",
-            amount: parseFloat(row[3]) || 0,
-            credit: row[4] || "",
-            admin: row[6] || ""
-        }));
+        const totalRows = allExpenseData.length;
+        enhancedAllData = allExpenseData.map((row, index) => {
+            const rowSn = (row[8] !== undefined && row[8] !== null && row[8] !== "" && !isNaN(parseInt(row[8])))
+                ? parseInt(row[8])
+                : (totalRows - index);
+            return {
+                sn: rowSn,
+                id: row[7] || "",
+                date: row[0],
+                month: row[1] || "",
+                year: row[5] || "",
+                item: row[2] || "",
+                amount: parseFloat(row[3]) || 0,
+                credit: row[4] || "",
+                admin: row[6] || ""
+            };
+        });
 
         populateYearSelector();
         populateEnhancedItemFilter();
@@ -3088,14 +3102,19 @@ Expense Tracker Pro: 2026 JavaScript Code
         if (!tableBody) return;
 
         let dataToRender = globalFilteredReportsData.map((item, index) => {
-            return { ...item, sn: index + 1 };
+            return {
+                ...item,
+                sn: (item.sn !== undefined && item.sn !== null)
+                    ? item.sn
+                    : (globalFilteredReportsData.length - index)
+            };
         });
 
         if (reportsSortCol) {
             dataToRender.sort((a, b) => {
                 let valA, valB;
                 switch (reportsSortCol) {
-                    case 'sn': valA = a.sn; valB = b.sn; break;
+                    case 'sn': valA = parseInt(a.sn) || 0; valB = parseInt(b.sn) || 0; break;
                     case 'id': valA = String(a.id || ''); valB = String(b.id || ''); break;
                     case 'date': valA = new Date(a.date); valB = new Date(b.date); break;
                     case 'item': valA = String(a.item || ''); valB = String(b.item || ''); break;
@@ -5831,9 +5850,16 @@ vertical-align: middle;
 }
 
 [data-theme="dark"] .table-scroll-container table thead th {
-background-color: #495057 !important;
-border-color: #6c757d;
-color: #ffc107 !important;
+background-color: #1e1b4b !important;
+border-color: rgba(255, 255, 255, 0.1);
+color: #ffffff !important;
+}
+
+#reports-page .table thead th,
+#reports-page .table thead th *,
+#reports-page table thead th,
+#reports-page table thead th i {
+color: #ffffff !important;
 }
 
 /* Ensure proper stacking context */
