@@ -1553,7 +1553,7 @@ Expense Tracker Pro: 2026 JavaScript Code
         const titleText = document.getElementById('table-title-text');
         const isAll = (targetMonth.toLowerCase() === 'all');
         const isMobile = window.innerWidth <= 768;
-        const displayMonthTitle = isAll 
+        const displayMonthTitle = isAll
             ? (isMobile ? 'All 2026' : `${CURRENT_YEAR || 2026} All Expenses (12 Months)`)
             : (isMobile ? `${targetMonth} 2026` : `${targetMonth} 2026 Expenses`);
 
@@ -1984,6 +1984,7 @@ Expense Tracker Pro: 2026 JavaScript Code
                 <td data-label="Unique ID">${uniqueIdValue || ''}</td>
                 <td data-label="Date">${formatDisplayDate(item.date)}</td>
                 <td data-label="Item List">${item.item}</td>
+                <td data-label="Amount"><strong class="text-primary">${formatCurrency(item.amount)}</strong></td>
                 <td data-label="Amount"><strong class="report-amount-text" style="color: #ffffff !important;">${formatCurrency(item.amount)}</strong></td>
                 <td data-label="Credit">${formatCreditDisplay(item.credit, item.item)}</td>
                 <td data-label="Admin">${item.admin || ''}</td>
@@ -3052,6 +3053,10 @@ Expense Tracker Pro: 2026 JavaScript Code
         // Apply search filter
         if (searchValue !== "") {
             filteredData = filteredData.filter(item =>
+                (item.sn && item.sn.toString().toLowerCase().includes(searchValue)) ||
+                (item.id && item.id.toLowerCase().includes(searchValue)) ||
+                (item.admin && item.admin.toLowerCase().includes(searchValue)) ||
+                (item.credit && item.credit.toLowerCase().includes(searchValue)) ||
                 item.item.toLowerCase().includes(searchValue) ||
                 item.month.toLowerCase().includes(searchValue) ||
                 item.year.includes(searchValue) ||
@@ -3184,6 +3189,7 @@ Expense Tracker Pro: 2026 JavaScript Code
                     <td data-label="Unique ID">${uniqueIdValue || ''}</td>
                     <td data-label="Date">${formatDisplayDate(item.date)}</td>
                     <td data-label="Item List">${item.item}</td>
+                    <td data-label="Amount"><strong class="text-primary">${formatCurrency(item.amount)}</strong></td>
                     <td data-label="Amount"><strong class="report-amount-text" style="color: #ffffff !important;">${formatCurrency(item.amount)}</strong></td>
                     <td data-label="Credit">${formatCreditDisplay(item.credit, item.item)}</td>
                     <td data-label="Admin">${item.admin || ''}</td>

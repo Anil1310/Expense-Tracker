@@ -8683,41 +8683,57 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
         #reports-page .table {
             display: table !important;
             width: 100% !important;
-            min-width: 680px !important;
-            border-collapse: collapse !important;
+            min-width: 850px !important;
             margin: 0 !important;
-            table-layout: fixed !important;
+            padding: 0 !important;
+            border-collapse: collapse !important;
+            border-spacing: 0 !important;
+            table-layout: auto !important;
         }
 
-        /* ── Sticky Header with Distinct Gradient ── */
+        /* ── Sticky Header with Distinct Gradient (Matches Dashboard exactly) ── */
         #reports-page .table thead th {
             position: sticky !important;
             top: 0 !important;
-            z-index: 10 !important;
+            z-index: 100 !important;
             background: linear-gradient(135deg, #6366f1, #4f46e5) !important;
+            background-clip: padding-box !important;
             color: #ffffff !important;
-            font-size: 0.68rem !important;
-            font-weight: 800 !important;
-            padding: 8px 6px !important;
+            -webkit-text-fill-color: #ffffff !important;
+            font-size: 0.72rem !important;
+            font-weight: 700 !important;
+            padding: 6px 12px !important;
             white-space: nowrap !important;
             letter-spacing: 0.02em !important;
             text-align: center !important;
             border: none !important;
-            border-right: 1px solid rgba(255, 255, 255, 0.15) !important;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
             line-height: 1.2 !important;
             height: auto !important;
+            cursor: pointer !important;
         }
 
         [data-theme="dark"] #reports-page .table thead th {
             background: linear-gradient(135deg, #312e81, #1e1b4b) !important;
-            border-right-color: rgba(255, 255, 255, 0.1) !important;
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+
+        #reports-page .table thead th i {
+            margin-left: 4px !important;
+            font-size: 0.68rem !important;
+            opacity: 0.9 !important;
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
         }
 
         #reports-page .table thead th:last-child {
             border-right: none !important;
         }
 
-        /* ── Clearly Visible Body Cells (36px Height, Sharp Contrast) ── */
+        /* ── Clearly Visible Body Cells (Matches Dashboard exactly) ── */
         #reports-page .table tbody tr {
             display: table-row !important;
             background: #ffffff !important;
@@ -8737,19 +8753,18 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
 
         #reports-page .table tbody td {
             display: table-cell !important;
-            height: 36px !important;
-            min-height: 36px !important;
-            line-height: 1.3 !important;
+            height: 32px !important;
+            line-height: 1.2 !important;
             font-size: 0.72rem !important;
+            font-family: inherit !important;
             font-weight: 600 !important;
-            padding: 6px 6px !important;
+            padding: 2px 8px !important;
             vertical-align: middle !important;
             border-bottom: 1px solid #e2e8f0 !important;
             border-right: 1px solid #e2e8f0 !important;
             color: #1e293b !important;
             white-space: nowrap !important;
-            overflow: hidden !important;
-            text-overflow: ellipsis !important;
+            overflow: visible !important;
             visibility: visible !important;
         }
 
@@ -8764,7 +8779,7 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             border-right: none !important;
         }
 
-        /* ── Specific Column Widths & Alignments ── */
+        /* ── Specific Column Alignments & Colors ── */
         #reports-page .table thead th,
         #reports-page .table thead th *,
         #reports-page table thead th,
@@ -8774,50 +8789,12 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             -webkit-text-fill-color: #ffffff !important;
         }
 
-        #reports-page .table thead th.reports-sortable-th {
-            cursor: pointer !important;
-            user-select: none !important;
-            padding: 8px 8px !important;
-        }
-
-        #reports-page .table thead th .th-content {
-            display: flex !important;
-            align-items: center !important;
-            justify-content: space-between !important;
-            width: 100% !important;
-            gap: 4px !important;
-        }
-
-        #reports-page .table thead th .sort-icon-wrapper {
-            display: inline-flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            margin-left: auto !important;
-            flex-shrink: 0 !important;
-            padding-left: 4px !important;
-        }
-
-        #reports-page .table thead th i.sort-icon,
-        #reports-page .table thead th .sort-icon-wrapper i {
-            font-size: 0.82rem !important;
-            color: #ffffff !important;
-            -webkit-text-fill-color: #ffffff !important;
-            opacity: 1 !important;
-            margin-left: 0 !important;
-            display: inline-block !important;
-            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
-        }
-
-        #reports-page .table thead th:hover i.sort-icon {
-            transform: scale(1.2);
-            color: #ffffff !important;
-        }
-
         #reports-page .table th:nth-child(1),
         #reports-page .table td:nth-child(1) {
-            width: 38px !important;
+            min-width: 60px !important;
             text-align: center !important;
             font-weight: 700 !important;
+            white-space: nowrap !important;
         }
         #reports-page .table td:nth-child(1) {
             color: #64748b !important;
@@ -8825,25 +8802,28 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
 
         #reports-page .table th:nth-child(2),
         #reports-page .table td:nth-child(2) {
-            width: 75px !important;
+            min-width: 105px !important;
             text-align: center !important;
-            font-family: monospace !important;
-            font-size: 0.68rem !important;
+            font-family: inherit !important;
+            font-size: 0.72rem !important;
+            white-space: nowrap !important;
         }
 
         #reports-page .table th:nth-child(3),
         #reports-page .table td:nth-child(3) {
-            width: 82px !important;
+            min-width: 95px !important;
             text-align: center !important;
             font-weight: 600 !important;
+            white-space: nowrap !important;
         }
 
         #reports-page .table th:nth-child(4),
         #reports-page .table td:nth-child(4) {
-            width: 140px !important;
+            min-width: 130px !important;
             text-align: left !important;
             padding-left: 8px !important;
             font-weight: 700 !important;
+            white-space: nowrap !important;
         }
         #reports-page .table td:nth-child(4) {
             color: #0f172a !important;
@@ -8855,9 +8835,10 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
 
         #reports-page .table th:nth-child(5),
         #reports-page .table td:nth-child(5) {
-            width: 85px !important;
+            min-width: 85px !important;
             text-align: center !important;
             font-weight: 800 !important;
+            white-space: nowrap !important;
         }
         #reports-page .table td:nth-child(5),
         #reports-page .table td:nth-child(5) *,
@@ -9948,7 +9929,7 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
         <!-- Search Box -->
         <div class="search-box">
           <i class="fas fa-search"></i>
-          <input type="text" id="quickSearch" placeholder="Search Across All Fields..."
+          <input type="text" id="quickSearch" placeholder="Search by S.N, Unique ID, Item, Amount, Date..."
             oninput="enhancedFilterReports()">
         </div>
 
@@ -10076,49 +10057,14 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             <table class="table">
               <thead>
                 <tr>
-                  <th onclick="toggleReportsSort('sn')" class="reports-sortable-th" data-sort-col="sn">
-                    <div class="th-content">
-                      <span>S.N</span>
-                      <span class="sort-icon-wrapper"><i class="fas fa-sort sort-icon"></i></span>
-                    </div>
-                  </th>
-                  <th onclick="toggleReportsSort('id')" class="reports-sortable-th" data-sort-col="id">
-                    <div class="th-content">
-                      <span>Unique ID</span>
-                      <span class="sort-icon-wrapper"><i class="fas fa-sort sort-icon"></i></span>
-                    </div>
-                  </th>
-                  <th onclick="toggleReportsSort('date')" class="reports-sortable-th" data-sort-col="date">
-                    <div class="th-content">
-                      <span>Date</span>
-                      <span class="sort-icon-wrapper"><i class="fas fa-sort sort-icon"></i></span>
-                    </div>
-                  </th>
-                  <th onclick="toggleReportsSort('item')" class="reports-sortable-th" data-sort-col="item">
-                    <div class="th-content">
-                      <span>Item List</span>
-                      <span class="sort-icon-wrapper"><i class="fas fa-sort sort-icon"></i></span>
-                    </div>
-                  </th>
-                  <th onclick="toggleReportsSort('amount')" class="reports-sortable-th" data-sort-col="amount">
-                    <div class="th-content">
-                      <span>Amount</span>
-                      <span class="sort-icon-wrapper"><i class="fas fa-sort sort-icon"></i></span>
-                    </div>
-                  </th>
-                  <th onclick="toggleReportsSort('credit')" class="reports-sortable-th" data-sort-col="credit">
-                    <div class="th-content">
-                      <span>Credit & Remark</span>
-                      <span class="sort-icon-wrapper"><i class="fas fa-sort sort-icon"></i></span>
-                    </div>
-                  </th>
-                  <th onclick="toggleReportsSort('admin')" class="reports-sortable-th" data-sort-col="admin">
-                    <div class="th-content">
-                      <span>Admin</span>
-                      <span class="sort-icon-wrapper"><i class="fas fa-sort sort-icon"></i></span>
-                    </div>
-                  </th>
-                  <th class="actions-header"><span class="actions-header-text">Actions</span></th>
+                  <th onclick="toggleReportsSort('sn')" class="reports-sortable-th" data-sort-col="sn" style="cursor: pointer; white-space: nowrap;">S.N <i class="fas fa-sort sort-icon"></i></th>
+                  <th onclick="toggleReportsSort('id')" class="reports-sortable-th" data-sort-col="id" style="cursor: pointer; white-space: nowrap;">Unique ID <i class="fas fa-sort sort-icon"></i></th>
+                  <th onclick="toggleReportsSort('date')" class="reports-sortable-th" data-sort-col="date" style="cursor: pointer; white-space: nowrap;">Date <i class="fas fa-sort sort-icon"></i></th>
+                  <th onclick="toggleReportsSort('item')" class="reports-sortable-th" data-sort-col="item" style="cursor: pointer; white-space: nowrap;">Item List <i class="fas fa-sort sort-icon"></i></th>
+                  <th onclick="toggleReportsSort('amount')" class="reports-sortable-th" data-sort-col="amount" style="cursor: pointer; white-space: nowrap;">Amount <i class="fas fa-sort sort-icon"></i></th>
+                  <th onclick="toggleReportsSort('credit')" class="reports-sortable-th" data-sort-col="credit" style="cursor: pointer; white-space: nowrap;">Credit & Remark <i class="fas fa-sort sort-icon"></i></th>
+                  <th onclick="toggleReportsSort('admin')" class="reports-sortable-th" data-sort-col="admin" style="cursor: pointer; white-space: nowrap;">Admin <i class="fas fa-sort sort-icon"></i></th>
+                  <th class="actions-header" style="white-space: nowrap;"><span class="actions-header-text">Actions</span></th>
                 </tr>
               </thead>
               <tbody id="reports-table-body">
@@ -14101,6 +14047,10 @@ Expense Tracker Pro: 2026 JavaScript Code
         // Apply search filter
         if (searchValue !== "") {
             filteredData = filteredData.filter(item =>
+                (item.sn && item.sn.toString().toLowerCase().includes(searchValue)) ||
+                (item.id && item.id.toLowerCase().includes(searchValue)) ||
+                (item.admin && item.admin.toLowerCase().includes(searchValue)) ||
+                (item.credit && item.credit.toLowerCase().includes(searchValue)) ||
                 item.item.toLowerCase().includes(searchValue) ||
                 item.month.toLowerCase().includes(searchValue) ||
                 item.year.includes(searchValue) ||

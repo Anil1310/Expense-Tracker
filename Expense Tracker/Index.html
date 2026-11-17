@@ -546,7 +546,7 @@ Expense Tracker Pro: 2026 Frontend Code
         <!-- Search Box -->
         <div class="search-box">
           <i class="fas fa-search"></i>
-          <input type="text" id="quickSearch" placeholder="Search Across All Fields..."
+          <input type="text" id="quickSearch" placeholder="Search by S.N, Unique ID, Item, Amount, Date..."
             oninput="enhancedFilterReports()">
         </div>
 
@@ -674,49 +674,14 @@ Expense Tracker Pro: 2026 Frontend Code
             <table class="table">
               <thead>
                 <tr>
-                  <th onclick="toggleReportsSort('sn')" class="reports-sortable-th" data-sort-col="sn">
-                    <div class="th-content">
-                      <span>S.N</span>
-                      <span class="sort-icon-wrapper"><i class="fas fa-sort sort-icon"></i></span>
-                    </div>
-                  </th>
-                  <th onclick="toggleReportsSort('id')" class="reports-sortable-th" data-sort-col="id">
-                    <div class="th-content">
-                      <span>Unique ID</span>
-                      <span class="sort-icon-wrapper"><i class="fas fa-sort sort-icon"></i></span>
-                    </div>
-                  </th>
-                  <th onclick="toggleReportsSort('date')" class="reports-sortable-th" data-sort-col="date">
-                    <div class="th-content">
-                      <span>Date</span>
-                      <span class="sort-icon-wrapper"><i class="fas fa-sort sort-icon"></i></span>
-                    </div>
-                  </th>
-                  <th onclick="toggleReportsSort('item')" class="reports-sortable-th" data-sort-col="item">
-                    <div class="th-content">
-                      <span>Item List</span>
-                      <span class="sort-icon-wrapper"><i class="fas fa-sort sort-icon"></i></span>
-                    </div>
-                  </th>
-                  <th onclick="toggleReportsSort('amount')" class="reports-sortable-th" data-sort-col="amount">
-                    <div class="th-content">
-                      <span>Amount</span>
-                      <span class="sort-icon-wrapper"><i class="fas fa-sort sort-icon"></i></span>
-                    </div>
-                  </th>
-                  <th onclick="toggleReportsSort('credit')" class="reports-sortable-th" data-sort-col="credit">
-                    <div class="th-content">
-                      <span>Credit & Remark</span>
-                      <span class="sort-icon-wrapper"><i class="fas fa-sort sort-icon"></i></span>
-                    </div>
-                  </th>
-                  <th onclick="toggleReportsSort('admin')" class="reports-sortable-th" data-sort-col="admin">
-                    <div class="th-content">
-                      <span>Admin</span>
-                      <span class="sort-icon-wrapper"><i class="fas fa-sort sort-icon"></i></span>
-                    </div>
-                  </th>
-                  <th class="actions-header"><span class="actions-header-text">Actions</span></th>
+                  <th onclick="toggleReportsSort('sn')" class="reports-sortable-th" data-sort-col="sn" style="cursor: pointer; white-space: nowrap;">S.N <i class="fas fa-sort sort-icon"></i></th>
+                  <th onclick="toggleReportsSort('id')" class="reports-sortable-th" data-sort-col="id" style="cursor: pointer; white-space: nowrap;">Unique ID <i class="fas fa-sort sort-icon"></i></th>
+                  <th onclick="toggleReportsSort('date')" class="reports-sortable-th" data-sort-col="date" style="cursor: pointer; white-space: nowrap;">Date <i class="fas fa-sort sort-icon"></i></th>
+                  <th onclick="toggleReportsSort('item')" class="reports-sortable-th" data-sort-col="item" style="cursor: pointer; white-space: nowrap;">Item List <i class="fas fa-sort sort-icon"></i></th>
+                  <th onclick="toggleReportsSort('amount')" class="reports-sortable-th" data-sort-col="amount" style="cursor: pointer; white-space: nowrap;">Amount <i class="fas fa-sort sort-icon"></i></th>
+                  <th onclick="toggleReportsSort('credit')" class="reports-sortable-th" data-sort-col="credit" style="cursor: pointer; white-space: nowrap;">Credit & Remark <i class="fas fa-sort sort-icon"></i></th>
+                  <th onclick="toggleReportsSort('admin')" class="reports-sortable-th" data-sort-col="admin" style="cursor: pointer; white-space: nowrap;">Admin <i class="fas fa-sort sort-icon"></i></th>
+                  <th class="actions-header" style="white-space: nowrap;"><span class="actions-header-text">Actions</span></th>
                 </tr>
               </thead>
               <tbody id="reports-table-body">
