@@ -240,8 +240,8 @@ Expense Tracker Pro: 2026 JavaScript Code
     class ExpenseCache {
         constructor() {
             this.cacheKey = 'expense_app_cache';
-            this.cacheDuration = 60 * 1000; // 1 minute max for cached data
-            this.shortCacheDuration = 5 * 1000; // 5 seconds for frequently updated monthly/all_data
+            this.cacheDuration = 30 * 24 * 60 * 60 * 1000; // 30 days persistent offline storage
+            this.shortCacheDuration = 24 * 60 * 60 * 1000; // 24 hours
             this.loadFromStorage();
         }
 
@@ -249,13 +249,6 @@ Expense Tracker Pro: 2026 JavaScript Code
             try {
                 const stored = localStorage.getItem(this.cacheKey);
                 this.cache = stored ? new Map(JSON.parse(stored)) : new Map();
-                // Clean expired items
-                const now = Date.now();
-                this.cache.forEach((item, key) => {
-                    if (now - item.timestamp > this.cacheDuration) {
-                        this.cache.delete(key);
-                    }
-                });
             } catch (e) {
                 this.cache = new Map();
             }
@@ -278,14 +271,7 @@ Expense Tracker Pro: 2026 JavaScript Code
         get(key) {
             const item = this.cache.get(key);
             if (!item) return null;
-
-            const duration = (key === 'all_data' || key.startsWith('monthly_')) ? this.shortCacheDuration : this.cacheDuration;
-            if (Date.now() - item.timestamp > duration) {
-                this.cache.delete(key);
-                this.saveToStorage();
-                return null;
-            }
-
+            // Always return cached data immediately for instant 0ms preloaded render!
             return item.data;
         }
 
@@ -2223,9 +2209,6 @@ Expense Tracker Pro: 2026 JavaScript Code
             if (window.expenseCache) {
                 window.expenseCache.invalidate(cacheKey);
             }
-            try {
-                localStorage.removeItem('expense_app_cache');
-            } catch (e) { }
             localStorage.setItem('expense_items_cache_ver', ITEMS_CACHE_VERSION);
         }
 

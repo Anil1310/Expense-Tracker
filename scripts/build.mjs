@@ -25,14 +25,19 @@ const bridgeScript = `(() => {
 
         return (...args) => {
           const payload = { method: prop, args };
-          const endpoints = ["/api/apps-script", "/.netlify/functions/apps-script"];
+          const endpoints = [
+            "/api/apps-script",
+            "https://expenselive.vercel.app/api/apps-script",
+            "https://script.google.com/macros/s/AKfycbys6Y0MD92ZlCR3rOjdQCSH5PqTD6NxnUOY6c2eq1h1tBEAfYnbKrbLxXZ4zfFAf3qe/exec"
+          ];
 
           async function sendRequest(urlIdx = 0) {
             try {
               const res = await fetch(endpoints[urlIdx], {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload)
+                body: JSON.stringify(payload),
+                redirect: "follow"
               });
 
               if (!res.ok && urlIdx + 1 < endpoints.length) {
