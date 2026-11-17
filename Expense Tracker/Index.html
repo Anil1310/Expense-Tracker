@@ -674,20 +674,50 @@ Expense Tracker Pro: 2026 Frontend Code
             <table class="table">
               <thead>
                 <tr>
-                  <th onclick="toggleReportsSort('sn')" style="cursor: pointer;">S.N <i class="fas fa-sort"></i></th>
-                  <th onclick="toggleReportsSort('id')" style="cursor: pointer;">Unique ID <i class="fas fa-sort"></i>
+                  <th onclick="toggleReportsSort('sn')" class="reports-sortable-th" data-sort-col="sn">
+                    <div class="th-content">
+                      <span>S.N</span>
+                      <span class="sort-icon-wrapper"><i class="fas fa-sort sort-icon"></i></span>
+                    </div>
                   </th>
-                  <th onclick="toggleReportsSort('date')" style="cursor: pointer;">Date <i class="fas fa-sort"></i></th>
-                  <th onclick="toggleReportsSort('item')" style="cursor: pointer;">Item List <i class="fas fa-sort"></i>
+                  <th onclick="toggleReportsSort('id')" class="reports-sortable-th" data-sort-col="id">
+                    <div class="th-content">
+                      <span>Unique ID</span>
+                      <span class="sort-icon-wrapper"><i class="fas fa-sort sort-icon"></i></span>
+                    </div>
                   </th>
-                  <th onclick="toggleReportsSort('amount')" style="cursor: pointer;">Amount <i class="fas fa-sort"></i>
+                  <th onclick="toggleReportsSort('date')" class="reports-sortable-th" data-sort-col="date">
+                    <div class="th-content">
+                      <span>Date</span>
+                      <span class="sort-icon-wrapper"><i class="fas fa-sort sort-icon"></i></span>
+                    </div>
                   </th>
-                  <th onclick="toggleReportsSort('credit')" style="cursor: pointer;">Credit & Remark <i
-                      class="fas fa-sort"></i></th>
-                  <th onclick="toggleReportsSort('admin')" style="cursor: pointer;">Admin <i class="fas fa-sort"></i>
+                  <th onclick="toggleReportsSort('item')" class="reports-sortable-th" data-sort-col="item">
+                    <div class="th-content">
+                      <span>Item List</span>
+                      <span class="sort-icon-wrapper"><i class="fas fa-sort sort-icon"></i></span>
+                    </div>
+                  </th>
+                  <th onclick="toggleReportsSort('amount')" class="reports-sortable-th" data-sort-col="amount">
+                    <div class="th-content">
+                      <span>Amount</span>
+                      <span class="sort-icon-wrapper"><i class="fas fa-sort sort-icon"></i></span>
+                    </div>
+                  </th>
+                  <th onclick="toggleReportsSort('credit')" class="reports-sortable-th" data-sort-col="credit">
+                    <div class="th-content">
+                      <span>Credit & Remark</span>
+                      <span class="sort-icon-wrapper"><i class="fas fa-sort sort-icon"></i></span>
+                    </div>
+                  </th>
+                  <th onclick="toggleReportsSort('admin')" class="reports-sortable-th" data-sort-col="admin">
+                    <div class="th-content">
+                      <span>Admin</span>
+                      <span class="sort-icon-wrapper"><i class="fas fa-sort sort-icon"></i></span>
+                    </div>
                   </th>
                   <th class="actions-header"><span class="actions-header-text">Actions</span></th>
-                      </tr>
+                </tr>
               </thead>
               <tbody id="reports-table-body">
                 <!-- Data will be loaded here -->

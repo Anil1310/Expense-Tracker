@@ -1984,7 +1984,7 @@ Expense Tracker Pro: 2026 JavaScript Code
                 <td data-label="Unique ID">${uniqueIdValue || ''}</td>
                 <td data-label="Date">${formatDisplayDate(item.date)}</td>
                 <td data-label="Item List">${item.item}</td>
-                <td data-label="Amount"><strong class="text-primary">${formatCurrency(item.amount)}</strong></td>
+                <td data-label="Amount"><strong class="report-amount-text" style="color: #ffffff !important;">${formatCurrency(item.amount)}</strong></td>
                 <td data-label="Credit">${formatCreditDisplay(item.credit, item.item)}</td>
                 <td data-label="Admin">${item.admin || ''}</td>
                 <td data-label="Actions" style="white-space:nowrap;"></td>
@@ -3100,6 +3100,7 @@ Expense Tracker Pro: 2026 JavaScript Code
         const paginationContainer = document.getElementById('reports-pagination');
         const pageInfo = document.getElementById('reports-page-info');
         if (!tableBody) return;
+        updateReportsSortIcons();
 
         let dataToRender = globalFilteredReportsData.map((item, index) => {
             return {
@@ -3183,7 +3184,7 @@ Expense Tracker Pro: 2026 JavaScript Code
                     <td data-label="Unique ID">${uniqueIdValue || ''}</td>
                     <td data-label="Date">${formatDisplayDate(item.date)}</td>
                     <td data-label="Item List">${item.item}</td>
-                    <td data-label="Amount"><strong class="text-primary">${formatCurrency(item.amount)}</strong></td>
+                    <td data-label="Amount"><strong class="report-amount-text" style="color: #ffffff !important;">${formatCurrency(item.amount)}</strong></td>
                     <td data-label="Credit">${formatCreditDisplay(item.credit, item.item)}</td>
                     <td data-label="Admin">${item.admin || ''}</td>
                     <td data-label="Actions" style="white-space: nowrap;"></td>
@@ -3449,6 +3450,24 @@ Expense Tracker Pro: 2026 JavaScript Code
         }
     });
 
+    function updateReportsSortIcons() {
+        const thElements = document.querySelectorAll('#reports-page .table thead th.reports-sortable-th');
+        thElements.forEach(th => {
+            const col = th.getAttribute('data-sort-col');
+            const icon = th.querySelector('.sort-icon');
+            if (!icon) return;
+            if (col === reportsSortCol) {
+                if (reportsSortDir === 'asc') {
+                    icon.className = 'fas fa-sort-up sort-icon text-white';
+                } else {
+                    icon.className = 'fas fa-sort-down sort-icon text-white';
+                }
+            } else {
+                icon.className = 'fas fa-sort sort-icon text-white';
+            }
+        });
+    }
+
     function toggleReportsSort(col) {
         if (reportsSortCol === col) {
             reportsSortDir = reportsSortDir === 'asc' ? 'desc' : 'asc';
@@ -3457,6 +3476,7 @@ Expense Tracker Pro: 2026 JavaScript Code
             reportsSortDir = 'asc';
         }
         currentReportsPage = 1;
+        updateReportsSortIcons();
         renderReportsTable();
     }
 

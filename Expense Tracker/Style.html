@@ -8668,6 +8668,45 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             -webkit-text-fill-color: #ffffff !important;
         }
 
+        #reports-page .table thead th.reports-sortable-th {
+            cursor: pointer !important;
+            user-select: none !important;
+            padding: 8px 8px !important;
+        }
+
+        #reports-page .table thead th .th-content {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            width: 100% !important;
+            gap: 4px !important;
+        }
+
+        #reports-page .table thead th .sort-icon-wrapper {
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            margin-left: auto !important;
+            flex-shrink: 0 !important;
+            padding-left: 4px !important;
+        }
+
+        #reports-page .table thead th i.sort-icon,
+        #reports-page .table thead th .sort-icon-wrapper i {
+            font-size: 0.82rem !important;
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
+            opacity: 1 !important;
+            margin-left: 0 !important;
+            display: inline-block !important;
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
+        }
+
+        #reports-page .table thead th:hover i.sort-icon {
+            transform: scale(1.2);
+            color: #ffffff !important;
+        }
+
         #reports-page .table th:nth-child(1),
         #reports-page .table td:nth-child(1) {
             width: 38px !important;
@@ -8714,12 +8753,20 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             text-align: center !important;
             font-weight: 800 !important;
         }
-        #reports-page .table td:nth-child(5) {
-            color: #2563eb !important;
+        #reports-page .table td:nth-child(5),
+        #reports-page .table td:nth-child(5) *,
+        #reports-page .table td[data-label="Amount"],
+        #reports-page .table td[data-label="Amount"] *,
+        #reports-page .report-amount-text {
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
+            font-weight: 800 !important;
         }
 
-        [data-theme="dark"] #reports-page .table td:nth-child(5) {
-            color: #60a5fa !important;
+        [data-theme="dark"] #reports-page .table td:nth-child(5),
+        [data-theme="dark"] #reports-page .table td:nth-child(5) * {
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
         }
 
         #reports-page .table th:nth-child(6),

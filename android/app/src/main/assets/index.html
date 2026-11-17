@@ -8774,6 +8774,45 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             -webkit-text-fill-color: #ffffff !important;
         }
 
+        #reports-page .table thead th.reports-sortable-th {
+            cursor: pointer !important;
+            user-select: none !important;
+            padding: 8px 8px !important;
+        }
+
+        #reports-page .table thead th .th-content {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            width: 100% !important;
+            gap: 4px !important;
+        }
+
+        #reports-page .table thead th .sort-icon-wrapper {
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            margin-left: auto !important;
+            flex-shrink: 0 !important;
+            padding-left: 4px !important;
+        }
+
+        #reports-page .table thead th i.sort-icon,
+        #reports-page .table thead th .sort-icon-wrapper i {
+            font-size: 0.82rem !important;
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
+            opacity: 1 !important;
+            margin-left: 0 !important;
+            display: inline-block !important;
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
+        }
+
+        #reports-page .table thead th:hover i.sort-icon {
+            transform: scale(1.2);
+            color: #ffffff !important;
+        }
+
         #reports-page .table th:nth-child(1),
         #reports-page .table td:nth-child(1) {
             width: 38px !important;
@@ -8820,12 +8859,20 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             text-align: center !important;
             font-weight: 800 !important;
         }
-        #reports-page .table td:nth-child(5) {
-            color: #2563eb !important;
+        #reports-page .table td:nth-child(5),
+        #reports-page .table td:nth-child(5) *,
+        #reports-page .table td[data-label="Amount"],
+        #reports-page .table td[data-label="Amount"] *,
+        #reports-page .report-amount-text {
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
+            font-weight: 800 !important;
         }
 
-        [data-theme="dark"] #reports-page .table td:nth-child(5) {
-            color: #60a5fa !important;
+        [data-theme="dark"] #reports-page .table td:nth-child(5),
+        [data-theme="dark"] #reports-page .table td:nth-child(5) * {
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
         }
 
         #reports-page .table th:nth-child(6),
@@ -10029,20 +10076,50 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             <table class="table">
               <thead>
                 <tr>
-                  <th onclick="toggleReportsSort('sn')" style="cursor: pointer;">S.N <i class="fas fa-sort"></i></th>
-                  <th onclick="toggleReportsSort('id')" style="cursor: pointer;">Unique ID <i class="fas fa-sort"></i>
+                  <th onclick="toggleReportsSort('sn')" class="reports-sortable-th" data-sort-col="sn">
+                    <div class="th-content">
+                      <span>S.N</span>
+                      <span class="sort-icon-wrapper"><i class="fas fa-sort sort-icon"></i></span>
+                    </div>
                   </th>
-                  <th onclick="toggleReportsSort('date')" style="cursor: pointer;">Date <i class="fas fa-sort"></i></th>
-                  <th onclick="toggleReportsSort('item')" style="cursor: pointer;">Item List <i class="fas fa-sort"></i>
+                  <th onclick="toggleReportsSort('id')" class="reports-sortable-th" data-sort-col="id">
+                    <div class="th-content">
+                      <span>Unique ID</span>
+                      <span class="sort-icon-wrapper"><i class="fas fa-sort sort-icon"></i></span>
+                    </div>
                   </th>
-                  <th onclick="toggleReportsSort('amount')" style="cursor: pointer;">Amount <i class="fas fa-sort"></i>
+                  <th onclick="toggleReportsSort('date')" class="reports-sortable-th" data-sort-col="date">
+                    <div class="th-content">
+                      <span>Date</span>
+                      <span class="sort-icon-wrapper"><i class="fas fa-sort sort-icon"></i></span>
+                    </div>
                   </th>
-                  <th onclick="toggleReportsSort('credit')" style="cursor: pointer;">Credit & Remark <i
-                      class="fas fa-sort"></i></th>
-                  <th onclick="toggleReportsSort('admin')" style="cursor: pointer;">Admin <i class="fas fa-sort"></i>
+                  <th onclick="toggleReportsSort('item')" class="reports-sortable-th" data-sort-col="item">
+                    <div class="th-content">
+                      <span>Item List</span>
+                      <span class="sort-icon-wrapper"><i class="fas fa-sort sort-icon"></i></span>
+                    </div>
+                  </th>
+                  <th onclick="toggleReportsSort('amount')" class="reports-sortable-th" data-sort-col="amount">
+                    <div class="th-content">
+                      <span>Amount</span>
+                      <span class="sort-icon-wrapper"><i class="fas fa-sort sort-icon"></i></span>
+                    </div>
+                  </th>
+                  <th onclick="toggleReportsSort('credit')" class="reports-sortable-th" data-sort-col="credit">
+                    <div class="th-content">
+                      <span>Credit & Remark</span>
+                      <span class="sort-icon-wrapper"><i class="fas fa-sort sort-icon"></i></span>
+                    </div>
+                  </th>
+                  <th onclick="toggleReportsSort('admin')" class="reports-sortable-th" data-sort-col="admin">
+                    <div class="th-content">
+                      <span>Admin</span>
+                      <span class="sort-icon-wrapper"><i class="fas fa-sort sort-icon"></i></span>
+                    </div>
                   </th>
                   <th class="actions-header"><span class="actions-header-text">Actions</span></th>
-                      </tr>
+                </tr>
               </thead>
               <tbody id="reports-table-body">
                 <!-- Data will be loaded here -->
@@ -12956,7 +13033,7 @@ Expense Tracker Pro: 2026 JavaScript Code
                 <td data-label="Unique ID">${uniqueIdValue || ''}</td>
                 <td data-label="Date">${formatDisplayDate(item.date)}</td>
                 <td data-label="Item List">${item.item}</td>
-                <td data-label="Amount"><strong class="text-primary">${formatCurrency(item.amount)}</strong></td>
+                <td data-label="Amount"><strong class="report-amount-text" style="color: #ffffff !important;">${formatCurrency(item.amount)}</strong></td>
                 <td data-label="Credit">${formatCreditDisplay(item.credit, item.item)}</td>
                 <td data-label="Admin">${item.admin || ''}</td>
                 <td data-label="Actions" style="white-space:nowrap;"></td>
@@ -14072,6 +14149,7 @@ Expense Tracker Pro: 2026 JavaScript Code
         const paginationContainer = document.getElementById('reports-pagination');
         const pageInfo = document.getElementById('reports-page-info');
         if (!tableBody) return;
+        updateReportsSortIcons();
 
         let dataToRender = globalFilteredReportsData.map((item, index) => {
             return {
@@ -14155,7 +14233,7 @@ Expense Tracker Pro: 2026 JavaScript Code
                     <td data-label="Unique ID">${uniqueIdValue || ''}</td>
                     <td data-label="Date">${formatDisplayDate(item.date)}</td>
                     <td data-label="Item List">${item.item}</td>
-                    <td data-label="Amount"><strong class="text-primary">${formatCurrency(item.amount)}</strong></td>
+                    <td data-label="Amount"><strong class="report-amount-text" style="color: #ffffff !important;">${formatCurrency(item.amount)}</strong></td>
                     <td data-label="Credit">${formatCreditDisplay(item.credit, item.item)}</td>
                     <td data-label="Admin">${item.admin || ''}</td>
                     <td data-label="Actions" style="white-space: nowrap;"></td>
@@ -14421,6 +14499,24 @@ Expense Tracker Pro: 2026 JavaScript Code
         }
     });
 
+    function updateReportsSortIcons() {
+        const thElements = document.querySelectorAll('#reports-page .table thead th.reports-sortable-th');
+        thElements.forEach(th => {
+            const col = th.getAttribute('data-sort-col');
+            const icon = th.querySelector('.sort-icon');
+            if (!icon) return;
+            if (col === reportsSortCol) {
+                if (reportsSortDir === 'asc') {
+                    icon.className = 'fas fa-sort-up sort-icon text-white';
+                } else {
+                    icon.className = 'fas fa-sort-down sort-icon text-white';
+                }
+            } else {
+                icon.className = 'fas fa-sort sort-icon text-white';
+            }
+        });
+    }
+
     function toggleReportsSort(col) {
         if (reportsSortCol === col) {
             reportsSortDir = reportsSortDir === 'asc' ? 'desc' : 'asc';
@@ -14429,6 +14525,7 @@ Expense Tracker Pro: 2026 JavaScript Code
             reportsSortDir = 'asc';
         }
         currentReportsPage = 1;
+        updateReportsSortIcons();
         renderReportsTable();
     }
 
