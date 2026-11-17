@@ -192,6 +192,26 @@ function doPost(e) {
                     nov: { totalRows: novLastRow - 1, lastRow: novLastValues },
                     data: { totalRows: dataLastRow - 1, lastRow: dataLastValues }
                 };
+            },
+            syncAllDataSheetSnFromUniqueId: () => {
+                const ss = SpreadsheetApp.openById(MAIN_ID);
+                const dataSheet = ss.getSheetByName("Data");
+                if (!dataSheet) return { error: "Data sheet not found" };
+                const data = dataSheet.getDataRange().getValues();
+                let updated = 0;
+                for (let i = 1; i < data.length; i++) {
+                    const uid = String(data[i][1] || '').trim();
+                    const match = uid.match(/^(\d+)-/);
+                    if (match) {
+                        const parsedSn = parseInt(match[1]);
+                        if (data[i][0] !== parsedSn) {
+                            dataSheet.getRange(i + 1, 1).setValue(parsedSn);
+                            updated++;
+                        }
+                    }
+                }
+                SpreadsheetApp.flush();
+                return { success: true, updated: updated };
             }
         };
 
