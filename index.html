@@ -15186,16 +15186,18 @@ Expense Tracker Pro: 2026 JavaScript Code
             return;
         }
 
-        const uniqueIdValue = uniqueId.value;
-        const itemListValue = getItemDisplayName(itemList.value).trim();
+        const uniqueIdValue = (uniqueId.value || '').trim();
+        // Fallback: check both #itemList and #itemSearchInput
+        const rawItem = (itemList && itemList.value ? itemList.value : (document.getElementById('itemSearchInput')?.value || '')).trim();
+        const itemListValue = getItemDisplayName(rawItem).trim();
         const amountValue = parseFloat(amount.value);
         const dateValue = date.value;
-        const creditValue = credit.value;
+        const creditValue = (credit.value || '').trim();
 
         // Input validation
         if (!itemListValue) {
             showModernToast("Required", "Please enter or select an item name.", "warning");
-            itemList.focus();
+            if (itemList) itemList.focus();
             return;
         }
         if (isNaN(amountValue) || amountValue <= 0) {
@@ -15234,7 +15236,7 @@ Expense Tracker Pro: 2026 JavaScript Code
             monthValue = CURRENT_MONTH;
         }
 
-        let entryUser = currentUser ? currentUser.name : 'Unknown';
+        let entryUser = currentUser ? (currentUser.name || currentUser.username) : 'Anil Chahar';
         if (entryUser.toLowerCase() === 'admin') {
             entryUser = 'Anil Chahar';
         } else if (entryUser.toLowerCase() === 'user') {
@@ -15270,175 +15272,149 @@ Expense Tracker Pro: 2026 JavaScript Code
             }
         }
 
-        // ── ⚡ INSTANT SAVE & MODAL DISMISS (0ms perceived latency) ───────────
-        const modalElement = document.getElementById('entryModal');
-        if (modalElement) {
-            const modalInstance = bootstrap.Modal.getInstance(modalElement) || bootstrap.Modal.getOrCreateInstance(modalElement);
-            modalInstance.hide();
+        // ── 🔒 CONFIRMED BACKEND SAVE (Save to Month Sheet & Data Sheet -> Then Display) ──
+        const saveBtn = document.getElementById('saveRecordBtn');
+        const originalBtnHtml = saveBtn ? saveBtn.innerHTML : '<i class="fas fa-check me-1"></i>Save Record';
+        if (saveBtn) {
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Saving to Google Sheets...';
         }
 
-        // Instant toast feedback
-        showModernToast("Success", isEdit ? "Record updated successfully!" : "Record saved successfully!", "success", 2000);
-
-        // Date formatting for instant table display
-        const parsedDate = new Date(dateValue);
-        const monthNamesShort = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-        const formattedDisplayDate = (!isNaN(parsedDate.getTime()))
-            ? `${monthNamesShort[parsedDate.getMonth()]} ${parsedDate.getDate()}, ${parsedDate.getFullYear()}`
-            : dateValue;
-
-        const cleanItemWord = (itemListValue.split(' ')[0] || 'Item').replace(/[^a-zA-Z0-9]/g, '');
-        const newSn = (expenseData && expenseData.length > 0) ? (Math.max(0, ...expenseData.map(r => parseInt(r[0]) || 0)) + 1) : 1;
-        const tempUniqueId = isEdit ? uniqueIdValue : `${newSn}-${cleanItemWord}`;
-
-        if (!isEdit) {
-            if (!expenseData) expenseData = [];
-            const optimisticRow = [
-                newSn,
-                tempUniqueId,
-                formattedDisplayDate,
-                monthValue,
-                itemListValue,
-                amountValue,
-                creditValue || '',
-                entryUser
-            ];
-            optimisticRow.sn = newSn;
-            optimisticRow.isOptimistic = true;
-
-            // Reflect instantly at top of dashboard table if on current month
-            if (monthValue === CURRENT_MONTH || !CURRENT_MONTH) {
-                expenseData.unshift(optimisticRow);
-                renderDashboardTable(expenseData);
-
-                // Update card values instantly
-                const totalExpensesEl = document.getElementById('total-expenses');
-                if (totalExpensesEl) {
-                    const curTotal = parseFloat(totalExpensesEl.textContent.replace(/[^\d.-]/g, '')) || 0;
-                    animateValue(totalExpensesEl, curTotal + amountValue, 'currency');
-                }
-                const totalCategoriesEl = document.getElementById('total-categories');
-                if (totalCategoriesEl && expenseData) {
-                    const cats = new Set(expenseData.map(r => r[4]).filter(Boolean));
-                    animateValue(totalCategoriesEl, cats.size, 'integer');
-                }
-                const totalDaysEl = document.getElementById('total-days');
-                if (totalDaysEl && expenseData) {
-                    const days = new Set(expenseData.map(r => r[2]).filter(Boolean));
-                    animateValue(totalDaysEl, days.size, 'integer');
-                }
-            }
-
-            // Update local memory cache instantly
-            if (window.expenseCache) {
-                const cachedMonthly = window.expenseCache.get(`monthly_${monthValue}`);
-                if (cachedMonthly && cachedMonthly.tableData) {
-                    cachedMonthly.tableData.unshift(optimisticRow);
-                    cachedMonthly.totalExpenses = (cachedMonthly.totalExpenses || 0) + amountValue;
-                    window.expenseCache.set(`monthly_${monthValue}`, cachedMonthly);
-                }
-                const cachedAll = window.expenseCache.get('all_data');
-                if (cachedAll && cachedAll.allExpenses) {
-                    const optDateStr = `${monthValue} ${parsedDate.getDate() || 1} ${parsedDate.getFullYear() || CURRENT_YEAR}`;
-                    cachedAll.allExpenses.unshift([optDateStr, monthValue, itemListValue, amountValue, creditValue || '', CURRENT_YEAR, entryUser, tempUniqueId]);
-                    window.expenseCache.set('all_data', cachedAll);
-                }
-            }
-
-            // Push notification
-            try {
-                pushExpenseNotification({
-                    item: itemListValue,
-                    amount: amountValue,
-                    date: dateValue,
-                    credit: creditValue,
-                    month: monthValue
-                });
-            } catch (e) { }
-
-            // Clear form ready for next entry
-            try {
-                document.getElementById('entryForm').reset();
-                document.getElementById('editUniqueId').value = '';
-                document.getElementById('editMonth').value = '';
-            } catch (e) { }
-        } else {
-            // Edit in place
-            if (expenseData) {
-                const row = expenseData.find(r => r && String(r[1]) === String(uniqueIdValue));
-                if (row) {
-                    row[2] = formattedDisplayDate;
-                    row[4] = itemListValue;
-                    row[5] = amountValue;
-                    row[6] = creditValue || '';
-                    renderDashboardTable(expenseData);
-                }
-            }
-        }
-
-        // ── ☁️ BACKGROUND ASYNC SYNC WITH GOOGLE SHEETS ─────────────────────
         if (typeof google !== 'undefined' && google.script && google.script.run) {
             const runner = google.script.run
                 .withSuccessHandler((response) => {
-                    console.log("Background save response:", response);
+                    console.log("Backend save confirmed response:", response);
+                    if (saveBtn) {
+                        saveBtn.disabled = false;
+                        saveBtn.innerHTML = originalBtnHtml;
+                    }
                     const res = response && response.result ? response.result : response;
                     if (res && res.success) {
-                        // Replace temporary ID with server unique ID seamlessly and keep record in table permanently
-                        if (!isEdit && expenseData) {
-                            const row = expenseData.find(r => r && (
-                                r[1] === tempUniqueId ||
-                                r[1] === res.uniqueId ||
-                                (r.isOptimistic && r[4] === itemListValue && parseFloat(r[5]) === parseFloat(amountValue))
-                            ));
-                            if (row) {
-                                if (res.uniqueId) row[1] = res.uniqueId;
-                                if (res.sn) {
-                                    row[0] = res.sn;
-                                    row.sn = res.sn;
-                                }
-                                delete row.isOptimistic;
-                                delete row.syncFailed;
-                            }
-                            renderDashboardTable(expenseData);
+                        // 1. Close Modal ONLY after confirmed backend save
+                        const modalElement = document.getElementById('entryModal');
+                        if (modalElement) {
+                            const modalInstance = bootstrap.Modal.getInstance(modalElement) || bootstrap.Modal.getOrCreateInstance(modalElement);
+                            modalInstance.hide();
                         }
 
-                        // Update local cache in-place with confirmed server record
+                        // 2. Format display date
+                        const parsedDate = new Date(res.date || dateValue);
+                        const monthNamesShort = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                        const formattedDisplayDate = (!isNaN(parsedDate.getTime()))
+                            ? `${monthNamesShort[parsedDate.getMonth()]} ${parsedDate.getDate()}, ${parsedDate.getFullYear()}`
+                            : (res.date || dateValue);
+
+                        const confirmedSn = res.sn || ((expenseData && expenseData.length > 0) ? (Math.max(0, ...expenseData.map(r => parseInt(r[0]) || 0)) + 1) : 1);
+                        const confirmedUid = res.uniqueId || `${confirmedSn}-${itemListValue.split(' ')[0]}`;
+                        const savedMonth = res.month || monthValue;
+                        const savedItem = res.itemList || itemListValue;
+                        const savedAmt = (typeof res.amount === 'number') ? res.amount : amountValue;
+                        const savedCredit = (res.credit !== undefined && res.credit !== null) ? res.credit : creditValue;
+                        const savedUser = res.user || entryUser;
+
+                        const confirmedRow = [
+                            confirmedSn,
+                            confirmedUid,
+                            formattedDisplayDate,
+                            savedMonth,
+                            savedItem,
+                            savedAmt,
+                            savedCredit || '',
+                            savedUser
+                        ];
+                        confirmedRow.sn = confirmedSn;
+
+                        // 3. Render directly into frontend table
+                        if (!isEdit) {
+                            if (!expenseData) expenseData = [];
+                            if (savedMonth === CURRENT_MONTH || !CURRENT_MONTH) {
+                                // Add to table data
+                                expenseData.unshift(confirmedRow);
+                                renderDashboardTable(expenseData);
+
+                                // Update dashboard stat cards
+                                const totalExpensesEl = document.getElementById('total-expenses');
+                                if (totalExpensesEl) {
+                                    const curTotal = parseFloat(totalExpensesEl.textContent.replace(/[^\d.-]/g, '')) || 0;
+                                    animateValue(totalExpensesEl, curTotal + savedAmt, 'currency');
+                                }
+                                const totalCategoriesEl = document.getElementById('total-categories');
+                                if (totalCategoriesEl && expenseData) {
+                                    const cats = new Set(expenseData.map(r => r[4]).filter(Boolean));
+                                    animateValue(totalCategoriesEl, cats.size, 'integer');
+                                }
+                                const totalDaysEl = document.getElementById('total-days');
+                                if (totalDaysEl && expenseData) {
+                                    const days = new Set(expenseData.map(r => r[2]).filter(Boolean));
+                                    animateValue(totalDaysEl, days.size, 'integer');
+                                }
+                            }
+                        } else {
+                            if (expenseData) {
+                                const row = expenseData.find(r => r && String(r[1]) === String(uniqueIdValue));
+                                if (row) {
+                                    row[2] = formattedDisplayDate;
+                                    row[4] = savedItem;
+                                    row[5] = savedAmt;
+                                    row[6] = savedCredit || '';
+                                    renderDashboardTable(expenseData);
+                                }
+                            }
+                        }
+
+                        // 4. Update memory cache with confirmed server record
                         if (window.expenseCache) {
-                            const cacheKey = `monthly_${monthValue}_${CURRENT_YEAR || 2026}`;
-                            const cached = window.expenseCache.get(cacheKey) || window.expenseCache.get(`monthly_${monthValue}`);
+                            const cacheKey = `monthly_${savedMonth}_${CURRENT_YEAR || 2026}`;
+                            const cached = window.expenseCache.get(cacheKey) || window.expenseCache.get(`monthly_${savedMonth}`);
                             if (cached && cached.tableData) {
-                                const rIdx = cached.tableData.findIndex(r => r && (
-                                    r[1] === tempUniqueId ||
-                                    r[1] === res.uniqueId ||
-                                    (r.isOptimistic && r[4] === itemListValue && parseFloat(r[5]) === parseFloat(amountValue))
-                                ));
-                                if (rIdx > -1) {
-                                    if (res.uniqueId) cached.tableData[rIdx][1] = res.uniqueId;
-                                    if (res.sn) {
-                                        cached.tableData[rIdx][0] = res.sn;
-                                        cached.tableData[rIdx].sn = res.sn;
-                                    }
-                                    delete cached.tableData[rIdx].isOptimistic;
-                                } else {
-                                    const confirmedRow = [res.sn, res.uniqueId, formattedDisplayDate, monthValue, itemListValue, amountValue, creditValue || '', entryUser];
-                                    confirmedRow.sn = res.sn;
+                                if (!isEdit) {
                                     cached.tableData.unshift(confirmedRow);
+                                    cached.totalExpenses = (cached.totalExpenses || 0) + savedAmt;
+                                } else {
+                                    const rIdx = cached.tableData.findIndex(r => r && String(r[1]) === String(uniqueIdValue));
+                                    if (rIdx > -1) {
+                                        cached.tableData[rIdx] = confirmedRow;
+                                    }
                                 }
                                 window.expenseCache.set(cacheKey, cached);
-                                window.expenseCache.set(`monthly_${monthValue}`, cached);
+                                window.expenseCache.set(`monthly_${savedMonth}`, cached);
                             }
                             window.expenseCache.invalidate('all_data');
                             window.expenseCache.invalidate('consolidated_data');
                         }
 
-                        showModernToast("Record Confirmed", `Saved safely to ${monthValue} & Data tab (ID: ${res.uniqueId || tempUniqueId})`, "success", 2500);
+                        // 5. Reset form inputs
+                        try {
+                            document.getElementById('entryForm').reset();
+                            document.getElementById('editUniqueId').value = '';
+                            document.getElementById('editMonth').value = '';
+                            const searchInp = document.getElementById('itemSearchInput');
+                            if (searchInp) searchInp.value = '';
+                        } catch (e) { }
+
+                        // 6. Push notification
+                        try {
+                            pushExpenseNotification({
+                                item: savedItem,
+                                amount: savedAmt,
+                                date: dateValue,
+                                credit: savedCredit,
+                                month: savedMonth
+                            });
+                        } catch (e) { }
+
+                        showModernToast("Record Confirmed", `Saved to ${savedMonth} & Data tab (ID: ${confirmedUid})`, "success", 3000);
                     } else {
-                        showModernToast("Sync Error", "Server: " + (res ? res.error : "Unknown error"), "error", 4000);
+                        showModernToast("Save Failed", "Server error: " + (res ? res.error : "Unknown error"), "error", 5000);
                     }
                 })
                 .withFailureHandler((err) => {
-                    console.error("Background save failure:", err);
-                    showModernToast("Sync Issue", "Could not reach Google Sheets. Please check your network.", "error", 4000);
+                    console.error("Save failure:", err);
+                    if (saveBtn) {
+                        saveBtn.disabled = false;
+                        saveBtn.innerHTML = originalBtnHtml;
+                    }
+                    showModernToast("Save Error", "Could not reach Google Sheets. Please check your network.", "error", 5000);
                 });
 
             if (isEdit) {
@@ -15446,7 +15422,14 @@ Expense Tracker Pro: 2026 JavaScript Code
             } else {
                 runner.addEntry(entryData);
             }
+        } else {
+            if (saveBtn) {
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = originalBtnHtml;
+            }
+            showModernToast("Connection Error", "Google Script connection is not available.", "error", 4000);
         }
+    }
     }
 
     window.editEntry = function (uniqueId, month) {
@@ -16408,7 +16391,8 @@ Expense Tracker Pro: 2026 JavaScript Code
         let monthIdx = MONTHS.indexOf(activeM);
         if (monthIdx === -1) monthIdx = 10;
         const month = String(monthIdx + 1).padStart(2, '0');
-        const day = '16';
+        const todayDate = new Date();
+        const day = String(todayDate.getDate()).padStart(2, '0');
         const formattedDate = `${year}-${month}-${day}`;
 
         const dateInput = document.getElementById('date');

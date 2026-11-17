@@ -817,7 +817,11 @@ function addEntry(entryData) {
             uniqueId: newUniqueId,
             sn: sn,
             date: formattedDate,
-            month: monthName
+            month: monthName,
+            itemList: entryData.itemList,
+            amount: amount,
+            credit: entryData.credit || '',
+            user: entryData.user || ''
         };
     } catch (e) {
         return {
