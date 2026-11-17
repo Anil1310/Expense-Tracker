@@ -20,7 +20,7 @@ function stripEmojiIcon(text) {
     str = str.replace(/^[^\w\s"'(+\-\u0900-\u097F]+/u, '');
     try {
         str = str.replace(/^[\p{Extended_Pictographic}\p{Emoji_Presentation}\p{Emoji}\s]+/u, '');
-    } catch (e) {}
+    } catch (e) { }
     return str.trim();
 }
 
@@ -696,7 +696,7 @@ function ensureTrashSheet(ss) {
 function removeAllMinuteTriggers() {
     try {
         const triggers = ScriptApp.getProjectTriggers();
-        triggers.forEach(function(t) {
+        triggers.forEach(function (t) {
             if (t.getEventType() === ScriptApp.EventType.CLOCK) {
                 try {
                     ScriptApp.deleteTrigger(t);
@@ -1878,7 +1878,7 @@ function cleanAllColumnEIconsAndStopTriggers() {
         var removedTriggers = [];
         try {
             var triggers = ScriptApp.getProjectTriggers();
-            triggers.forEach(function(t) {
+            triggers.forEach(function (t) {
                 removedTriggers.push({
                     id: t.getUniqueId(),
                     handler: t.getHandlerFunction(),
@@ -1896,7 +1896,7 @@ function cleanAllColumnEIconsAndStopTriggers() {
 
         // 2. Process all sheets in the spreadsheet (Months, Data, etc.)
         var sheets = ss.getSheets();
-        sheets.forEach(function(sheet) {
+        sheets.forEach(function (sheet) {
             try {
                 if (typeof sheet.getType === 'function' && sheet.getType() !== SpreadsheetApp.SheetType.GRID) {
                     return;
@@ -1963,7 +1963,7 @@ function cleanAllColumnEIconsAndStopTriggers() {
                     // Clear any data validation dropdowns on Column E
                     try {
                         eRange.clearDataValidations();
-                    } catch (cErr) {}
+                    } catch (cErr) { }
                 }
 
                 // Clean Column B (Unique ID) if sheet has at least 2 columns
