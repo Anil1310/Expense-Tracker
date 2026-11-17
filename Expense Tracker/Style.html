@@ -8573,256 +8573,160 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             width: 100% !important;
         }
 
-        /* ── Reports Table Base ── */
+        /* ── Reports Table Base: Same to same as Dashboard Month Table ── */
         #reports-page .table {
             display: table !important;
             width: 100% !important;
-            min-width: 680px !important;
-            border-collapse: collapse !important;
+            min-width: 850px !important;
             margin: 0 !important;
-            table-layout: fixed !important;
+            padding: 0 !important;
+            border-collapse: collapse !important;
+            border-spacing: 0 !important;
+            table-layout: auto !important;
         }
 
-        /* ── Sticky Header with Distinct Gradient ── */
+        /* ── Sticky Header: Same to same as Dashboard Month Table ── */
         #reports-page .table thead th {
             position: sticky !important;
             top: 0 !important;
-            z-index: 10 !important;
+            z-index: 100 !important;
             background: linear-gradient(135deg, #6366f1, #4f46e5) !important;
+            background-clip: padding-box !important;
             color: #ffffff !important;
-            font-size: 0.68rem !important;
-            font-weight: 800 !important;
-            padding: 8px 6px !important;
-            white-space: nowrap !important;
+            -webkit-text-fill-color: #ffffff !important;
+            font-weight: 700 !important;
+            font-size: 0.72rem !important;
+            padding: 6px 12px !important;
+            text-transform: none !important;
             letter-spacing: 0.02em !important;
-            text-align: center !important;
             border: none !important;
-            border-right: 1px solid rgba(255, 255, 255, 0.15) !important;
-            line-height: 1.2 !important;
-            height: auto !important;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+            white-space: nowrap !important;
+            cursor: pointer !important;
         }
 
         [data-theme="dark"] #reports-page .table thead th {
             background: linear-gradient(135deg, #312e81, #1e1b4b) !important;
-            border-right-color: rgba(255, 255, 255, 0.1) !important;
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+
+        #reports-page .table thead th i {
+            margin-left: 4px !important;
+            font-size: 0.65rem !important;
+            opacity: 0.8 !important;
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
         }
 
         #reports-page .table thead th:last-child {
             border-right: none !important;
         }
 
-        /* ── Clearly Visible Body Cells (36px Height, Sharp Contrast) ── */
-        #reports-page .table tbody tr {
+        /* ── Table Rows: Same to same as Dashboard Month Table ── */
+        #reports-page .table tr {
             display: table-row !important;
-            background: #ffffff !important;
+            background: var(--glass-bg) !important;
+            box-shadow: none !important;
+            border: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
         }
 
-        #reports-page .table tbody tr:nth-child(even) {
-            background: #f8fafc !important;
+        #reports-page .table tr:nth-child(even) {
+            background: rgba(0, 0, 0, 0.02) !important;
         }
 
-        [data-theme="dark"] #reports-page .table tbody tr {
+        [data-theme="dark"] #reports-page .table tr {
             background: #1e293b !important;
         }
 
-        [data-theme="dark"] #reports-page .table tbody tr:nth-child(even) {
+        [data-theme="dark"] #reports-page .table tr:nth-child(even) {
             background: #162032 !important;
         }
 
+        /* ── Table Cells: Same to same as Dashboard Month Table ── */
         #reports-page .table tbody td {
             display: table-cell !important;
-            height: 36px !important;
-            min-height: 36px !important;
-            line-height: 1.3 !important;
-            font-size: 0.72rem !important;
-            font-weight: 600 !important;
-            padding: 6px 6px !important;
-            vertical-align: middle !important;
-            border-bottom: 1px solid #e2e8f0 !important;
-            border-right: 1px solid #e2e8f0 !important;
-            color: #1e293b !important;
+            visibility: visible !important;
+            text-align: left !important;
+            padding: 0px 8px !important;
             white-space: nowrap !important;
+            vertical-align: middle !important;
+            border-bottom: 1px solid var(--glass-border) !important;
+            border-right: 1px solid var(--glass-border) !important;
+            margin: 0 !important;
+            color: var(--text-primary) !important;
             overflow: hidden !important;
             text-overflow: ellipsis !important;
-            visibility: visible !important;
+            font-size: 0.72rem !important;
+            font-family: inherit !important;
+            font-weight: bold !important;
+            height: 32px !important;
+            line-height: 1.2 !important;
         }
 
         [data-theme="dark"] #reports-page .table tbody td {
             color: #e2e8f0 !important;
-            border-bottom-color: #334155 !important;
-            border-right-color: #1e293b !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+            border-right: 1px solid rgba(255, 255, 255, 0.06) !important;
         }
 
-        #reports-page .table thead th:last-child,
         #reports-page .table tbody td:last-child {
             border-right: none !important;
         }
 
-        /* ── Specific Column Widths & Alignments ── */
-        #reports-page .table thead th,
-        #reports-page .table thead th *,
-        #reports-page table thead th,
-        #reports-page table thead th i,
-        #reports-page table thead th span {
-            color: #ffffff !important;
-            -webkit-text-fill-color: #ffffff !important;
-        }
-
-        #reports-page .table thead th.reports-sortable-th {
-            cursor: pointer !important;
-            user-select: none !important;
-            padding: 8px 8px !important;
-        }
-
-        #reports-page .table thead th .th-content {
-            display: flex !important;
-            align-items: center !important;
-            justify-content: space-between !important;
-            width: 100% !important;
-            gap: 4px !important;
-        }
-
-        #reports-page .table thead th .sort-icon-wrapper {
-            display: inline-flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            margin-left: auto !important;
-            flex-shrink: 0 !important;
-            padding-left: 4px !important;
-        }
-
-        #reports-page .table thead th i.sort-icon,
-        #reports-page .table thead th .sort-icon-wrapper i {
-            font-size: 0.82rem !important;
-            color: #ffffff !important;
-            -webkit-text-fill-color: #ffffff !important;
-            opacity: 1 !important;
-            margin-left: 0 !important;
-            display: inline-block !important;
-            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
-        }
-
-        #reports-page .table thead th:hover i.sort-icon {
-            transform: scale(1.2);
-            color: #ffffff !important;
-        }
-
+        /* Center alignments for S.N, Date, Month, Amount */
         #reports-page .table th:nth-child(1),
-        #reports-page .table td:nth-child(1) {
-            width: 38px !important;
-            text-align: center !important;
-            font-weight: 700 !important;
-        }
-
-        #reports-page .table td:nth-child(1) {
-            color: #64748b !important;
-        }
-
-        #reports-page .table th:nth-child(2),
-        #reports-page .table td:nth-child(2) {
-            width: 75px !important;
-            text-align: center !important;
-            font-family: monospace !important;
-            font-size: 0.68rem !important;
-        }
-
+        #reports-page .table td:nth-child(1),
         #reports-page .table th:nth-child(3),
-        #reports-page .table td:nth-child(3) {
-            width: 82px !important;
-            text-align: center !important;
-            font-weight: 600 !important;
-        }
-
+        #reports-page .table td:nth-child(3),
         #reports-page .table th:nth-child(4),
-        #reports-page .table td:nth-child(4) {
-            width: 140px !important;
-            text-align: left !important;
-            padding-left: 8px !important;
-            font-weight: 700 !important;
-        }
-
-        #reports-page .table td:nth-child(4) {
-            color: #0f172a !important;
-        }
-
-        [data-theme="dark"] #reports-page .table td:nth-child(4) {
-            color: #f1f5f9 !important;
-        }
-
-        #reports-page .table th:nth-child(5),
-        #reports-page .table td:nth-child(5) {
-            width: 85px !important;
+        #reports-page .table td:nth-child(4),
+        #reports-page .table th:nth-child(6),
+        #reports-page .table td:nth-child(6) {
             text-align: center !important;
+        }
+
+        /* White amount styling on Report Page */
+        #reports-page .table td:nth-child(6),
+        #reports-page .table td:nth-child(6) *,
+        #reports-page .table td[data-label="Amount"],
+        #reports-page .table td[data-label="Amount"] *,
+        #reports-page .report-amount-text {
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
             font-weight: 800 !important;
         }
 
-        #reports-page .table td:nth-child(5) {
-            color: #2563eb !important;
+        [data-theme="dark"] #reports-page .table td:nth-child(6),
+        [data-theme="dark"] #reports-page .table td:nth-child(6) * {
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
+        }
 
-            #reports-page .table td:nth-child(5),
-            #reports-page .table td:nth-child(5) *,
-            #reports-page .table td[data-label="Amount"],
-            #reports-page .table td[data-label="Amount"] *,
-            #reports-page .report-amount-text {
-                color: #ffffff !important;
-                -webkit-text-fill-color: #ffffff !important;
-                font-weight: 800 !important;
-            }
+        /* Action Buttons Column: Same to same as Dashboard Month Table */
+        #reports-page .table td:last-child {
+            min-width: 120px !important;
+            text-align: right !important;
+            padding-right: 12px !important;
+        }
 
-            [data-theme="dark"] #reports-page .table td:nth-child(5) {
-                color: #60a5fa !important;
+        #reports-page .table td:last-child .action-btn {
+            font-size: 0.55rem !important;
+            margin-left: 6px !important;
+            padding: 0 !important;
+            width: 16px !important;
+            height: 16px !important;
+            display: inline-flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            border-radius: 4px !important;
+        }
 
-                [data-theme="dark"] #reports-page .table td:nth-child(5),
-                [data-theme="dark"] #reports-page .table td:nth-child(5) * {
-                    color: #ffffff !important;
-                    -webkit-text-fill-color: #ffffff !important;
-                }
-
-                #reports-page .table th:nth-child(6),
-                #reports-page .table td:nth-child(6) {
-                    width: 95px !important;
-                    text-align: left !important;
-                    font-size: 0.68rem !important;
-                    padding-left: 6px !important;
-                }
-
-                #reports-page .table th:nth-child(7),
-                #reports-page .table td:nth-child(7) {
-                    width: 75px !important;
-                    text-align: center !important;
-                    font-size: 0.68rem !important;
-                }
-
-                #reports-page .table th:nth-child(8),
-                #reports-page .table td:nth-child(8) {
-                    width: 90px !important;
-                    text-align: center !important;
-                    padding: 0 4px !important;
-                }
-
-                /* Action buttons inside rows */
-                #reports-page .table td:last-child .action-btn {
-                    font-size: 0.68rem !important;
-                    margin: 0 2px !important;
-                    padding: 0 !important;
-                    width: 24px !important;
-                    height: 24px !important;
-                    display: inline-flex !important;
-                    justify-content: center !important;
-                    align-items: center !important;
-                    border-radius: 6px !important;
-                    border: 1px solid rgba(99, 102, 241, 0.2) !important;
-                    background: rgba(99, 102, 241, 0.08) !important;
-                }
-
-                [data-theme="dark"] #reports-page .table td:last-child .action-btn {
-                    background: rgba(255, 255, 255, 0.06) !important;
-                    border-color: rgba(255, 255, 255, 0.1) !important;
-                }
-
-            }
-
-            /* end @media max-width: 768px */
+    } /* end @media (max-width: 768px) */
 
             /* ── Premium Modern Toast Notification ── */
             .modern-toast {

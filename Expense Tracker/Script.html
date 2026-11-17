@@ -1983,8 +1983,8 @@ Expense Tracker Pro: 2026 JavaScript Code
                 <td data-label="S.N">${sn}</td>
                 <td data-label="Unique ID">${uniqueIdValue || ''}</td>
                 <td data-label="Date">${formatDisplayDate(item.date)}</td>
+                <td data-label="Month">${monthName}</td>
                 <td data-label="Item List">${item.item}</td>
-                <td data-label="Amount"><strong class="text-primary">${formatCurrency(item.amount)}</strong></td>
                 <td data-label="Amount"><strong class="report-amount-text" style="color: #ffffff !important;">${formatCurrency(item.amount)}</strong></td>
                 <td data-label="Credit">${formatCreditDisplay(item.credit, item.item)}</td>
                 <td data-label="Admin">${item.admin || ''}</td>
@@ -3123,6 +3123,7 @@ Expense Tracker Pro: 2026 JavaScript Code
                     case 'sn': valA = parseInt(a.sn) || 0; valB = parseInt(b.sn) || 0; break;
                     case 'id': valA = String(a.id || ''); valB = String(b.id || ''); break;
                     case 'date': valA = new Date(a.date); valB = new Date(b.date); break;
+                    case 'month': valA = String(a.month || ''); valB = String(b.month || ''); break;
                     case 'item': valA = String(a.item || ''); valB = String(b.item || ''); break;
                     case 'amount': valA = parseFloat(a.amount) || 0; valB = parseFloat(b.amount) || 0; break;
                     case 'credit': valA = String(a.credit || ''); valB = String(b.credit || ''); break;
@@ -3188,8 +3189,8 @@ Expense Tracker Pro: 2026 JavaScript Code
                     <td data-label="S.N">${sn}</td>
                     <td data-label="Unique ID">${uniqueIdValue || ''}</td>
                     <td data-label="Date">${formatDisplayDate(item.date)}</td>
+                    <td data-label="Month">${monthName}</td>
                     <td data-label="Item List">${item.item}</td>
-                    <td data-label="Amount"><strong class="text-primary">${formatCurrency(item.amount)}</strong></td>
                     <td data-label="Amount"><strong class="report-amount-text" style="color: #ffffff !important;">${formatCurrency(item.amount)}</strong></td>
                     <td data-label="Credit">${formatCreditDisplay(item.credit, item.item)}</td>
                     <td data-label="Admin">${item.admin || ''}</td>

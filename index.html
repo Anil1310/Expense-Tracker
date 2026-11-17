@@ -8679,7 +8679,7 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             width: 100% !important;
         }
 
-        /* ── Reports Table Base ── */
+        /* ── Reports Table Base: Same to same as Dashboard Month Table ── */
         #reports-page .table {
             display: table !important;
             width: 100% !important;
@@ -8691,7 +8691,7 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             table-layout: auto !important;
         }
 
-        /* ── Sticky Header with Distinct Gradient (Matches Dashboard exactly) ── */
+        /* ── Sticky Header: Same to same as Dashboard Month Table ── */
         #reports-page .table thead th {
             position: sticky !important;
             top: 0 !important;
@@ -8700,17 +8700,15 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             background-clip: padding-box !important;
             color: #ffffff !important;
             -webkit-text-fill-color: #ffffff !important;
-            font-size: 0.72rem !important;
             font-weight: 700 !important;
+            font-size: 0.72rem !important;
             padding: 6px 12px !important;
-            white-space: nowrap !important;
+            text-transform: none !important;
             letter-spacing: 0.02em !important;
-            text-align: center !important;
             border: none !important;
             border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
-            line-height: 1.2 !important;
-            height: auto !important;
+            white-space: nowrap !important;
             cursor: pointer !important;
         }
 
@@ -8723,8 +8721,8 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
 
         #reports-page .table thead th i {
             margin-left: 4px !important;
-            font-size: 0.68rem !important;
-            opacity: 0.9 !important;
+            font-size: 0.65rem !important;
+            opacity: 0.8 !important;
             color: #ffffff !important;
             -webkit-text-fill-color: #ffffff !important;
         }
@@ -8733,115 +8731,74 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             border-right: none !important;
         }
 
-        /* ── Clearly Visible Body Cells (Matches Dashboard exactly) ── */
-        #reports-page .table tbody tr {
+        /* ── Table Rows: Same to same as Dashboard Month Table ── */
+        #reports-page .table tr {
             display: table-row !important;
-            background: #ffffff !important;
+            background: var(--glass-bg) !important;
+            box-shadow: none !important;
+            border: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
         }
 
-        #reports-page .table tbody tr:nth-child(even) {
-            background: #f8fafc !important;
+        #reports-page .table tr:nth-child(even) {
+            background: rgba(0, 0, 0, 0.02) !important;
         }
 
-        [data-theme="dark"] #reports-page .table tbody tr {
+        [data-theme="dark"] #reports-page .table tr {
             background: #1e293b !important;
         }
 
-        [data-theme="dark"] #reports-page .table tbody tr:nth-child(even) {
+        [data-theme="dark"] #reports-page .table tr:nth-child(even) {
             background: #162032 !important;
         }
 
+        /* ── Table Cells: Same to same as Dashboard Month Table ── */
         #reports-page .table tbody td {
             display: table-cell !important;
-            height: 32px !important;
-            line-height: 1.2 !important;
+            visibility: visible !important;
+            text-align: left !important;
+            padding: 0px 8px !important;
+            white-space: nowrap !important;
+            vertical-align: middle !important;
+            border-bottom: 1px solid var(--glass-border) !important;
+            border-right: 1px solid var(--glass-border) !important;
+            margin: 0 !important;
+            color: var(--text-primary) !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
             font-size: 0.72rem !important;
             font-family: inherit !important;
-            font-weight: 600 !important;
-            padding: 2px 8px !important;
-            vertical-align: middle !important;
-            border-bottom: 1px solid #e2e8f0 !important;
-            border-right: 1px solid #e2e8f0 !important;
-            color: #1e293b !important;
-            white-space: nowrap !important;
-            overflow: visible !important;
-            visibility: visible !important;
+            font-weight: bold !important;
+            height: 32px !important;
+            line-height: 1.2 !important;
         }
 
         [data-theme="dark"] #reports-page .table tbody td {
             color: #e2e8f0 !important;
-            border-bottom-color: #334155 !important;
-            border-right-color: #1e293b !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+            border-right: 1px solid rgba(255, 255, 255, 0.06) !important;
         }
 
-        #reports-page .table thead th:last-child,
         #reports-page .table tbody td:last-child {
             border-right: none !important;
         }
 
-        /* ── Specific Column Alignments & Colors ── */
-        #reports-page .table thead th,
-        #reports-page .table thead th *,
-        #reports-page table thead th,
-        #reports-page table thead th i,
-        #reports-page table thead th span {
-            color: #ffffff !important;
-            -webkit-text-fill-color: #ffffff !important;
-        }
-
+        /* Center alignments for S.N, Date, Month, Amount */
         #reports-page .table th:nth-child(1),
-        #reports-page .table td:nth-child(1) {
-            min-width: 60px !important;
-            text-align: center !important;
-            font-weight: 700 !important;
-            white-space: nowrap !important;
-        }
-        #reports-page .table td:nth-child(1) {
-            color: #64748b !important;
-        }
-
-        #reports-page .table th:nth-child(2),
-        #reports-page .table td:nth-child(2) {
-            min-width: 105px !important;
-            text-align: center !important;
-            font-family: inherit !important;
-            font-size: 0.72rem !important;
-            white-space: nowrap !important;
-        }
-
+        #reports-page .table td:nth-child(1),
         #reports-page .table th:nth-child(3),
-        #reports-page .table td:nth-child(3) {
-            min-width: 95px !important;
-            text-align: center !important;
-            font-weight: 600 !important;
-            white-space: nowrap !important;
-        }
-
+        #reports-page .table td:nth-child(3),
         #reports-page .table th:nth-child(4),
-        #reports-page .table td:nth-child(4) {
-            min-width: 130px !important;
-            text-align: left !important;
-            padding-left: 8px !important;
-            font-weight: 700 !important;
-            white-space: nowrap !important;
-        }
-        #reports-page .table td:nth-child(4) {
-            color: #0f172a !important;
-        }
-
-        [data-theme="dark"] #reports-page .table td:nth-child(4) {
-            color: #f1f5f9 !important;
-        }
-
-        #reports-page .table th:nth-child(5),
-        #reports-page .table td:nth-child(5) {
-            min-width: 85px !important;
+        #reports-page .table td:nth-child(4),
+        #reports-page .table th:nth-child(6),
+        #reports-page .table td:nth-child(6) {
             text-align: center !important;
-            font-weight: 800 !important;
-            white-space: nowrap !important;
         }
-        #reports-page .table td:nth-child(5),
-        #reports-page .table td:nth-child(5) *,
+
+        /* White amount styling on Report Page */
+        #reports-page .table td:nth-child(6),
+        #reports-page .table td:nth-child(6) *,
         #reports-page .table td[data-label="Amount"],
         #reports-page .table td[data-label="Amount"] *,
         #reports-page .report-amount-text {
@@ -8850,564 +8807,539 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
             font-weight: 800 !important;
         }
 
-        [data-theme="dark"] #reports-page .table td:nth-child(5),
-        [data-theme="dark"] #reports-page .table td:nth-child(5) * {
+        [data-theme="dark"] #reports-page .table td:nth-child(6),
+        [data-theme="dark"] #reports-page .table td:nth-child(6) * {
             color: #ffffff !important;
             -webkit-text-fill-color: #ffffff !important;
         }
 
-        #reports-page .table th:nth-child(6),
-        #reports-page .table td:nth-child(6) {
-            width: 95px !important;
-            text-align: left !important;
-            font-size: 0.68rem !important;
-            padding-left: 6px !important;
+        /* Action Buttons Column: Same to same as Dashboard Month Table */
+        #reports-page .table td:last-child {
+            min-width: 120px !important;
+            text-align: right !important;
+            padding-right: 12px !important;
         }
 
-        #reports-page .table th:nth-child(7),
-        #reports-page .table td:nth-child(7) {
-            width: 75px !important;
-            text-align: center !important;
-            font-size: 0.68rem !important;
-        }
-
-        #reports-page .table th:nth-child(8),
-        #reports-page .table td:nth-child(8) {
-            width: 90px !important;
-            text-align: center !important;
-            padding: 0 4px !important;
-        }
-
-        /* Action buttons inside rows */
         #reports-page .table td:last-child .action-btn {
-            font-size: 0.68rem !important;
-            margin: 0 2px !important;
+            font-size: 0.55rem !important;
+            margin-left: 6px !important;
             padding: 0 !important;
-            width: 24px !important;
-            height: 24px !important;
+            width: 16px !important;
+            height: 16px !important;
             display: inline-flex !important;
             justify-content: center !important;
             align-items: center !important;
-            border-radius: 6px !important;
-            border: 1px solid rgba(99, 102, 241, 0.2) !important;
-            background: rgba(99, 102, 241, 0.08) !important;
+            border-radius: 4px !important;
         }
 
-        [data-theme="dark"] #reports-page .table td:last-child .action-btn {
-            background: rgba(255, 255, 255, 0.06) !important;
-            border-color: rgba(255, 255, 255, 0.1) !important;
-        }
-
-    }
-
-    /* end @media max-width: 768px */
-
-    /* ── Premium Modern Toast Notification ── */
-    .modern-toast {
-        position: fixed;
-        top: 24px;
-        right: 24px;
-        z-index: 9999;
-        pointer-events: auto;
-        width: 260px;
-        max-width: calc(100vw - 32px);
-        background: #ffffff;
-        border-radius: 12px;
-        border: 1px solid rgba(0, 0, 0, 0.06);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-        overflow: hidden;
-        transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.35s ease;
-        opacity: 0;
-        transform: translate3d(120%, 0, 0);
-    }
-
-    .modern-toast.show {
-        opacity: 1;
-        transform: translate3d(0, 0, 0);
-    }
-
-    .modern-toast-content {
-        display: flex;
-        align-items: center;
-        padding: 12px 14px;
-        position: relative;
-    }
-
-    .modern-toast-icon-wrapper {
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.15rem;
-        margin-right: 12px;
-        flex-shrink: 0;
-    }
-
-    .modern-toast-text {
-        flex-grow: 1;
-        padding-right: 20px;
-    }
-
-    .modern-toast-title {
-        font-weight: 800;
-        font-size: 0.88rem;
-        color: #0f172a;
-        margin: 0;
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        line-height: 1.2;
-    }
-
-    .modern-toast-body {
-        font-size: 0.75rem;
-        color: #475569;
-        margin-top: 2px;
-        font-family: 'Inter', sans-serif;
-        line-height: 1.3;
-    }
-
-    .modern-toast-close-btn {
-        position: absolute;
-        top: 50%;
-        right: 12px;
-        transform: translateY(-50%);
-        background: none;
-        border: none;
-        font-size: 1.2rem;
-        color: #94a3b8;
-        cursor: pointer;
-        padding: 0;
-        line-height: 1;
-        transition: color 0.2s;
-    }
-
-    .modern-toast-close-btn:hover {
-        color: #475569;
-    }
-
-    /* Dark Mode styling */
-    [data-theme="dark"] .modern-toast {
-        background: #1e293b;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-    }
-
-    [data-theme="dark"] .modern-toast-title {
-        color: #f8fafc;
-    }
-
-    [data-theme="dark"] .modern-toast-body {
-        color: #cbd5e1;
-    }
-
-    [data-theme="dark"] .modern-toast-close-btn {
-        color: #64748b;
-    }
-
-    [data-theme="dark"] .modern-toast-close-btn:hover {
-        color: #94a3b8;
-    }
-
-    @media (max-width: 576px) {
-        .modern-toast {
-            top: 16px;
-            right: 16px;
-            left: 16px;
-            width: auto;
-            max-width: none;
-            transform: translate3d(0, -120%, 0);
-        }
-
-        .modern-toast.show {
-            transform: translate3d(0, 0, 0);
-        }
-    }
-
-    /* ── Month Expenditure Summary Modal Styles ────────────────────────── */
-    .total-expenses-card {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    }
-
-    .total-expenses-card:hover {
-        transform: translateY(-4px) !important;
-        box-shadow: 0 12px 24px -4px rgba(37, 99, 235, 0.2), var(--shadow-md) !important;
-    }
-
-    body[data-theme="dark"] .total-expenses-card:hover {
-        box-shadow: 0 12px 24px -4px rgba(59, 130, 246, 0.3), var(--shadow-md) !important;
-    }
-
-    .summary-kpi-card {
-        background: rgba(37, 99, 235, 0.04);
-        border: 1px solid rgba(37, 99, 235, 0.1);
-        border-radius: 10px;
-        transition: all 0.25s ease;
-        padding: 8px 12px !important;
-    }
-
-    .summary-kpi-card span {
-        font-size: 0.68rem !important;
-        margin-bottom: 2px !important;
-    }
-
-    .summary-kpi-card h5 {
-        font-size: 1.05rem !important;
-        font-weight: 800 !important;
-        margin-top: 2px;
-    }
-
-    .summary-kpi-card:hover {
-        background: rgba(37, 99, 235, 0.07);
-        transform: translateY(-2px);
-    }
-
-    [data-theme="dark"] .summary-kpi-card {
-        background: rgba(59, 130, 246, 0.08) !important;
-        border-color: rgba(59, 130, 246, 0.18) !important;
-    }
-
-    [data-theme="dark"] .summary-kpi-card:hover {
-        background: rgba(59, 130, 246, 0.12) !important;
-    }
-
-    .summary-category-item {
-        background: rgba(0, 0, 0, 0.02);
-        border: 1px solid rgba(0, 0, 0, 0.04);
-        border-radius: 4px;
-        padding: 2px 6px;
-        margin-bottom: 2px;
-        transition: all 0.2s ease;
-    }
-
-    .summary-category-item:hover {
-        background: rgba(0, 0, 0, 0.04);
-        border-color: rgba(0, 0, 0, 0.08);
-    }
-
-    [data-theme="dark"] .summary-category-item {
-        background: rgba(255, 255, 255, 0.02) !important;
-        border-color: rgba(255, 255, 255, 0.05) !important;
-    }
-
-    [data-theme="dark"] .summary-category-item:hover {
-        background: rgba(255, 255, 255, 0.04) !important;
-        border-color: rgba(255, 255, 255, 0.08) !important;
-    }
-
-    #summary-category-list::-webkit-scrollbar {
-        width: 6px;
-    }
-
-    #summary-category-list::-webkit-scrollbar-track {
-        background: transparent;
-    }
-
-    #summary-category-list::-webkit-scrollbar-thumb {
-        background: rgba(0, 0, 0, 0.15);
-        border-radius: 10px;
-    }
-
-    body[data-theme="dark"] #summary-category-list::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.15);
-    }
-
-    @media (min-width: 768px) {
-        .border-end-md {
-            border-right: 1px solid rgba(0, 0, 0, 0.08) !important;
-        }
-
-        body[data-theme="dark"] .border-end-md {
-            border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
-        }
-    }
-
-    /* ── Item-wise modern summary list styles ─────────────────────────── */
-    .item-pivot-row {
-        transition: all 0.2s ease !important;
-    }
-
-    .item-pivot-row:hover {
-        transform: translateX(4px);
-        background: rgba(234, 179, 8, 0.05) !important;
-        border-color: rgba(234, 179, 8, 0.15) !important;
-    }
-
-    [data-theme="dark"] .item-pivot-row:hover {
-        background: rgba(234, 179, 8, 0.1) !important;
-        border-color: rgba(234, 179, 8, 0.25) !important;
-    }
-
-    #item-summary-list::-webkit-scrollbar {
-        width: 6px;
-    }
-
-    #item-summary-list::-webkit-scrollbar-track {
-        background: transparent;
-    }
-
-    #item-summary-list::-webkit-scrollbar-thumb {
-        background: rgba(0, 0, 0, 0.15);
-        border-radius: 10px;
-    }
-
-    body[data-theme="dark"] #item-summary-list::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.15);
-    }
-
-    @media (max-width: 768px) {
-        html {
-            height: auto !important;
-            min-height: 100% !important;
-            overflow-x: hidden !important;
-            overscroll-behavior: none !important;
-            overscroll-behavior-y: none !important;
-            overscroll-behavior-x: none !important;
-        }
-
-        /* Home Page (Dashboard) & All Pages — Full Natural Mobile Scrolling Up & Down */
-        body,
-        body.dashboard-active,
-        body:not(.dashboard-active),
-        body.reports-active {
-            height: auto !important;
-            min-height: 100vh !important;
-            min-height: 100dvh !important;
-            overflow-x: hidden !important;
-            overflow-y: auto !important;
-            -webkit-overflow-scrolling: touch !important;
-            overscroll-behavior: none !important;
-            overscroll-behavior-y: none !important;
-            overscroll-behavior-x: none !important;
-        }
-
-        .app-container,
-        .main-content,
-        body.dashboard-active .app-container,
-        body.dashboard-active .main-content,
-        body:not(.dashboard-active) .app-container,
-        body:not(.dashboard-active) .main-content,
-        body.reports-active .app-container,
-        body.reports-active .main-content {
-            height: auto !important;
-            max-height: none !important;
-            overflow-x: hidden !important;
-            overflow-y: visible !important;
-            overscroll-behavior: none !important;
-            overscroll-behavior-y: none !important;
-            overscroll-behavior-x: none !important;
-        }
-
-        #dashboard-page:not(.d-none) {
-            height: auto !important;
-            min-height: 100% !important;
-            display: flex !important;
-            flex-direction: column !important;
-            overflow: visible !important;
-        }
-
-        /* Strictly isolate each page — when a page is hidden, hide all its elements */
-        .page-content.d-none,
-        #dashboard-page.d-none,
-        #reports-page.d-none,
-        #data-page.d-none,
-        #graphs-page.d-none,
-        #categories-page.d-none,
-        #yearly-chart-page.d-none {
-            display: none !important;
-            visibility: hidden !important;
-            height: 0 !important;
-            min-height: 0 !important;
-            overflow: hidden !important;
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-
-        body.reports-active #dashboard-page,
-        body.reports-active .month-buttons,
-        body.reports-active .stats-cards {
-            display: none !important;
-            visibility: hidden !important;
-            height: 0 !important;
-            min-height: 0 !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            overflow: hidden !important;
-        }
-    }
-
-    /* ── PDF Preview Modal (Full Page on Laptop & Mobile) ── */
-    #pdfPreviewModal {
-        padding: 0 !important;
-        overflow: hidden !important;
-        inset: 0 !important;
-    }
-
-    #pdfPreviewModal .modal-dialog {
-        width: 100vw !important;
-        max-width: 100vw !important;
-        height: 100% !important;
-        height: 100vh !important;
-        height: 100dvh !important;
-        max-height: 100dvh !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
-        right: 0 !important;
-        bottom: 0 !important;
-        transform: none !important;
-    }
-
-    #pdfPreviewModal .modal-content {
-        width: 100vw !important;
-        height: 100% !important;
-        height: 100vh !important;
-        height: 100dvh !important;
-        max-height: 100dvh !important;
-        border-radius: 0 !important;
-        border: none !important;
-        display: flex !important;
-        flex-direction: column !important;
-        box-shadow: none !important;
-        background: #ffffff !important;
-    }
-
-    #pdfPreviewModal .modal-header {
-        border-radius: 0 !important;
-        padding: calc(env(safe-area-inset-top, 0px) + 8px) 18px 8px 18px !important;
-        min-height: calc(52px + env(safe-area-inset-top, 0px)) !important;
-        background: linear-gradient(135deg, #090d16, #111827) !important;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25) !important;
-        display: flex !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        flex-shrink: 0 !important;
-        z-index: 10 !important;
-    }
-
-    #pdfPreviewModal .pdf-modal-title-group {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        min-width: 0;
-    }
-
-    #pdfPreviewModal .pdf-modal-back-btn {
-        background: rgba(255, 255, 255, 0.12);
-        border: none;
-        color: #ffffff;
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.95rem;
-        cursor: pointer;
-        transition: all 0.2s ease;
-    }
-
-    #pdfPreviewModal .pdf-modal-back-btn:active {
-        background: rgba(255, 255, 255, 0.25);
-        transform: scale(0.92);
-    }
-
-    #pdfPreviewModal .modal-title {
-        font-weight: 800;
-        font-size: 1.05rem !important;
-        letter-spacing: -0.02em;
-        display: flex;
-        align-items: center;
-        margin: 0;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        color: #ffffff !important;
-    }
-
-    #pdfPreviewModal .pdf-month-badge {
-        display: inline-block;
-        font-size: 0.72rem !important;
-        font-weight: 700;
-        background: rgba(59, 130, 246, 0.25);
-        color: #93c5fd;
-        border: 1px solid rgba(147, 197, 253, 0.3);
-        padding: 2px 8px !important;
-        border-radius: 20px;
-        margin-left: 8px !important;
-    }
-
-    #pdfPreviewModal .pdf-modal-actions {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        flex-shrink: 0;
-    }
-
-    #pdfPreviewModal .pdf-email-btn {
-        background: rgba(16, 185, 129, 0.15);
-        color: #34d399;
-        border: 1px solid rgba(52, 211, 153, 0.4);
-        font-size: 0.82rem;
-        padding: 6px 14px;
-        display: inline-flex;
-        align-items: center;
-        white-space: nowrap;
-        border-radius: 50rem;
-        transition: all 0.2s ease;
-        cursor: pointer;
-    }
-
-    #pdfPreviewModal .pdf-email-btn:hover {
-        background: #10b981;
-        color: #ffffff;
-        border-color: #10b981;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
-    }
-
-    #pdfPreviewModal .pdf-print-btn {
-        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
-        background-color: #3b82f6;
-        border: none;
-        font-size: 0.85rem !important;
-        padding: 7px 16px !important;
-        display: inline-flex;
-        align-items: center;
-        white-space: nowrap;
-        transition: all 0.2s ease;
-        border-radius: 50rem;
-        color: #ffffff;
-    }
-
-    #pdfPreviewModal .pdf-print-btn:hover {
-        background-color: #2563eb;
-        transform: translateY(-1px);
-    }
-
-    #pdfPreviewModal .modal-body {
-        flex: 1 1 0% !important;
-        min-height: 0 !important;
-        height: auto !important;
-        width: 100vw !important;
-        overflow: hidden !important;
-        background: #f1f5f9 !important;
-        padding: 0 !important;
-        position: relative !important;
-    }
-
-    #pdfPreviewModal #pdfPreviewIframe {
-        display: block !important;
-        flex: 1 1 0% !important;
-        min-height: 0 !important;
-        width: 100% !important;
-        height: 100% !important;
-        border: none !important;
-        background: #f1f5f9 !important;
-        -webkit-overflow-scrolling: touch !important;
-    }
+    } /* end @media (max-width: 768px) */
+
+            /* ── Premium Modern Toast Notification ── */
+            .modern-toast {
+                position: fixed;
+                top: 24px;
+                right: 24px;
+                z-index: 9999;
+                pointer-events: auto;
+                width: 260px;
+                max-width: calc(100vw - 32px);
+                background: #ffffff;
+                border-radius: 12px;
+                border: 1px solid rgba(0, 0, 0, 0.06);
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+                overflow: hidden;
+                transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.35s ease;
+                opacity: 0;
+                transform: translate3d(120%, 0, 0);
+            }
+
+            .modern-toast.show {
+                opacity: 1;
+                transform: translate3d(0, 0, 0);
+            }
+
+            .modern-toast-content {
+                display: flex;
+                align-items: center;
+                padding: 12px 14px;
+                position: relative;
+            }
+
+            .modern-toast-icon-wrapper {
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.15rem;
+                margin-right: 12px;
+                flex-shrink: 0;
+            }
+
+            .modern-toast-text {
+                flex-grow: 1;
+                padding-right: 20px;
+            }
+
+            .modern-toast-title {
+                font-weight: 800;
+                font-size: 0.88rem;
+                color: #0f172a;
+                margin: 0;
+                font-family: 'Plus Jakarta Sans', sans-serif;
+                line-height: 1.2;
+            }
+
+            .modern-toast-body {
+                font-size: 0.75rem;
+                color: #475569;
+                margin-top: 2px;
+                font-family: 'Inter', sans-serif;
+                line-height: 1.3;
+            }
+
+            .modern-toast-close-btn {
+                position: absolute;
+                top: 50%;
+                right: 12px;
+                transform: translateY(-50%);
+                background: none;
+                border: none;
+                font-size: 1.2rem;
+                color: #94a3b8;
+                cursor: pointer;
+                padding: 0;
+                line-height: 1;
+                transition: color 0.2s;
+            }
+
+            .modern-toast-close-btn:hover {
+                color: #475569;
+            }
+
+            /* Dark Mode styling */
+            [data-theme="dark"] .modern-toast {
+                background: #1e293b;
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            }
+
+            [data-theme="dark"] .modern-toast-title {
+                color: #f8fafc;
+            }
+
+            [data-theme="dark"] .modern-toast-body {
+                color: #cbd5e1;
+            }
+
+            [data-theme="dark"] .modern-toast-close-btn {
+                color: #64748b;
+            }
+
+            [data-theme="dark"] .modern-toast-close-btn:hover {
+                color: #94a3b8;
+            }
+
+            @media (max-width: 576px) {
+                .modern-toast {
+                    top: 16px;
+                    right: 16px;
+                    left: 16px;
+                    width: auto;
+                    max-width: none;
+                    transform: translate3d(0, -120%, 0);
+                }
+
+                .modern-toast.show {
+                    transform: translate3d(0, 0, 0);
+                }
+            }
+
+            /* ── Month Expenditure Summary Modal Styles ────────────────────────── */
+            .total-expenses-card {
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            }
+
+            .total-expenses-card:hover {
+                transform: translateY(-4px) !important;
+                box-shadow: 0 12px 24px -4px rgba(37, 99, 235, 0.2), var(--shadow-md) !important;
+            }
+
+            body[data-theme="dark"] .total-expenses-card:hover {
+                box-shadow: 0 12px 24px -4px rgba(59, 130, 246, 0.3), var(--shadow-md) !important;
+            }
+
+            .summary-kpi-card {
+                background: rgba(37, 99, 235, 0.04);
+                border: 1px solid rgba(37, 99, 235, 0.1);
+                border-radius: 10px;
+                transition: all 0.25s ease;
+                padding: 8px 12px !important;
+            }
+
+            .summary-kpi-card span {
+                font-size: 0.68rem !important;
+                margin-bottom: 2px !important;
+            }
+
+            .summary-kpi-card h5 {
+                font-size: 1.05rem !important;
+                font-weight: 800 !important;
+                margin-top: 2px;
+            }
+
+            .summary-kpi-card:hover {
+                background: rgba(37, 99, 235, 0.07);
+                transform: translateY(-2px);
+            }
+
+            [data-theme="dark"] .summary-kpi-card {
+                background: rgba(59, 130, 246, 0.08) !important;
+                border-color: rgba(59, 130, 246, 0.18) !important;
+            }
+
+            [data-theme="dark"] .summary-kpi-card:hover {
+                background: rgba(59, 130, 246, 0.12) !important;
+            }
+
+            .summary-category-item {
+                background: rgba(0, 0, 0, 0.02);
+                border: 1px solid rgba(0, 0, 0, 0.04);
+                border-radius: 4px;
+                padding: 2px 6px;
+                margin-bottom: 2px;
+                transition: all 0.2s ease;
+            }
+
+            .summary-category-item:hover {
+                background: rgba(0, 0, 0, 0.04);
+                border-color: rgba(0, 0, 0, 0.08);
+            }
+
+            [data-theme="dark"] .summary-category-item {
+                background: rgba(255, 255, 255, 0.02) !important;
+                border-color: rgba(255, 255, 255, 0.05) !important;
+            }
+
+            [data-theme="dark"] .summary-category-item:hover {
+                background: rgba(255, 255, 255, 0.04) !important;
+                border-color: rgba(255, 255, 255, 0.08) !important;
+            }
+
+            #summary-category-list::-webkit-scrollbar {
+                width: 6px;
+            }
+
+            #summary-category-list::-webkit-scrollbar-track {
+                background: transparent;
+            }
+
+            #summary-category-list::-webkit-scrollbar-thumb {
+                background: rgba(0, 0, 0, 0.15);
+                border-radius: 10px;
+            }
+
+            body[data-theme="dark"] #summary-category-list::-webkit-scrollbar-thumb {
+                background: rgba(255, 255, 255, 0.15);
+            }
+
+            @media (min-width: 768px) {
+                .border-end-md {
+                    border-right: 1px solid rgba(0, 0, 0, 0.08) !important;
+                }
+
+                body[data-theme="dark"] .border-end-md {
+                    border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+                }
+            }
+
+            /* ── Item-wise modern summary list styles ─────────────────────────── */
+            .item-pivot-row {
+                transition: all 0.2s ease !important;
+            }
+
+            .item-pivot-row:hover {
+                transform: translateX(4px);
+                background: rgba(234, 179, 8, 0.05) !important;
+                border-color: rgba(234, 179, 8, 0.15) !important;
+            }
+
+            [data-theme="dark"] .item-pivot-row:hover {
+                background: rgba(234, 179, 8, 0.1) !important;
+                border-color: rgba(234, 179, 8, 0.25) !important;
+            }
+
+            #item-summary-list::-webkit-scrollbar {
+                width: 6px;
+            }
+
+            #item-summary-list::-webkit-scrollbar-track {
+                background: transparent;
+            }
+
+            #item-summary-list::-webkit-scrollbar-thumb {
+                background: rgba(0, 0, 0, 0.15);
+                border-radius: 10px;
+            }
+
+            body[data-theme="dark"] #item-summary-list::-webkit-scrollbar-thumb {
+                background: rgba(255, 255, 255, 0.15);
+            }
+
+            @media (max-width: 768px) {
+                html {
+                    height: auto !important;
+                    min-height: 100% !important;
+                    overflow-x: hidden !important;
+                    overscroll-behavior: none !important;
+                    overscroll-behavior-y: none !important;
+                    overscroll-behavior-x: none !important;
+                }
+
+                /* Home Page (Dashboard) & All Pages — Full Natural Mobile Scrolling Up & Down */
+                body,
+                body.dashboard-active,
+                body:not(.dashboard-active),
+                body.reports-active {
+                    height: auto !important;
+                    min-height: 100vh !important;
+                    min-height: 100dvh !important;
+                    overflow-x: hidden !important;
+                    overflow-y: auto !important;
+                    -webkit-overflow-scrolling: touch !important;
+                    overscroll-behavior: none !important;
+                    overscroll-behavior-y: none !important;
+                    overscroll-behavior-x: none !important;
+                }
+
+                .app-container,
+                .main-content,
+                body.dashboard-active .app-container,
+                body.dashboard-active .main-content,
+                body:not(.dashboard-active) .app-container,
+                body:not(.dashboard-active) .main-content,
+                body.reports-active .app-container,
+                body.reports-active .main-content {
+                    height: auto !important;
+                    max-height: none !important;
+                    overflow-x: hidden !important;
+                    overflow-y: visible !important;
+                    overscroll-behavior: none !important;
+                    overscroll-behavior-y: none !important;
+                    overscroll-behavior-x: none !important;
+                }
+
+                #dashboard-page:not(.d-none) {
+                    height: auto !important;
+                    min-height: 100% !important;
+                    display: flex !important;
+                    flex-direction: column !important;
+                    overflow: visible !important;
+                }
+
+                /* Strictly isolate each page — when a page is hidden, hide all its elements */
+                .page-content.d-none,
+                #dashboard-page.d-none,
+                #reports-page.d-none,
+                #data-page.d-none,
+                #graphs-page.d-none,
+                #categories-page.d-none,
+                #yearly-chart-page.d-none {
+                    display: none !important;
+                    visibility: hidden !important;
+                    height: 0 !important;
+                    min-height: 0 !important;
+                    overflow: hidden !important;
+                    margin: 0 !important;
+                    padding: 0 !important;
+                }
+
+                body.reports-active #dashboard-page,
+                body.reports-active .month-buttons,
+                body.reports-active .stats-cards {
+                    display: none !important;
+                    visibility: hidden !important;
+                    height: 0 !important;
+                    min-height: 0 !important;
+                    margin: 0 !important;
+                    padding: 0 !important;
+                    overflow: hidden !important;
+                }
+            }
+
+            /* ── PDF Preview Modal (Full Page on Laptop & Mobile) ── */
+            #pdfPreviewModal {
+                padding: 0 !important;
+                overflow: hidden !important;
+                inset: 0 !important;
+            }
+
+            #pdfPreviewModal .modal-dialog {
+                width: 100vw !important;
+                max-width: 100vw !important;
+                height: 100% !important;
+                height: 100vh !important;
+                height: 100dvh !important;
+                max-height: 100dvh !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                bottom: 0 !important;
+                transform: none !important;
+            }
+
+            #pdfPreviewModal .modal-content {
+                width: 100vw !important;
+                height: 100% !important;
+                height: 100vh !important;
+                height: 100dvh !important;
+                max-height: 100dvh !important;
+                border-radius: 0 !important;
+                border: none !important;
+                display: flex !important;
+                flex-direction: column !important;
+                box-shadow: none !important;
+                background: #ffffff !important;
+            }
+
+            #pdfPreviewModal .modal-header {
+                border-radius: 0 !important;
+                padding: calc(env(safe-area-inset-top, 0px) + 8px) 18px 8px 18px !important;
+                min-height: calc(52px + env(safe-area-inset-top, 0px)) !important;
+                background: linear-gradient(135deg, #090d16, #111827) !important;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25) !important;
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                flex-shrink: 0 !important;
+                z-index: 10 !important;
+            }
+
+            #pdfPreviewModal .pdf-modal-title-group {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                min-width: 0;
+            }
+
+            #pdfPreviewModal .pdf-modal-back-btn {
+                background: rgba(255, 255, 255, 0.12);
+                border: none;
+                color: #ffffff;
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 0.95rem;
+                cursor: pointer;
+                transition: all 0.2s ease;
+            }
+
+            #pdfPreviewModal .pdf-modal-back-btn:active {
+                background: rgba(255, 255, 255, 0.25);
+                transform: scale(0.92);
+            }
+
+            #pdfPreviewModal .modal-title {
+                font-weight: 800;
+                font-size: 1.05rem !important;
+                letter-spacing: -0.02em;
+                display: flex;
+                align-items: center;
+                margin: 0;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                color: #ffffff !important;
+            }
+
+            #pdfPreviewModal .pdf-month-badge {
+                display: inline-block;
+                font-size: 0.72rem !important;
+                font-weight: 700;
+                background: rgba(59, 130, 246, 0.25);
+                color: #93c5fd;
+                border: 1px solid rgba(147, 197, 253, 0.3);
+                padding: 2px 8px !important;
+                border-radius: 20px;
+                margin-left: 8px !important;
+            }
+
+            #pdfPreviewModal .pdf-modal-actions {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                flex-shrink: 0;
+            }
+
+            #pdfPreviewModal .pdf-email-btn {
+                background: rgba(16, 185, 129, 0.15);
+                color: #34d399;
+                border: 1px solid rgba(52, 211, 153, 0.4);
+                font-size: 0.82rem;
+                padding: 6px 14px;
+                display: inline-flex;
+                align-items: center;
+                white-space: nowrap;
+                border-radius: 50rem;
+                transition: all 0.2s ease;
+                cursor: pointer;
+            }
+
+            #pdfPreviewModal .pdf-email-btn:hover {
+                background: #10b981;
+                color: #ffffff;
+                border-color: #10b981;
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+            }
+
+            #pdfPreviewModal .pdf-print-btn {
+                box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+                background-color: #3b82f6;
+                border: none;
+                font-size: 0.85rem !important;
+                padding: 7px 16px !important;
+                display: inline-flex;
+                align-items: center;
+                white-space: nowrap;
+                transition: all 0.2s ease;
+                border-radius: 50rem;
+                color: #ffffff;
+            }
+
+            #pdfPreviewModal .pdf-print-btn:hover {
+                background-color: #2563eb;
+                transform: translateY(-1px);
+            }
+
+            #pdfPreviewModal .modal-body {
+                flex: 1 1 0% !important;
+                min-height: 0 !important;
+                height: auto !important;
+                width: 100vw !important;
+                overflow: hidden !important;
+                background: #f1f5f9 !important;
+                padding: 0 !important;
+                position: relative !important;
+            }
+
+            #pdfPreviewModal #pdfPreviewIframe {
+                display: block !important;
+                flex: 1 1 0% !important;
+                min-height: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                border: none !important;
+                background: #f1f5f9 !important;
+                -webkit-overflow-scrolling: touch !important;
+            }
 </style>
 
   <script>
@@ -10060,6 +9992,7 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
                   <th onclick="toggleReportsSort('sn')" class="reports-sortable-th" data-sort-col="sn" style="cursor: pointer; white-space: nowrap;">S.N <i class="fas fa-sort sort-icon"></i></th>
                   <th onclick="toggleReportsSort('id')" class="reports-sortable-th" data-sort-col="id" style="cursor: pointer; white-space: nowrap;">Unique ID <i class="fas fa-sort sort-icon"></i></th>
                   <th onclick="toggleReportsSort('date')" class="reports-sortable-th" data-sort-col="date" style="cursor: pointer; white-space: nowrap;">Date <i class="fas fa-sort sort-icon"></i></th>
+                  <th onclick="toggleReportsSort('month')" class="reports-sortable-th" data-sort-col="month" style="cursor: pointer; white-space: nowrap;">Month <i class="fas fa-sort sort-icon"></i></th>
                   <th onclick="toggleReportsSort('item')" class="reports-sortable-th" data-sort-col="item" style="cursor: pointer; white-space: nowrap;">Item List <i class="fas fa-sort sort-icon"></i></th>
                   <th onclick="toggleReportsSort('amount')" class="reports-sortable-th" data-sort-col="amount" style="cursor: pointer; white-space: nowrap;">Amount <i class="fas fa-sort sort-icon"></i></th>
                   <th onclick="toggleReportsSort('credit')" class="reports-sortable-th" data-sort-col="credit" style="cursor: pointer; white-space: nowrap;">Credit & Remark <i class="fas fa-sort sort-icon"></i></th>
@@ -12548,7 +12481,7 @@ Expense Tracker Pro: 2026 JavaScript Code
         const titleText = document.getElementById('table-title-text');
         const isAll = (targetMonth.toLowerCase() === 'all');
         const isMobile = window.innerWidth <= 768;
-        const displayMonthTitle = isAll 
+        const displayMonthTitle = isAll
             ? (isMobile ? 'All 2026' : `${CURRENT_YEAR || 2026} All Expenses (12 Months)`)
             : (isMobile ? `${targetMonth} 2026` : `${targetMonth} 2026 Expenses`);
 
@@ -12978,6 +12911,7 @@ Expense Tracker Pro: 2026 JavaScript Code
                 <td data-label="S.N">${sn}</td>
                 <td data-label="Unique ID">${uniqueIdValue || ''}</td>
                 <td data-label="Date">${formatDisplayDate(item.date)}</td>
+                <td data-label="Month">${monthName}</td>
                 <td data-label="Item List">${item.item}</td>
                 <td data-label="Amount"><strong class="report-amount-text" style="color: #ffffff !important;">${formatCurrency(item.amount)}</strong></td>
                 <td data-label="Credit">${formatCreditDisplay(item.credit, item.item)}</td>
@@ -14117,6 +14051,7 @@ Expense Tracker Pro: 2026 JavaScript Code
                     case 'sn': valA = parseInt(a.sn) || 0; valB = parseInt(b.sn) || 0; break;
                     case 'id': valA = String(a.id || ''); valB = String(b.id || ''); break;
                     case 'date': valA = new Date(a.date); valB = new Date(b.date); break;
+                    case 'month': valA = String(a.month || ''); valB = String(b.month || ''); break;
                     case 'item': valA = String(a.item || ''); valB = String(b.item || ''); break;
                     case 'amount': valA = parseFloat(a.amount) || 0; valB = parseFloat(b.amount) || 0; break;
                     case 'credit': valA = String(a.credit || ''); valB = String(b.credit || ''); break;
@@ -14182,6 +14117,7 @@ Expense Tracker Pro: 2026 JavaScript Code
                     <td data-label="S.N">${sn}</td>
                     <td data-label="Unique ID">${uniqueIdValue || ''}</td>
                     <td data-label="Date">${formatDisplayDate(item.date)}</td>
+                    <td data-label="Month">${monthName}</td>
                     <td data-label="Item List">${item.item}</td>
                     <td data-label="Amount"><strong class="report-amount-text" style="color: #ffffff !important;">${formatCurrency(item.amount)}</strong></td>
                     <td data-label="Credit">${formatCreditDisplay(item.credit, item.item)}</td>
