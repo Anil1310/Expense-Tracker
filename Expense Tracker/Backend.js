@@ -839,9 +839,9 @@ function parseSafeDateAndMonth(rawDate, rawMonth) {
 function addEntry(entryData) {
     const lock = LockService.getScriptLock();
     try {
-        lock.waitLock(15000);
+        lock.tryLock(5000);
     } catch (lockErr) {
-        return { error: "Server busy processing another entry. Please wait a moment." };
+        return { error: "Server busy. Please try again." };
     }
 
     try {
@@ -861,7 +861,10 @@ function addEntry(entryData) {
         const ss = SpreadsheetApp.openById(MAIN_ID);
 
         // 1. FIRST: Save into the target month sheet (e.g. "Nov")
-        const sheet = ensureSheetExists(ss, monthName, ["S.N", "Unique ID", "Date", "Month", "Item List", "Amount", "Credit & Remark", "Admin"]);
+        let sheet = ss.getSheetByName(monthName);
+        if (!sheet) {
+            sheet = ensureSheetExists(ss, monthName, ["S.N", "Unique ID", "Date", "Month", "Item List", "Amount", "Credit & Remark", "Admin"]);
+        }
         const lastRow = sheet.getLastRow();
 
         // Convert amount to number
@@ -908,24 +911,15 @@ function addEntry(entryData) {
             entryData.user   // Admin name
         ];
 
-        // Append to current month sheet FIRST
+        // Append to current month sheet
         sheet.appendRow(newRow);
 
-        // 2. SECOND: Append to consolidated "Data" sheet tab directly from the current month with identical S.N
-        const consolidatedSheet = ensureSheetExists(ss, "Data", ["S.N", "Unique ID", "Date", "Month", "Item List", "Amount", "Credit & Remark", "Admin"]);
-        consolidatedSheet.appendRow([
-            sn,
-            newUniqueId,
-            formattedDate,
-            monthName,
-            entryData.itemList,
-            amount,  // Number
-            entryData.credit || '',
-            entryData.user
-        ]);
-
-        // Commit both writes immediately to Google Sheets
-        SpreadsheetApp.flush();
+        // 2. SECOND: Append to consolidated "Data" sheet tab
+        let consolidatedSheet = ss.getSheetByName("Data");
+        if (!consolidatedSheet) {
+            consolidatedSheet = ensureSheetExists(ss, "Data", ["S.N", "Unique ID", "Date", "Month", "Item List", "Amount", "Credit & Remark", "Admin"]);
+        }
+        consolidatedSheet.appendRow(newRow);
 
         // 3. Fast audit log passing already open ss
         const userForLog = entryData.user || (currentUser ? currentUser.username : "System/Web");
@@ -1127,56 +1121,65 @@ function deleteEntry(uniqueId, month, user) {
         const sheet = ss.getSheetByName(month);
         if (!sheet) throw new Error(`Sheet "${month}" not found.`);
 
-        const dataRange = sheet.getDataRange();
-        const displayData = dataRange.getDisplayValues();
+        const lastRow = sheet.getLastRow();
+        if (lastRow <= 1) return { error: `Entry ${uniqueId} not found in ${month} sheet.` };
 
-        // Find row by comparing display values (safer for client-side strings)
-        const rowIndexToDelete = displayData.findIndex((row, idx) => {
-            return idx > 0 && String(row[1]).trim() === String(uniqueId).trim();
-        });
+        // Fast search Column B (Unique ID) only instead of reading whole sheet
+        const uids = sheet.getRange(1, 2, lastRow, 1).getValues();
+        const targetUid = String(uniqueId).trim();
+        let rowIndexToDelete = -1;
+        for (let i = 1; i < uids.length; i++) {
+            if (String(uids[i][0]).trim() === targetUid) {
+                rowIndexToDelete = i + 1; // 1-based index
+                break;
+            }
+        }
 
         if (rowIndexToDelete > -1) {
-            // --- Move to Trash before deleting ---
-            try {
-                const trashSheet = ensureTrashSheet(ss);
-                const rowData = dataRange.getValues()[rowIndexToDelete];
+            // Read only row data for trash
+            const rowData = sheet.getRange(rowIndexToDelete, 1, 1, Math.min(8, sheet.getLastColumn())).getValues()[0];
 
-                // Construct trash row: [Original 8 columns] + [Deleted By, Deleted At, Original Month]
+            // Move to Trash (fast)
+            try {
+                let trashSheet = ss.getSheetByName("Trash");
+                if (!trashSheet) {
+                    trashSheet = ensureTrashSheet(ss);
+                }
                 const trashRow = [
                     ...rowData.slice(0, 8),
                     user || "System/Unknown",
                     new Date(),
                     month
                 ];
-
                 trashSheet.appendRow(trashRow);
             } catch (trashErr) {
-                console.error("Failed to move entry to Trash:", trashErr);
-                // We still proceed with deletion even if trash fails, or should we?
-                // The user specifically asked for this, so maybe we should stop if it fails?
-                // For now, let's just log it and proceed.
+                console.warn("Trash move warning:", trashErr);
             }
 
-            sheet.deleteRow(rowIndexToDelete + 1);
+            sheet.deleteRow(rowIndexToDelete);
 
-            // Delete from the consolidated "Data" sheet as well
-            const consolidatedSheet = ss.getSheetByName("Data");
-            if (consolidatedSheet) {
-                const consolidatedData = consolidatedSheet.getDataRange().getDisplayValues();
-                const consolidatedRowIndex = consolidatedData.findIndex((row, idx) => {
-                    return idx > 0 && String(row[1]).trim() === String(uniqueId).trim();
-                });
-                if (consolidatedRowIndex > -1) {
-                    consolidatedSheet.deleteRow(consolidatedRowIndex + 1);
-                }
-            }
-
-            // Ensure changes are written before returning
-            SpreadsheetApp.flush();
-
-            // Log the action
+            // Fast delete from Data sheet by searching Column B only
             try {
-                logAction("DELETE", `Deleted record ${uniqueId} from ${month}`, uniqueId, user);
+                const consolidatedSheet = ss.getSheetByName("Data");
+                if (consolidatedSheet) {
+                    const dataLastRow = consolidatedSheet.getLastRow();
+                    if (dataLastRow > 1) {
+                        const dataUids = consolidatedSheet.getRange(1, 2, dataLastRow, 1).getValues();
+                        for (let j = 1; j < dataUids.length; j++) {
+                            if (String(dataUids[j][0]).trim() === targetUid) {
+                                consolidatedSheet.deleteRow(j + 1);
+                                break;
+                            }
+                        }
+                    }
+                }
+            } catch (dataErr) {
+                console.warn("Data delete warning:", dataErr);
+            }
+
+            // Log action passing existing ss
+            try {
+                logAction("DELETE", `Deleted record ${uniqueId} from ${month}`, uniqueId, user, ss);
             } catch (logErr) {
                 console.warn("Log failed:", logErr);
             }
