@@ -1075,14 +1075,16 @@ function updateEntry(entryData) {
 
         // --- Update Consolidated Sheet (Always Check & Update) ---
         // Use try-catch for consolidated update so it doesn't fail the main update
+        let finalSn = null;
         try {
             const consolidatedSheet = ss.getSheetByName("Data");
             if (consolidatedSheet) {
                 const consolidatedData = consolidatedSheet.getDataRange().getValues();
                 const consolidatedRowIndex = consolidatedData.findIndex(row => String(row[1]).trim() === String(entryData.uniqueId).trim());
 
+                finalSn = (consolidatedRowIndex > -1) ? consolidatedData[consolidatedRowIndex][0] : consolidatedSheet.getLastRow();
                 const consolidatedRowValues = [
-                    (consolidatedRowIndex > -1) ? consolidatedData[consolidatedRowIndex][0] : consolidatedSheet.getLastRow(),
+                    finalSn,
                     entryData.uniqueId,
                     formattedDate,
                     monthName,
@@ -1100,7 +1102,17 @@ function updateEntry(entryData) {
             console.error("Consolidated update failed: " + e.message);
         }
 
-        return { success: true };
+        return {
+            success: true,
+            uniqueId: entryData.uniqueId,
+            sn: finalSn,
+            date: formattedDate,
+            month: monthName,
+            itemList: entryData.itemList,
+            amount: amount,
+            credit: entryData.credit || '',
+            user: entryData.user || ''
+        };
 
     } catch (e) {
         return { error: e.message };

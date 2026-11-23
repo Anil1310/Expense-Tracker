@@ -4411,7 +4411,24 @@ Expense Tracker Pro: 2026 JavaScript Code
             ? `${monthNamesShort[parsedDate.getMonth()]} ${parsedDate.getDate()}, ${parsedDate.getFullYear()}`
             : dateValue;
 
-        const tempSn = ((expenseData && expenseData.length > 0) ? (Math.max(0, ...expenseData.map(r => parseInt(r[0]) || 0)) + 1) : 1);
+        // Retrieve existing record if editing to preserve exact S.N and previous values
+        let existingRecord = null;
+        if (isEdit) {
+            if (typeof expenseData !== 'undefined' && Array.isArray(expenseData)) {
+                existingRecord = expenseData.find(r => r && String(r[1]).trim() === String(uniqueIdValue).trim());
+            }
+            if (!existingRecord && typeof enhancedAllData !== 'undefined' && Array.isArray(enhancedAllData)) {
+                const rep = enhancedAllData.find(r => r && String(r.id).trim() === String(uniqueIdValue).trim());
+                if (rep) {
+                    existingRecord = [rep.sn, rep.id, rep.date, rep.month, rep.item, rep.amount, rep.credit, rep.admin];
+                }
+            }
+        }
+
+        const existingSn = existingRecord ? existingRecord[0] : null;
+        const tempSn = (isEdit && existingSn)
+            ? existingSn
+            : ((expenseData && expenseData.length > 0) ? (Math.max(0, ...expenseData.map(r => parseInt(r[0]) || 0)) + 1) : 1);
         const tempUid = isEdit ? uniqueIdValue : `${tempSn}-${itemListValue}`;
 
         const optimisticRow = [
@@ -4472,16 +4489,56 @@ Expense Tracker Pro: 2026 JavaScript Code
 
             showModernToast("Record Saved", `Added ₹${amountValue} for ${itemListValue}`, "success", 2500);
         } else {
-            if (expenseData) {
-                const row = expenseData.find(r => r && String(r[1]) === String(uniqueIdValue));
+            // Update Dashboard table
+            if (typeof expenseData !== 'undefined' && Array.isArray(expenseData)) {
+                const row = expenseData.find(r => r && String(r[1]).trim() === String(uniqueIdValue).trim());
                 if (row) {
                     row[2] = formattedDisplayDate;
+                    row[3] = monthValue;
                     row[4] = itemListValue;
                     row[5] = amountValue;
                     row[6] = creditValue || '';
+                    row[7] = entryUser;
+                    renderDashboardTable(expenseData);
+                } else if (monthValue === CURRENT_MONTH || !CURRENT_MONTH) {
+                    expenseData.unshift(optimisticRow);
                     renderDashboardTable(expenseData);
                 }
+
+                // Recalculate dashboard stat cards immediately
+                const totalExpensesEl = document.getElementById('total-expenses');
+                if (totalExpensesEl) {
+                    const newTotal = expenseData.reduce((sum, r) => sum + (parseFloat(r[5]) || 0), 0);
+                    animateValue(totalExpensesEl, newTotal, 'currency');
+                }
+                const totalCategoriesEl = document.getElementById('total-categories');
+                if (totalCategoriesEl && expenseData) {
+                    const cats = new Set(expenseData.map(r => r[4]).filter(Boolean));
+                    animateValue(totalCategoriesEl, cats.size, 'integer');
+                }
+                const totalDaysEl = document.getElementById('total-days');
+                if (totalDaysEl && expenseData) {
+                    const days = new Set(expenseData.map(r => r[2]).filter(Boolean));
+                    animateValue(totalDaysEl, days.size, 'integer');
+                }
             }
+
+            // Update Reports table immediately
+            if (typeof enhancedAllData !== 'undefined' && Array.isArray(enhancedAllData)) {
+                const repItem = enhancedAllData.find(r => r && String(r.id).trim() === String(uniqueIdValue).trim());
+                if (repItem) {
+                    repItem.item = itemListValue;
+                    repItem.amount = amountValue;
+                    repItem.date = formattedDisplayDate;
+                    repItem.month = monthValue;
+                    repItem.credit = creditValue || '';
+                    repItem.admin = entryUser;
+                }
+                if (typeof enhancedFilterReports === 'function') {
+                    enhancedFilterReports();
+                }
+            }
+
             showModernToast("Record Updated", `Updated ${uniqueIdValue}`, "success", 2500);
         }
 
@@ -4490,6 +4547,8 @@ Expense Tracker Pro: 2026 JavaScript Code
             document.getElementById('entryForm').reset();
             document.getElementById('editUniqueId').value = '';
             document.getElementById('editMonth').value = '';
+            const modalTitle = document.getElementById('modalTitle');
+            if (modalTitle) modalTitle.innerHTML = '<i class="fas fa-plus-circle me-2"></i>Add New Expense';
             const searchInp = document.getElementById('itemSearchInput');
             if (searchInp) searchInp.value = '';
         } catch (e) { }
@@ -4520,13 +4579,22 @@ Expense Tracker Pro: 2026 JavaScript Code
                             if (cached && cached.tableData) {
                                 if (!isEdit) {
                                     cached.tableData.unshift(optimisticRow);
-                                    cached.totalExpenses = (cached.totalExpenses || 0) + amountValue;
                                 } else {
-                                    const rIdx = cached.tableData.findIndex(r => r && String(r[1]) === String(uniqueIdValue));
+                                    const rIdx = cached.tableData.findIndex(r => r && String(r[1]).trim() === String(uniqueIdValue).trim());
                                     if (rIdx > -1) {
-                                        cached.tableData[rIdx] = optimisticRow;
+                                        cached.tableData[rIdx] = [
+                                            confirmedSn,
+                                            confirmedUid,
+                                            formattedDisplayDate,
+                                            monthValue,
+                                            itemListValue,
+                                            amountValue,
+                                            creditValue || '',
+                                            entryUser
+                                        ];
                                     }
                                 }
+                                cached.totalExpenses = cached.tableData.reduce((sum, r) => sum + (parseFloat(r[5]) || 0), 0);
                                 window.expenseCache.set(cacheKey, cached);
                                 window.expenseCache.set(`monthly_${monthValue}`, cached);
                             }
@@ -4580,8 +4648,24 @@ Expense Tracker Pro: 2026 JavaScript Code
         if (!modalEl) return;
 
         let entry = null;
-        if (month === CURRENT_MONTH && typeof expenseData !== 'undefined' && expenseData) {
-            entry = expenseData.find(item => item && String(item[1]) === String(uniqueId));
+        if (typeof expenseData !== 'undefined' && Array.isArray(expenseData)) {
+            entry = expenseData.find(item => item && String(item[1]).trim() === String(uniqueId).trim());
+        }
+
+        if (!entry && typeof enhancedAllData !== 'undefined' && Array.isArray(enhancedAllData)) {
+            const repItem = enhancedAllData.find(item => item && String(item.id).trim() === String(uniqueId).trim());
+            if (repItem) {
+                entry = [
+                    repItem.sn,
+                    repItem.id,
+                    repItem.date,
+                    repItem.month,
+                    repItem.item,
+                    repItem.amount,
+                    repItem.credit,
+                    repItem.admin
+                ];
+            }
         }
 
         if (entry) {
