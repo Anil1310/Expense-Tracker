@@ -15560,29 +15560,45 @@ Expense Tracker Pro: 2026 JavaScript Code
         optimisticRow.sn = tempSn;
         optimisticRow.isOptimistic = true;
 
-        // 3. Render directly into frontend table immediately
+        // 3. Render directly into frontend table immediately (0ms visual delay)
+        // Clear search query so the new item is never hidden
+        const searchInput = document.getElementById('month-records-search');
+        if (searchInput && searchInput.value) {
+            searchInput.value = '';
+        }
+
         if (!isEdit) {
             if (!expenseData) expenseData = [];
-            if (monthValue === CURRENT_MONTH || !CURRENT_MONTH) {
-                expenseData.unshift(optimisticRow);
-                renderDashboardTable(expenseData);
 
-                // Update dashboard stat cards immediately
-                const totalExpensesEl = document.getElementById('total-expenses');
-                if (totalExpensesEl) {
-                    const curTotal = parseFloat(totalExpensesEl.textContent.replace(/[^\d.-]/g, '')) || 0;
-                    animateValue(totalExpensesEl, curTotal + amountValue, 'currency');
-                }
-                const totalCategoriesEl = document.getElementById('total-categories');
-                if (totalCategoriesEl && expenseData) {
-                    const cats = new Set(expenseData.map(r => r[4]).filter(Boolean));
-                    animateValue(totalCategoriesEl, cats.size, 'integer');
-                }
-                const totalDaysEl = document.getElementById('total-days');
-                if (totalDaysEl && expenseData) {
-                    const days = new Set(expenseData.map(r => r[2]).filter(Boolean));
-                    animateValue(totalDaysEl, days.size, 'integer');
-                }
+            // If the record was added for another month, switch view to that month so user sees it right away
+            if (monthValue && monthValue !== CURRENT_MONTH && CURRENT_MONTH !== 'All') {
+                CURRENT_MONTH = monthValue;
+                document.querySelectorAll('.month-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.getAttribute('data-month') === monthValue);
+                });
+                const titleText = document.getElementById('table-title-text');
+                const isMobile = window.innerWidth <= 768;
+                if (titleText) titleText.textContent = isMobile ? `${monthValue} 2026` : `${monthValue} 2026 Expenses`;
+            }
+
+            expenseData.unshift(optimisticRow);
+            renderDashboardTable(expenseData);
+
+            // Update dashboard stat cards immediately
+            const totalExpensesEl = document.getElementById('total-expenses');
+            if (totalExpensesEl) {
+                const curTotal = parseFloat(totalExpensesEl.textContent.replace(/[^\d.-]/g, '')) || 0;
+                animateValue(totalExpensesEl, curTotal + amountValue, 'currency');
+            }
+            const totalCategoriesEl = document.getElementById('total-categories');
+            if (totalCategoriesEl && expenseData) {
+                const cats = new Set(expenseData.map(r => r[4]).filter(Boolean));
+                animateValue(totalCategoriesEl, cats.size, 'integer');
+            }
+            const totalDaysEl = document.getElementById('total-days');
+            if (totalDaysEl && expenseData) {
+                const days = new Set(expenseData.map(r => r[2]).filter(Boolean));
+                animateValue(totalDaysEl, days.size, 'integer');
             }
 
             // Also update Reports page if open
@@ -15656,6 +15672,27 @@ Expense Tracker Pro: 2026 JavaScript Code
             }
 
             showModernToast("Record Updated", `Updated ${uniqueIdValue}`, "success", 2500);
+        }
+
+        // Immediately update memory cache for instant persistence across view switches
+        if (window.expenseCache) {
+            const cacheKey = `monthly_${monthValue}_${CURRENT_YEAR || 2026}`;
+            const cached = window.expenseCache.get(cacheKey) || window.expenseCache.get(`monthly_${monthValue}`);
+            if (cached && cached.tableData) {
+                if (!isEdit) {
+                    cached.tableData.unshift(optimisticRow);
+                } else {
+                    const rIdx = cached.tableData.findIndex(r => r && String(r[1]).trim() === String(uniqueIdValue).trim());
+                    if (rIdx > -1) {
+                        cached.tableData[rIdx] = optimisticRow;
+                    }
+                }
+                cached.totalExpenses = cached.tableData.reduce((sum, r) => sum + (parseFloat(r[5]) || 0), 0);
+                window.expenseCache.set(cacheKey, cached);
+                window.expenseCache.set(`monthly_${monthValue}`, cached);
+            }
+            window.expenseCache.invalidate('all_data');
+            window.expenseCache.invalidate('consolidated_data');
         }
 
         // 4. Reset form inputs immediately

@@ -921,7 +921,35 @@ function addEntry(entryData) {
         }
         consolidatedSheet.appendRow(newRow);
 
-        // 3. Fast audit log passing already open ss
+        // 3. THIRD: Fast append to Master tab in CONSOLIDATED_ID (All Years Master Tab)
+        try {
+            const masterSS = SpreadsheetApp.openById(CONSOLIDATED_ID);
+            if (masterSS) {
+                const masterSheet = masterSS.getSheetByName("Master");
+                if (masterSheet) {
+                    const masterLastRow = masterSheet.getLastRow();
+                    const masterRow = [
+                        masterLastRow, // Master sequential S.N
+                        newUniqueId,
+                        formattedDate,
+                        monthName,
+                        entryData.itemList,
+                        amount,
+                        entryData.credit || '',
+                        entryData.user,
+                        `Expenses Tracker ${parsed.year || 2026}`
+                    ];
+                    masterSheet.appendRow(masterRow);
+                }
+            }
+        } catch (masterErr) {
+            console.warn("Master sheet append warning:", masterErr);
+        }
+
+        // 4. Flush ALL writes immediately so Google Sheets updates instantly without delay!
+        SpreadsheetApp.flush();
+
+        // 5. Fast audit log passing already open ss
         const userForLog = entryData.user || (currentUser ? currentUser.username : "System/Web");
         logAction("CREATE", `Added entry: ${entryData.itemList} (${amount})`, newUniqueId, userForLog, ss);
 
@@ -1102,6 +1130,39 @@ function updateEntry(entryData) {
             console.error("Consolidated update failed: " + e.message);
         }
 
+        // --- Update Master Sheet in CONSOLIDATED_ID as well ---
+        try {
+            const masterSS = SpreadsheetApp.openById(CONSOLIDATED_ID);
+            if (masterSS) {
+                const masterSheet = masterSS.getSheetByName("Master");
+                if (masterSheet) {
+                    const masterLastRow = masterSheet.getLastRow();
+                    if (masterLastRow > 1) {
+                        const masterUids = masterSheet.getRange(1, 2, masterLastRow, 1).getValues();
+                        const targetUid = String(entryData.uniqueId).trim();
+                        for (let k = 1; k < masterUids.length; k++) {
+                            if (String(masterUids[k][0]).trim() === targetUid) {
+                                masterSheet.getRange(k + 1, 3, 1, 6).setValues([[
+                                    formattedDate,
+                                    monthName,
+                                    entryData.itemList,
+                                    amount,
+                                    entryData.credit || '',
+                                    entryData.user
+                                ]]);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (mErr) {
+            console.warn("Master sheet update warning:", mErr);
+        }
+
+        // Flush all updates immediately so Google Sheets updates in real-time
+        SpreadsheetApp.flush();
+
         return {
             success: true,
             uniqueId: entryData.uniqueId,
@@ -1188,6 +1249,31 @@ function deleteEntry(uniqueId, month, user) {
             } catch (dataErr) {
                 console.warn("Data delete warning:", dataErr);
             }
+
+            // Fast delete from Master sheet in CONSOLIDATED_ID as well
+            try {
+                const masterSS = SpreadsheetApp.openById(CONSOLIDATED_ID);
+                if (masterSS) {
+                    const masterSheet = masterSS.getSheetByName("Master");
+                    if (masterSheet) {
+                        const mLastRow = masterSheet.getLastRow();
+                        if (mLastRow > 1) {
+                            const mUids = masterSheet.getRange(1, 2, mLastRow, 1).getValues();
+                            for (let m = 1; m < mUids.length; m++) {
+                                if (String(mUids[m][0]).trim() === targetUid) {
+                                    masterSheet.deleteRow(m + 1);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (mDelErr) {
+                console.warn("Master delete warning:", mDelErr);
+            }
+
+            // Flush immediately so deletion appears in Google Sheets in real-time
+            SpreadsheetApp.flush();
 
             // Log action passing existing ss
             try {
