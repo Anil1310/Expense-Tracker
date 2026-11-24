@@ -24,8 +24,7 @@ function stripEmojiIcon(text) {
     return str.trim();
 }
 
-/**
- * Strips emoji icons from unique ID (e.g. "1- 🍕 Food" -> "1- Food" or "1-Food").
+/**II" -> "1- Food" or "1-Food").
  */
 function stripEmojiFromUniqueId(uid) {
     if (!uid) return "";
@@ -994,7 +993,7 @@ function addEntry(entryData) {
             error: e.message
         };
     } finally {
-        try { lock.releaseLock(); } catch (e) {}
+        try { lock.releaseLock(); } catch (e) { }
     }
 }
 

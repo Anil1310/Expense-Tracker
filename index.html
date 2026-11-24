@@ -9441,73 +9441,6 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
                 background: #f1f5f9 !important;
                 -webkit-overflow-scrolling: touch !important;
             }
-
-            /* ── Modern Professional Cloud Sync Status Pill ── */
-            .sync-status-pill {
-                display: inline-flex;
-                align-items: center;
-                gap: 6px;
-                padding: 4px 11px;
-                border-radius: 9999px;
-                font-size: 0.75rem;
-                font-weight: 600;
-                cursor: pointer;
-                transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-                user-select: none;
-                margin-right: 4px;
-            }
-            .sync-status-pill .sync-status-dot {
-                width: 7px;
-                height: 7px;
-                border-radius: 50%;
-                display: inline-block;
-            }
-            .sync-status-pill.synced {
-                background: rgba(16, 185, 129, 0.12);
-                color: #059669;
-                border: 1px solid rgba(16, 185, 129, 0.28);
-            }
-            .sync-status-pill.synced .sync-status-dot {
-                background: #10b981;
-                box-shadow: 0 0 6px rgba(16, 185, 129, 0.6);
-            }
-            .sync-status-pill.syncing {
-                background: rgba(59, 130, 246, 0.12);
-                color: #2563eb;
-                border: 1px solid rgba(59, 130, 246, 0.3);
-            }
-            .sync-status-pill.syncing .sync-status-dot {
-                background: #3b82f6;
-                animation: syncPulse 1s infinite alternate;
-            }
-            .sync-status-pill.offline, .sync-status-pill.pending {
-                background: rgba(245, 158, 11, 0.12);
-                color: #d97706;
-                border: 1px solid rgba(245, 158, 11, 0.3);
-            }
-            .sync-status-pill.offline .sync-status-dot, .sync-status-pill.pending .sync-status-dot {
-                background: #f59e0b;
-            }
-            @keyframes syncPulse {
-                0% { transform: scale(0.8); opacity: 0.5; }
-                100% { transform: scale(1.3); opacity: 1; }
-            }
-            body[data-theme='dark'] .sync-status-pill.synced {
-                background: rgba(16, 185, 129, 0.18);
-                color: #34d399;
-                border-color: rgba(16, 185, 129, 0.35);
-            }
-            body[data-theme='dark'] .sync-status-pill.syncing {
-                background: rgba(59, 130, 246, 0.18);
-                color: #60a5fa;
-                border-color: rgba(59, 130, 246, 0.35);
-            }
-            body[data-theme='dark'] .sync-status-pill.offline,
-            body[data-theme='dark'] .sync-status-pill.pending {
-                background: rgba(245, 158, 11, 0.18);
-                color: #fbbf24;
-                border-color: rgba(245, 158, 11, 0.35);
-            }
 </style>
 
   <script>
@@ -9833,11 +9766,6 @@ MONTHS SUBMENU - UPDATED FOR ALL 12 MONTHS
               title="Toggle Theme">
               <i class="fas fa-moon"></i>
             </button>
-            <div id="cloud-sync-status" class="sync-status-pill synced" data-bs-toggle="tooltip" data-bs-placement="bottom"
-              title="All changes saved to Google Sheets. Click to sync." onclick="window.SyncEngine && window.SyncEngine.processQueue(true)">
-              <span class="sync-status-dot"></span>
-              <span class="sync-status-label">All Saved</span>
-            </div>
             <button class="refresh-btn-header" data-bs-toggle="tooltip" data-bs-placement="bottom"
               onclick="refreshCurrentMonth()" title="Refresh">
               <i class="fas fa-sync-alt"></i>
