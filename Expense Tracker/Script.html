@@ -802,7 +802,7 @@ Expense Tracker Pro: 2026 JavaScript Code
             }
         },
 
-        enqueue: function (actionType, payload, optimisticId) {
+        enqueue: function (actionType, payload, optimisticId, skipImmediateProcess = false) {
             const queue = this.getQueue();
             const task = {
                 id: optimisticId || ("sync_" + Date.now() + "_" + Math.random().toString(36).substr(2, 6)),
@@ -813,7 +813,9 @@ Expense Tracker Pro: 2026 JavaScript Code
             };
             queue.push(task);
             this.setQueue(queue);
-            this.processQueue();
+            if (!skipImmediateProcess) {
+                this.processQueue();
+            }
             return task.id;
         },
 
@@ -4565,7 +4567,7 @@ Expense Tracker Pro: 2026 JavaScript Code
 
         // 5. Send to Google Apps Script in background & track in SyncEngine
         const syncTaskId = window.SyncEngine
-            ? window.SyncEngine.enqueue(isEdit ? 'update' : 'add', entryData, tempUid)
+            ? window.SyncEngine.enqueue(isEdit ? 'update' : 'add', entryData, tempUid, true)
             : null;
 
         // Auto-release in-progress lock after 600ms so user is never blocked from saving subsequent records

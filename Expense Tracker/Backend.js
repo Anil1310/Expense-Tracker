@@ -946,6 +946,9 @@ function addEntry(entryData) {
         }
         consolidatedSheet.appendRow(newRow);
 
+        // Immediate flush of Month and Data sheet so records are saved in Google Sheets within 2 seconds
+        SpreadsheetApp.flush();
+
         // 3. THIRD: Fast append to Master tab in CONSOLIDATED_ID (All Years Master Tab)
         try {
             const masterSS = SpreadsheetApp.openById(CONSOLIDATED_ID);
@@ -970,9 +973,6 @@ function addEntry(entryData) {
         } catch (masterErr) {
             console.warn("Master sheet append warning:", masterErr);
         }
-
-        // 4. Flush ALL writes immediately so Google Sheets updates instantly without delay!
-        SpreadsheetApp.flush();
 
         // 5. Fast audit log passing already open ss
         const userForLog = entryData.user || (currentUser ? currentUser.username : "System/Web");
