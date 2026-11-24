@@ -176,6 +176,31 @@ function doPost(e) {
             saveProfilePhoto: (...args) => saveProfilePhoto(...args),
             cleanAllColumnEIconsAndStopTriggers: (...args) => cleanAllColumnEIconsAndStopTriggers(...args),
             updateAllListCategories: (...args) => updateAllListCategories(...args),
+            updateEntry: (...args) => updateEntry(...args),
+            getYearlyDetailedData: (...args) => getYearlyDetailedData(...args),
+            getYearlyReport: (...args) => getYearlyReport(...args),
+            exportData: (...args) => exportData(...args),
+            exportAllData: (...args) => exportAllData(...args),
+            syncMissingNovToData: () => {
+                const ss = SpreadsheetApp.openById(MAIN_ID);
+                const novSheet = ss.getSheetByName("Nov");
+                const dataSheet = ss.getSheetByName("Data");
+                if (!novSheet || !dataSheet) return { error: "Sheets not found" };
+                const novRows = novSheet.getDataRange().getValues().slice(1);
+                const dataRows = dataSheet.getDataRange().getValues().slice(1);
+                const dataUids = new Set(dataRows.map(r => String(r[1] || '').trim()));
+                let appended = 0;
+                novRows.forEach(r => {
+                    const uid = String(r[1] || '').trim();
+                    if (uid && !dataUids.has(uid)) {
+                        dataSheet.appendRow(r);
+                        dataUids.add(uid);
+                        appended++;
+                    }
+                });
+                if (appended > 0) SpreadsheetApp.flush();
+                return { success: true, appended };
+            },
             getSheetGids: () => {
                 const ss = SpreadsheetApp.openById(MAIN_ID);
                 return ss.getSheets().map(s => ({ name: s.getName(), id: s.getSheetId() }));

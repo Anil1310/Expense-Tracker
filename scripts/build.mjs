@@ -31,6 +31,14 @@ const bridgeScript = `(() => {
             "https://script.google.com/macros/s/AKfycbys6Y0MD92ZlCR3rOjdQCSH5PqTD6NxnUOY6c2eq1h1tBEAfYnbKrbLxXZ4zfFAf3qe/exec"
           ];
 
+          if (typeof window !== "undefined" && (window.location.protocol === "file:" || !window.location.hostname.includes("vercel.app"))) {
+            const directIdx = endpoints.indexOf("https://expenselive.vercel.app/api/apps-script");
+            if (directIdx > 0) {
+              endpoints.splice(directIdx, 1);
+              endpoints.unshift("https://expenselive.vercel.app/api/apps-script");
+            }
+          }
+
           async function sendRequest(urlIdx = 0) {
             try {
               const res = await fetch(endpoints[urlIdx], {

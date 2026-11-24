@@ -350,6 +350,11 @@ Expense Tracker Pro: 2026 Frontend Code
               title="Toggle Theme">
               <i class="fas fa-moon"></i>
             </button>
+            <div id="cloud-sync-status" class="sync-status-pill synced" data-bs-toggle="tooltip" data-bs-placement="bottom"
+              title="All changes saved to Google Sheets. Click to sync." onclick="window.SyncEngine && window.SyncEngine.processQueue(true)">
+              <span class="sync-status-dot"></span>
+              <span class="sync-status-label">All Saved</span>
+            </div>
             <button class="refresh-btn-header" data-bs-toggle="tooltip" data-bs-placement="bottom"
               onclick="refreshCurrentMonth()" title="Refresh">
               <i class="fas fa-sync-alt"></i>
